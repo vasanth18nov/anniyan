@@ -176,7 +176,7 @@
     renderTools();
   }
 
-  /* ---------- Games data (published on thudinest.com) ---------- */
+  /* ---------- Games data (hosted locally under /games/) ---------- */
   var GAME_ICONS = {
     board: '<svg viewBox="0 0 24 24" fill="none" class="game-thumb-icon"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16" stroke="currentColor" stroke-width="1" stroke-opacity="0.6"/></svg>',
     arcade: '<svg viewBox="0 0 24 24" fill="none" class="game-thumb-icon"><path d="M8 6a5 5 0 0 0-4.9 6l1 4a2.4 2.4 0 0 0 4.4.6l.7-1.1a1.6 1.6 0 0 1 1.3-.7h3a1.6 1.6 0 0 1 1.3.7l.7 1.1a2.4 2.4 0 0 0 4.4-.6l1-4A5 5 0 0 0 16 6H8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8.5 10v3M7 11.5h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="16" cy="10" r="0.9" fill="currentColor"/><circle cx="17.6" cy="11.6" r="0.9" fill="currentColor"/></svg>',
@@ -186,23 +186,23 @@
   };
 
   var GAMES = [
-    { title: "Rummy", desc: "Indian Rummy — 13 cards, flexible groups.", kind: "board" },
-    { title: "Chess", desc: "Hard AI, move counter, points & captured pieces.", kind: "board" },
-    { title: "Ping Pong", desc: "Classic paddle game with mouse, keyboard or touch.", kind: "arcade" },
-    { title: "Sudoku", desc: "Classic 9×9 puzzle with 3 difficulty levels, notes & hints.", kind: "puzzle" },
-    { title: "Word Search", desc: "5 themes, 130+ words — drag to find them all.", kind: "word" },
-    { title: "Darts", desc: "301, 501, 701 — tap to throw, double out to win.", kind: "target" },
-    { title: "Snake", desc: "Classic grid snake with 3 speeds and wraparound edges.", kind: "arcade" },
-    { title: "Pac-Bot", desc: "Robo-maze chomper — dodge ghosts, hunt power cores.", kind: "arcade" },
-    { title: "Robo Jump", desc: "Side-scrolling platformer — stomp bots, grab coins, reach the flag.", kind: "arcade" },
-    { title: "Snakes & Ladders", desc: "Paramapadham for up to 4 players — climb to 100, dodge the snakes.", kind: "board" },
-    { title: "Carrom", desc: "Flick physics, 3 levels — pocket your coins & the queen.", kind: "board" },
-    { title: "Kovai Quiz", desc: "50 questions on Coimbatore — food, temples, hills and more.", kind: "word" },
-    { title: "2048", desc: "Slide & merge the tiles — 3 board sizes, undo, best score.", kind: "puzzle" },
-    { title: "Dots & Boxes", desc: "Pass and play or vs CPU — close a box, go again.", kind: "board" },
-    { title: "Brick Breaker", desc: "Smash every brick across 5 levels — mouse, keyboard or touch.", kind: "arcade" },
-    { title: "Tetris", desc: "7-bag piece shuffle & ghost drop — clear lines, level up, go fast.", kind: "puzzle" },
-    { title: "Bazooka Man", desc: "Physics puzzle, 10 levels — aim, fire, chain the barrels.", kind: "arcade" }
+    { title: "Rummy", desc: "Indian Rummy — 13 cards, flexible groups.", kind: "board", href: "games/#rummy" },
+    { title: "Chess", desc: "Hard AI, move counter, points & captured pieces.", kind: "board", href: "games/#chess" },
+    { title: "Ping Pong", desc: "Classic paddle game with mouse, keyboard or touch.", kind: "arcade", href: "games/#pong" },
+    { title: "Sudoku", desc: "Classic 9×9 puzzle with 3 difficulty levels, notes & hints.", kind: "puzzle", href: "games/#sudoku" },
+    { title: "Word Search", desc: "5 themes, 130+ words — drag to find them all.", kind: "word", href: "games/#wordpuzzle" },
+    { title: "Darts", desc: "301, 501, 701 — tap to throw, double out to win.", kind: "target", href: "games/#darts" },
+    { title: "Snake", desc: "Classic grid snake with 3 speeds and wraparound edges.", kind: "arcade", href: "games/#snake" },
+    { title: "Pac-Bot", desc: "Robo-maze chomper — dodge ghosts, hunt power cores.", kind: "arcade", href: "games/#pacman" },
+    { title: "Robo Jump", desc: "Side-scrolling platformer — stomp bots, grab coins, reach the flag.", kind: "arcade", href: "games/#platformer" },
+    { title: "Snakes & Ladders", desc: "Paramapadham for up to 4 players — climb to 100, dodge the snakes.", kind: "board", href: "games/#ladders" },
+    { title: "Carrom", desc: "Flick physics, 3 levels — pocket your coins & the queen.", kind: "board", href: "games/#carrom" },
+    { title: "Kovai Quiz", desc: "50 questions on Coimbatore — food, temples, hills and more.", kind: "word", href: "games/#trivia" },
+    { title: "2048", desc: "Slide & merge the tiles — 3 board sizes, undo, best score.", kind: "puzzle", href: "games/#g2048" },
+    { title: "Dots & Boxes", desc: "Pass and play or vs CPU — close a box, go again.", kind: "board", href: "games/#dots" },
+    { title: "Brick Breaker", desc: "Smash every brick across 5 levels — mouse, keyboard or touch.", kind: "arcade", href: "games/#brick" },
+    { title: "Tetris", desc: "7-bag piece shuffle & ghost drop — clear lines, level up, go fast.", kind: "puzzle", href: "games/#tetris" },
+    { title: "Bazooka Man", desc: "Physics puzzle, 10 levels — aim, fire, chain the barrels.", kind: "arcade", href: "games/bazooka-man/" }
   ];
   var GAME_ART_VARIANTS = 6;
 
@@ -228,7 +228,7 @@
         '<div class="game-body">' +
           "<h3>" + game.title + "</h3>" +
           "<p>" + game.desc + "</p>" +
-          '<a class="btn btn-outline btn-sm" href="https://thudinest.com" target="_blank" rel="noopener noreferrer">Play Now</a>' +
+          '<a class="btn btn-outline btn-sm" href="' + game.href + '">Play Now</a>' +
         "</div>";
       gamesGrid.appendChild(card);
     });
