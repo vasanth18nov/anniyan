@@ -186,6 +186,7 @@
       card.className = "card tool-card";
       card.href = tool.href;
       card.innerHTML =
+        '<span class="tool-icon">' + tool.icon + "</span>" +
         '<span class="tool-tag">' + CAT_LABEL[tool.cat] + "</span>" +
         "<h4>" + tool.name + "</h4>" +
         "<p>" + tool.desc + "</p>" +

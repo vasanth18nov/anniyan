@@ -555,6 +555,15 @@ input, select, textarea { font: inherit; }
 .tool-card-disabled { cursor: default; }
 .tool-card-disabled:hover { transform: none; border-color: var(--border); }
 .tool-card-disabled .tool-link { color: var(--text-faint); }
+.tool-icon {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 11px;
+  background: var(--gradient-2);
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+.tool-icon svg { width: 21px; height: 21px; }
 .tool-tag {
   font-size: 0.7rem;
   font-weight: 600;
@@ -610,21 +619,34 @@ input, select, textarea { font: inherit; }
   background-size: 22px 22px;
   mix-blend-mode: overlay;
 }
-.game-thumb-icon { width: 42px; height: 42px; position: relative; z-index: 1; }
+.game-thumb-badge {
+  position: relative; z-index: 1;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+.game-thumb-icon { width: 28px; height: 28px; color: #ffffff; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25)); }
 .game-thumb-label {
   position: relative; z-index: 1;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
-.game-card[data-art="1"] .game-thumb { background: linear-gradient(135deg, #1c4fd6, #33e6ff); }
-.game-card[data-art="2"] .game-thumb { background: linear-gradient(135deg, #6a2ce0, #ff5ec4); }
-.game-card[data-art="3"] .game-thumb { background: linear-gradient(135deg, #0aa38a, #33e6ff); }
-.game-card[data-art="4"] .game-thumb { background: linear-gradient(135deg, #8a5cff, #3d8bff); }
-.game-card[data-art="5"] .game-thumb { background: linear-gradient(135deg, #e0762c, #ff5ec4); }
-.game-card[data-art="6"] .game-thumb { background: linear-gradient(135deg, #2c8ee0, #6a2ce0); }
+.game-card[data-art="1"] .game-thumb { background: linear-gradient(135deg, #0f9e73, #2dd4bf); }
+.game-card[data-art="2"] .game-thumb { background: linear-gradient(135deg, #f5a623, #ff6b6b); }
+.game-card[data-art="3"] .game-thumb { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+.game-card[data-art="4"] .game-thumb { background: linear-gradient(135deg, #0ea5e9, #12b886); }
+.game-card[data-art="5"] .game-thumb { background: linear-gradient(135deg, #f59e0b, #f43f5e); }
+.game-card[data-art="6"] .game-thumb { background: linear-gradient(135deg, #14b8a6, #6366f1); }
+.game-card[data-art="7"] .game-thumb { background: linear-gradient(135deg, #f5a623, #12b886); }
+.game-card[data-art="8"] .game-thumb { background: linear-gradient(135deg, #d946ef, #8b5cf6); }
 .game-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
 .game-body h3 { font-size: 1.05rem; }
 .game-body p { font-size: 0.88rem; color: var(--text-dim); }
@@ -823,7 +845,7 @@ input, select, textarea { font: inherit; }
 /* ============ Responsive ============ */
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .tools-grid { grid-template-columns: repeat(3, 1fr); }
+  .tools-grid { grid-template-columns: repeat(2, 1fr); }
   .games-grid { grid-template-columns: repeat(2, 1fr); }
   .why-us-inner, .contact-inner { grid-template-columns: 1fr; }
   .hero-visual { flex: 0 0 360px; }
@@ -859,14 +881,12 @@ input, select, textarea { font: inherit; }
 
   .hero { padding: 140px 0 80px; }
   .trust-grid { grid-template-columns: repeat(2, 1fr); }
-  .services-grid, .games-grid { grid-template-columns: 1fr; }
-  .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid, .games-grid, .tools-grid { grid-template-columns: 1fr; }
   .about-inner { flex-direction: column; text-align: center; }
   .form-row-split { grid-template-columns: 1fr; }
   .section { padding: 80px 0; }
 }
 
 @media (max-width: 480px) {
-  .tools-grid { grid-template-columns: 1fr; }
   .hero-cta { flex-direction: column; align-items: stretch; }
 }

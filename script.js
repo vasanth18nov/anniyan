@@ -52,7 +52,7 @@
   }
 
   /* ---------- Tools preview (full catalog lives at /tools/) ---------- */
-  var FEATURED_TOOL_NAMES = ["Text Editor", "Code Formatter", "JSON Formatter", "Image Compressor", "Unit Converter", "QR Generator", "BMI Calculator"];
+  var FEATURED_TOOL_NAMES = ["Text Editor", "Word Counter", "Code Formatter", "JSON Formatter", "Image Compressor", "Unit Converter", "QR Generator", "BMI Calculator"];
   var toolsGrid = document.getElementById("toolsGrid");
   if (toolsGrid && typeof TOOLS !== "undefined") {
     TOOLS.filter(function (t) { return FEATURED_TOOL_NAMES.indexOf(t.name) !== -1; }).forEach(function (tool) {
@@ -60,6 +60,7 @@
       card.className = "card tool-card";
       card.href = tool.href;
       card.innerHTML =
+        '<span class="tool-icon">' + tool.icon + "</span>" +
         '<span class="tool-tag">' + CAT_LABEL[tool.cat] + "</span>" +
         "<h4>" + tool.name + "</h4>" +
         "<p>" + tool.desc + "</p>" +
@@ -69,17 +70,17 @@
   }
 
   /* ---------- Games preview (full arcade lives at /games/) ---------- */
-  var GAME_ART_VARIANTS = 6;
+  var GAME_ART_VARIANTS = 8;
   var gamesGrid = document.getElementById("gamesGrid");
   if (gamesGrid && typeof GAMES !== "undefined") {
-    GAMES.slice(0, 6).forEach(function (game, index) {
+    GAMES.slice(0, 8).forEach(function (game, index) {
       var art = (index % GAME_ART_VARIANTS) + 1;
       var card = document.createElement("article");
       card.className = "card game-card";
       card.dataset.art = String(art);
       card.innerHTML =
         '<div class="game-thumb" aria-hidden="true">' +
-          GAME_ICONS[game.kind] +
+          '<span class="game-thumb-badge">' + game.icon + "</span>" +
           '<span class="game-thumb-label">' + game.title + "</span>" +
         "</div>" +
         '<div class="game-body">' +
