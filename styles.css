@@ -762,6 +762,17 @@ input, select, textarea { font: inherit; }
 .about-copy .section-title { margin-bottom: 4px; }
 .about-copy p { color: var(--text-dim); max-width: 640px; }
 
+/* ============ Legal pages ============ */
+.legal-updated { color: var(--text-faint); font-size: 0.85rem; margin-bottom: 44px; }
+.legal-content { max-width: 760px; }
+.legal-content h2 { font-size: 1.25rem; margin: 2.2em 0 0.6em; color: var(--text); }
+.legal-content h2:first-child { margin-top: 0; }
+.legal-content p { color: var(--text-dim); margin: 0.9em 0; line-height: 1.7; }
+.legal-content ul { padding-left: 1.4em; margin: 0.9em 0; color: var(--text-dim); }
+.legal-content li { margin: 0.4em 0; line-height: 1.6; }
+.legal-content a { color: var(--cyan); text-decoration: underline; }
+.legal-content strong { color: var(--text); }
+
 /* ============ Contact ============ */
 .contact-inner {
   display: grid;
