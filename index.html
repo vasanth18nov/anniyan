@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Anniyan — The Alpha | Build What's Next" />
 <meta name="twitter:description" content="Custom websites, web apps, automation and AI integrations — plus free online tools and games." />
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2312b886'/%3E%3Cstop offset='1' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cpath fill='%230a0b10' d='M50 18 L78 68 L60 68 L50 50 L40 68 L22 68 Z'/%3E%3Cpath fill='%230a0b10' opacity='0.55' d='M32 82 L50 50 L68 82 Z'/%3E%3C/svg%3E" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,43 +108,81 @@
         <svg viewBox="0 0 480 480" class="hero-orbit">
           <defs>
             <linearGradient id="orbitGrad1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#2dd4e0"/>
-              <stop offset="1" stop-color="#5865f2"/>
+              <stop offset="0" stop-color="#12b886"/>
+              <stop offset="1" stop-color="#f5a623"/>
             </linearGradient>
             <linearGradient id="orbitGrad2" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#7c6cf0"/>
-              <stop offset="1" stop-color="#2dd4e0"/>
+              <stop offset="0" stop-color="#f5a623"/>
+              <stop offset="1" stop-color="#2dd4bf"/>
             </linearGradient>
             <radialGradient id="coreGlow" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0" stop-color="#2dd4e0" stop-opacity="0.9"/>
-              <stop offset="1" stop-color="#2dd4e0" stop-opacity="0"/>
+              <stop offset="0" stop-color="#12b886" stop-opacity="0.9"/>
+              <stop offset="1" stop-color="#12b886" stop-opacity="0"/>
             </radialGradient>
           </defs>
 
-          <circle cx="240" cy="240" r="200" fill="none" stroke="url(#orbitGrad1)" stroke-opacity="0.25" stroke-width="1"/>
-          <circle cx="240" cy="240" r="150" fill="none" stroke="url(#orbitGrad2)" stroke-opacity="0.3" stroke-width="1"/>
-          <circle cx="240" cy="240" r="100" fill="none" stroke="url(#orbitGrad1)" stroke-opacity="0.35" stroke-width="1"/>
+          <g class="orbit-ring-dial" stroke="url(#orbitGrad1)" stroke-opacity="0.3" stroke-width="1.4" stroke-linecap="round">
+            <circle cx="240" cy="240" r="216" fill="none" stroke-opacity="0.15"/>
+            <line x1="443.0" y1="240.0" x2="456.0" y2="240.0"/>
+            <line x1="415.8" y1="341.5" x2="427.1" y2="348.0"/>
+            <line x1="341.5" y1="415.8" x2="348.0" y2="427.1"/>
+            <line x1="240.0" y1="443.0" x2="240.0" y2="456.0"/>
+            <line x1="138.5" y1="415.8" x2="132.0" y2="427.1"/>
+            <line x1="64.2" y1="341.5" x2="52.9" y2="348.0"/>
+            <line x1="37.0" y1="240.0" x2="24.0" y2="240.0"/>
+            <line x1="64.2" y1="138.5" x2="52.9" y2="132.0"/>
+            <line x1="138.5" y1="64.2" x2="132.0" y2="52.9"/>
+            <line x1="240.0" y1="37.0" x2="240.0" y2="24.0"/>
+            <line x1="341.5" y1="64.2" x2="348.0" y2="52.9"/>
+            <line x1="415.8" y1="138.5" x2="427.1" y2="132.0"/>
+          </g>
+          <g class="orbit-ring-rotate">
+            <circle cx="240" cy="240" r="160" fill="none" stroke="url(#orbitGrad2)" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="3 11"/>
+          </g>
+          <g class="orbit-ring-rotate-fast">
+            <circle cx="240" cy="240" r="105" fill="none" stroke="url(#orbitGrad1)" stroke-opacity="0.4" stroke-width="1.3" stroke-dasharray="1 9"/>
+          </g>
 
-          <circle cx="240" cy="240" r="70" fill="url(#coreGlow)"/>
-          <rect x="205" y="205" width="70" height="70" rx="18" fill="#0d0f16" stroke="url(#orbitGrad1)" stroke-width="1.5"/>
-          <text x="240" y="252" text-anchor="middle" font-family="Sora, sans-serif" font-weight="700" font-size="34" fill="url(#orbitGrad1)">A</text>
+          <circle class="core-pulse" cx="240" cy="240" r="98" fill="url(#coreGlow)"/>
+          <rect x="190" y="190" width="100" height="100" rx="24" fill="#0d0f16" stroke="url(#orbitGrad1)" stroke-width="1.5"/>
+          <g transform="translate(190,190) scale(1)" fill="url(#orbitGrad1)">
+            <path d="M50 18 L78 68 L60 68 L50 50 L40 68 L22 68 Z"/>
+            <path opacity="0.55" d="M32 82 L50 50 L68 82 Z"/>
+          </g>
 
           <g class="orbit-spin-slow">
-            <circle cx="240" cy="40" r="8" fill="url(#orbitGrad1)"/>
+            <circle cx="240" cy="25" r="9" fill="url(#orbitGrad1)"/>
           </g>
           <g class="orbit-spin-med">
-            <circle cx="440" cy="240" r="6" fill="url(#orbitGrad2)"/>
+            <path d="M455,234 L461,240 L455,246 L449,240 Z" fill="url(#orbitGrad2)"/>
           </g>
           <g class="orbit-spin-fast">
-            <circle cx="240" cy="140" r="5" fill="#2dd4e0"/>
+            <circle cx="240" cy="135" r="5" fill="#2dd4bf"/>
           </g>
           <g class="orbit-spin-med-rev">
-            <circle cx="90" cy="290" r="6" fill="#7c6cf0"/>
+            <circle cx="80" cy="300" r="7" fill="#f5a623"/>
+          </g>
+          <g class="orbit-spin-slow2">
+            <path d="M240,450 L245,455 L240,460 L235,455 Z" fill="#2dd4bf"/>
+          </g>
+          <g class="orbit-spin-fast2-rev">
+            <circle cx="345" cy="240" r="4" fill="url(#orbitGrad1)"/>
           </g>
         </svg>
       </div>
     </div>
     <div class="hero-glow" aria-hidden="true"></div>
+
+    <svg class="skyline-divider" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="skylineGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#12b886"/>
+          <stop offset="1" stop-color="#f5a623"/>
+        </linearGradient>
+      </defs>
+      <path d="M0,90 L0,62 L110,34 L200,56 L290,14 L380,50 L470,28 L560,60 L650,18 L740,52 L830,30 L920,64 L1010,22 L1100,54 L1200,38 L1200,90 Z" fill="url(#skylineGrad)" opacity="0.06"/>
+      <path d="M0,62 L110,34 L200,56 L290,14 L380,50 L470,28 L560,60 L650,18 L740,52 L830,30 L920,64 L1010,22 L1100,54 L1200,38" fill="none" stroke="url(#skylineGrad)" stroke-width="1.5" stroke-linejoin="round" opacity="0.4"/>
+    </svg>
   </section>
 
   <!-- ================= TRUST STRIP ================= -->
