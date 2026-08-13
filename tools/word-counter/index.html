@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Word Counter — Free Online Tool | Anniyan</title>
+<meta name="description" content="Count words, characters and estimated reading time instantly, right in your browser." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/word-counter/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Text &amp; Writing</p>
+    <h1>Word Counter</h1>
+    <p>Paste or type your text below for an instant breakdown of words, characters and reading time.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <div class="tool-toolbar">
+      <button class="btn btn-outline btn-sm" id="btnClear" type="button">Clear</button>
+      <button class="btn btn-outline btn-sm" id="btnCopy" type="button">Copy Text</button>
+    </div>
+    <textarea class="tool-textarea" id="input" placeholder="Paste or type your text here…" style="min-height: 320px;"></textarea>
+
+    <div class="tool-stats">
+      <div class="tool-stat"><div class="tool-stat-value" id="statWords">0</div><div class="tool-stat-label">Words</div></div>
+      <div class="tool-stat"><div class="tool-stat-value" id="statChars">0</div><div class="tool-stat-label">Characters</div></div>
+      <div class="tool-stat"><div class="tool-stat-value" id="statCharsNoSpace">0</div><div class="tool-stat-label">Chars (no spaces)</div></div>
+      <div class="tool-stat"><div class="tool-stat-value" id="statSentences">0</div><div class="tool-stat-label">Sentences</div></div>
+      <div class="tool-stat"><div class="tool-stat-value" id="statParagraphs">0</div><div class="tool-stat-label">Paragraphs</div></div>
+      <div class="tool-stat"><div class="tool-stat-value" id="statReadTime">0 min</div><div class="tool-stat-label">Reading Time</div></div>
+    </div>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var input = document.getElementById("input");
+  var WORDS_PER_MINUTE = 200;
+
+  var els = {
+    words: document.getElementById("statWords"),
+    chars: document.getElementById("statChars"),
+    charsNoSpace: document.getElementById("statCharsNoSpace"),
+    sentences: document.getElementById("statSentences"),
+    paragraphs: document.getElementById("statParagraphs"),
+    readTime: document.getElementById("statReadTime")
+  };
+
+  function update() {
+    var text = input.value;
+    var trimmed = text.trim();
+
+    var words = trimmed ? trimmed.split(/\s+/).length : 0;
+    var chars = text.length;
+    var charsNoSpace = text.replace(/\s/g, "").length;
+    var sentences = trimmed ? (trimmed.match(/[.!?]+(\s|$)/g) || []).length || (trimmed ? 1 : 0) : 0;
+    var paragraphs = trimmed ? trimmed.split(/\n\s*\n/).filter(function (p) { return p.trim().length > 0; }).length : 0;
+    var minutes = words / WORDS_PER_MINUTE;
+    var readTime = words === 0 ? "0 min" : minutes < 1 ? "< 1 min" : Math.round(minutes) + " min";
+
+    els.words.textContent = words.toLocaleString();
+    els.chars.textContent = chars.toLocaleString();
+    els.charsNoSpace.textContent = charsNoSpace.toLocaleString();
+    els.sentences.textContent = sentences.toLocaleString();
+    els.paragraphs.textContent = paragraphs.toLocaleString();
+    els.readTime.textContent = readTime;
+  }
+
+  input.addEventListener("input", update);
+
+  document.getElementById("btnClear").addEventListener("click", function () {
+    input.value = "";
+    update();
+    input.focus();
+  });
+
+  document.getElementById("btnCopy").addEventListener("click", function () {
+    navigator.clipboard.writeText(input.value);
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>

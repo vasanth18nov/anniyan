@@ -68,10 +68,10 @@
 
   /* ---------- Tools data ---------- */
   var TOOLS = [
-    { name: "Text Editor", cat: "text", desc: "Distraction-free online text editor with autosave." },
-    { name: "Word Counter", cat: "text", desc: "Count words, characters and reading time instantly." },
-    { name: "Case Converter", cat: "text", desc: "Switch between upper, lower, title and sentence case." },
-    { name: "Markdown Previewer", cat: "text", desc: "Write Markdown and preview rendered output live." },
+    { name: "Text Editor", cat: "text", desc: "Distraction-free online text editor with autosave.", href: "tools/text-editor/" },
+    { name: "Word Counter", cat: "text", desc: "Count words, characters and reading time instantly.", href: "tools/word-counter/" },
+    { name: "Case Converter", cat: "text", desc: "Switch between upper, lower, title and sentence case.", href: "tools/case-converter/" },
+    { name: "Markdown Previewer", cat: "text", desc: "Write Markdown and preview rendered output live.", href: "tools/markdown-previewer/" },
     { name: "Code Formatter", cat: "developer", desc: "Auto-format JS, CSS, HTML and JSON snippets." },
     { name: "Base64 Encoder", cat: "developer", desc: "Encode or decode Base64 strings and files." },
     { name: "Regex Tester", cat: "developer", desc: "Test regular expressions against sample text." },
@@ -133,13 +133,15 @@
 
     toolsGrid.innerHTML = "";
     visible.forEach(function (tool) {
-      var card = document.createElement("article");
+      var card = document.createElement(tool.href ? "a" : "article");
       card.className = "card tool-card";
+      if (tool.href) card.href = tool.href;
       card.innerHTML =
         '<span class="tool-tag">' + CAT_LABEL[tool.cat] + "</span>" +
         "<h4>" + tool.name + "</h4>" +
         "<p>" + tool.desc + "</p>" +
-        '<span class="tool-link">Open Tool &rarr;</span>';
+        '<span class="tool-link">' + (tool.href ? "Open Tool &rarr;" : "Coming Soon") + "</span>";
+      if (!tool.href) card.classList.add("tool-card-disabled");
       toolsGrid.appendChild(card);
     });
 

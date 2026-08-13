@@ -1,0 +1,198 @@
+/* Shared layout for standalone tool pages. Relies on tokens/resets from ../styles.css */
+
+body.tool-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(5, 7, 13, 0.85);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.tool-topbar-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.tool-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  transition: color 0.2s ease;
+}
+.tool-back:hover { color: var(--cyan); }
+.tool-back svg { width: 16px; height: 16px; }
+.tool-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.tool-brand .logo-mark {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--gradient-1);
+  color: #061019;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+}
+
+.tool-main {
+  flex: 1;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.tool-heading { margin-bottom: 8px; }
+.tool-heading h1 {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  margin-bottom: 8px;
+}
+.tool-heading p {
+  color: var(--text-dim);
+  font-size: 1rem;
+  max-width: 560px;
+}
+
+.tool-panel {
+  margin-top: 32px;
+  padding: 24px;
+}
+
+.tool-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.tool-textarea {
+  width: 100%;
+  min-height: 340px;
+  resize: vertical;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: "JetBrains Mono", "Inter", monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.tool-textarea:focus { border-color: var(--cyan); }
+
+.tool-status {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--text-faint);
+  min-height: 1.2em;
+}
+.tool-status.is-saved { color: var(--cyan); }
+
+.tool-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.tool-stat {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.tool-stat-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.tool-stat-label {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+}
+
+.tool-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 780px) {
+  .tool-split { grid-template-columns: 1fr; }
+}
+.tool-split-col { display: flex; flex-direction: column; gap: 10px; }
+.tool-split-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+}
+.tool-preview {
+  min-height: 340px;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  overflow: auto;
+  line-height: 1.65;
+}
+.tool-preview h1, .tool-preview h2, .tool-preview h3 { font-family: var(--font-display); margin: 0.8em 0 0.4em; }
+.tool-preview h1:first-child, .tool-preview h2:first-child, .tool-preview h3:first-child { margin-top: 0; }
+.tool-preview p { margin: 0.6em 0; color: var(--text); }
+.tool-preview a { color: var(--cyan); text-decoration: underline; }
+.tool-preview code {
+  background: rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88em;
+}
+.tool-preview pre {
+  background: rgba(255,255,255,0.06);
+  padding: 14px;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+.tool-preview pre code { background: none; padding: 0; }
+.tool-preview blockquote {
+  border-left: 3px solid var(--cyan);
+  margin: 0.8em 0;
+  padding: 4px 16px;
+  color: var(--text-dim);
+}
+.tool-preview ul, .tool-preview ol { padding-left: 1.4em; margin: 0.6em 0; }
+.tool-preview img { max-width: 100%; border-radius: 8px; }
+.tool-preview hr { border: none; border-top: 1px solid var(--border); margin: 1.4em 0; }
+
+.tool-footer-note {
+  margin-top: 40px;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+}
+.tool-footer-note a { color: var(--cyan); }
