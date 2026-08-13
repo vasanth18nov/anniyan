@@ -18,7 +18,7 @@
 
 <header class="tool-topbar">
   <div class="tool-topbar-inner">
-    <a href="../../index.html#tools" class="tool-back">
+    <a href="../" class="tool-back">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Back to Anniyan
     </a>
@@ -60,7 +60,7 @@
     <p class="tool-status" id="status"></p>
   </section>
 
-  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+  <p class="tool-footer-note">Need more tools? <a href="../">Browse the full toolkit</a>.</p>
 </main>
 
 <script>
@@ -104,7 +104,7 @@
     var bits = length * Math.log2(Math.max(charsetSize, 1));
     if (bits < 40) return { label: "Weak", color: "#ff6b6b" };
     if (bits < 64) return { label: "Fair", color: "#ffb020" };
-    if (bits < 90) return { label: "Strong", color: "#33e6ff" };
+    if (bits < 90) return { label: "Strong", color: "#2dd4e0" };
     return { label: "Very Strong", color: "#3ddc84" };
   }
 
