@@ -711,8 +711,10 @@ input, select, textarea { font: inherit; }
 /* ============ About ============ */
 .about-inner {
   display: flex;
-  gap: 56px;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  gap: 24px;
 }
 .about-avatar-wrap {
   flex-shrink: 0;
@@ -722,9 +724,9 @@ input, select, textarea { font: inherit; }
   gap: 16px;
 }
 .about-avatar {
-  width: 140px; height: 140px;
+  width: 116px; height: 116px;
   border-radius: 50%;
-  padding: 4px;
+  padding: 3px;
   background: var(--gradient-1);
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 50px rgba(18,184,134,0.25);
@@ -738,18 +740,12 @@ input, select, textarea { font: inherit; }
   border: 1px dashed rgba(45,212,191,0.35);
   animation: spin 40s linear infinite;
 }
-.about-avatar span {
+.about-avatar img {
   width: 100%; height: 100%;
   border-radius: 50%;
-  background: var(--surface);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display);
-  font-size: 2.6rem;
-  font-weight: 700;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  background-image: var(--gradient-1);
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
 }
 .about-badge {
   font-size: 0.75rem;
@@ -762,6 +758,8 @@ input, select, textarea { font: inherit; }
   border: 1px solid rgba(45,212,191,0.3);
   background: rgba(45,212,191,0.06);
 }
+.about-copy { display: flex; flex-direction: column; align-items: center; }
+.about-copy .section-title { margin-bottom: 4px; }
 .about-copy p { color: var(--text-dim); max-width: 640px; }
 
 /* ============ Contact ============ */
@@ -882,7 +880,6 @@ input, select, textarea { font: inherit; }
   .hero { padding: 140px 0 80px; }
   .trust-grid { grid-template-columns: repeat(2, 1fr); }
   .services-grid, .games-grid, .tools-grid { grid-template-columns: 1fr; }
-  .about-inner { flex-direction: column; text-align: center; }
   .form-row-split { grid-template-columns: 1fr; }
   .section { padding: 80px 0; }
 }

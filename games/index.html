@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2312b886'/%3E%3Cstop offset='1' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cpath fill='%230a0b10' d='M50 18 L78 68 L60 68 L50 50 L40 68 L22 68 Z'/%3E%3Cpath fill='%230a0b10' opacity='0.55' d='M32 82 L50 50 L68 82 Z'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ===== RESET ===== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,9 +26,66 @@ body {
 }
 .screen { min-height: 100vh; }
 
-/* ===== GLOBAL BACK BUTTON -- full-width sticky bar ===== */
+/* ===== ANNIYAN SITE HEADER (namespaced to avoid clashing with game UI styles) ===== */
+.ann-header {
+  position: sticky; top: 0; z-index: 600;
+  background: rgba(10,11,16,0.85);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-family: 'Inter', sans-serif;
+}
+.ann-header-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+}
+.ann-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.ann-logo-mark {
+  width: 34px; height: 34px; flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2312b886'/%3E%3Cstop offset='1' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cpath fill='%230a0b10' d='M50 18 L78 68 L60 68 L50 50 L40 68 L22 68 Z'/%3E%3Cpath fill='%230a0b10' opacity='0.55' d='M32 82 L50 50 L68 82 Z'/%3E%3C/svg%3E");
+  background-size: contain; background-repeat: no-repeat;
+}
+.ann-logo-lockup { display: flex; flex-direction: column; line-height: 1.1; }
+.ann-logo-text { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.05rem; color: #eef0f6; letter-spacing: 0.02em; }
+.ann-logo-tagline { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #2dd4bf; }
+.ann-nav { display: flex; gap: 28px; }
+.ann-nav a {
+  font-size: 0.9rem; font-weight: 500; color: #9195a8; text-decoration: none;
+  position: relative; padding: 6px 0; transition: color 0.2s ease;
+}
+.ann-nav a:hover, .ann-nav a[aria-current="page"] { color: #eef0f6; }
+.ann-nav a[aria-current="page"]::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px;
+  background: linear-gradient(120deg, #12b886, #f5a623);
+}
+.ann-header-actions { display: flex; align-items: center; gap: 14px; }
+.ann-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+  font-family: 'Inter', sans-serif; text-decoration: none;
+  background: linear-gradient(120deg, #12b886, #f5a623); color: #0a0b10;
+  white-space: nowrap;
+}
+.ann-nav-toggle {
+  display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 6px; cursor: pointer;
+}
+.ann-nav-toggle span { width: 22px; height: 2px; background: #eef0f6; border-radius: 2px; }
+@media (max-width: 780px) {
+  .ann-nav {
+    position: fixed; top: 72px; left: 0; right: 0; flex-direction: column;
+    background: rgba(10,11,16,0.97); backdrop-filter: blur(14px);
+    padding: 24px; gap: 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    transform: translateY(-120%); opacity: 0; transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .ann-nav.is-open { transform: translateY(0); opacity: 1; }
+  .ann-nav-toggle { display: flex; }
+  .ann-header-actions .ann-cta { display: none; }
+}
+
+/* ===== GLOBAL BACK BUTTON -- shown only inside an active game, sits below the site header ===== */
 #global-back-btn {
-  position: fixed; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+  position: fixed; top: 72px; left: 0; right: 0; width: 100%; z-index: 590;
   background: rgba(8,8,17,0.96);
   color: #f5c842;
   border: none; border-bottom: 1.5px solid rgba(245,200,66,0.22);
@@ -2005,7 +2062,34 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 </head>
 <body>
 
-<!-- ===== GLOBAL BACK BUTTON ===== -->
+<!-- ===== ANNIYAN SITE HEADER ===== -->
+<header class="ann-header">
+  <div class="ann-header-inner">
+    <a href="../" class="ann-logo" aria-label="Anniyan — The Alpha home">
+      <span class="ann-logo-mark"></span>
+      <span class="ann-logo-lockup">
+        <span class="ann-logo-text">Anniyan</span>
+        <span class="ann-logo-tagline">The Alpha</span>
+      </span>
+    </a>
+    <nav class="ann-nav" id="annNav" aria-label="Primary">
+      <a href="../#services">Services</a>
+      <a href="../tools/">Tools</a>
+      <a href="./" aria-current="page">Games</a>
+      <a href="../#why-us">Why Us</a>
+      <a href="../#about">About</a>
+      <a href="../#contact">Contact</a>
+    </nav>
+    <div class="ann-header-actions">
+      <a href="../#contact" class="ann-cta">Start Your Project</a>
+      <button class="ann-nav-toggle" id="annNavToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="annNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== GLOBAL BACK BUTTON (shown only inside an active game) ===== -->
 <button id="global-back-btn" style="display:none">&#8592; Back</button>
 
 <!-- ===== THUDINEST LANDING SCREEN ===== -->
@@ -2834,9 +2918,7 @@ function showScreen(name) {
 
   const bb = document.getElementById('global-back-btn');
   if (name === 'home') {
-    bb.style.display = 'flex';
-    bb.innerHTML = '&#8592; &nbsp;Back to Anniyan';
-    bb.onclick = () => { window.location.href = '../index.html#games'; };
+    bb.style.display = 'none';
   } else {
     bb.style.display = 'flex';
     bb.innerHTML = '&#8592; &nbsp;Back to Game Hub';
@@ -2862,6 +2944,23 @@ const VALID_SCREENS = ['rummy','chess','pong','snake','sudoku','wordpuzzle','dar
 document.addEventListener('DOMContentLoaded', () => {
   const requested = (location.hash || '').slice(1);
   showScreen(VALID_SCREENS.includes(requested) ? requested : 'home');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const annNavToggle = document.getElementById('annNavToggle');
+  const annNav = document.getElementById('annNav');
+  if (annNavToggle && annNav) {
+    annNavToggle.addEventListener('click', () => {
+      const isOpen = annNav.classList.toggle('is-open');
+      annNavToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    annNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        annNav.classList.remove('is-open');
+        annNavToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
 });
 
 // =====================================================================
