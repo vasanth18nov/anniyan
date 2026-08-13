@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Percentage Calculator — Free Online Tool | Anniyan</title>
+<meta name="description" content="Quickly calculate percentages, percentage of a number, and percentage change." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/percentage-calculator/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Calculators</p>
+    <h1>Percentage Calculator</h1>
+    <p>Three common percentage calculations, all updating live as you type.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <h3 style="margin-bottom: 14px;">What is X% of Y?</h3>
+    <div class="tool-row">
+      <div class="tool-field"><label>Percentage</label><input class="tool-input" id="p1x" type="number" value="20" style="width:120px;" /></div>
+      <div class="tool-field"><label>Of</label><input class="tool-input" id="p1y" type="number" value="500" style="width:140px;" /></div>
+    </div>
+    <div class="tool-result">
+      <div class="tool-result-value" id="p1result">100</div>
+      <div class="tool-result-label" id="p1label">20% of 500</div>
+    </div>
+  </section>
+
+  <section class="card tool-panel">
+    <h3 style="margin-bottom: 14px;">X is what percent of Y?</h3>
+    <div class="tool-row">
+      <div class="tool-field"><label>X</label><input class="tool-input" id="p2x" type="number" value="50" style="width:120px;" /></div>
+      <div class="tool-field"><label>Y</label><input class="tool-input" id="p2y" type="number" value="200" style="width:140px;" /></div>
+    </div>
+    <div class="tool-result">
+      <div class="tool-result-value" id="p2result">25%</div>
+      <div class="tool-result-label" id="p2label">50 is 25% of 200</div>
+    </div>
+  </section>
+
+  <section class="card tool-panel">
+    <h3 style="margin-bottom: 14px;">Percentage change from X to Y</h3>
+    <div class="tool-row">
+      <div class="tool-field"><label>From (X)</label><input class="tool-input" id="p3x" type="number" value="80" style="width:120px;" /></div>
+      <div class="tool-field"><label>To (Y)</label><input class="tool-input" id="p3y" type="number" value="100" style="width:140px;" /></div>
+    </div>
+    <div class="tool-result">
+      <div class="tool-result-value" id="p3result">+25%</div>
+      <div class="tool-result-label" id="p3label">Increase of 25%</div>
+    </div>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  function num(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+  function calc1() {
+    var x = num("p1x"), y = num("p1y");
+    var result = (x / 100) * y;
+    document.getElementById("p1result").textContent = round(result);
+    document.getElementById("p1label").textContent = x + "% of " + y;
+  }
+  function calc2() {
+    var x = num("p2x"), y = num("p2y");
+    var result = y === 0 ? 0 : (x / y) * 100;
+    document.getElementById("p2result").textContent = round(result) + "%";
+    document.getElementById("p2label").textContent = x + " is " + round(result) + "% of " + y;
+  }
+  function calc3() {
+    var x = num("p3x"), y = num("p3y");
+    var result = x === 0 ? 0 : ((y - x) / Math.abs(x)) * 100;
+    var sign = result >= 0 ? "+" : "";
+    document.getElementById("p3result").textContent = sign + round(result) + "%";
+    document.getElementById("p3label").textContent = (result >= 0 ? "Increase" : "Decrease") + " of " + round(Math.abs(result)) + "%";
+  }
+  function round(n) { return Math.round(n * 100) / 100; }
+
+  ["p1x", "p1y"].forEach(function (id) { document.getElementById(id).addEventListener("input", calc1); });
+  ["p2x", "p2y"].forEach(function (id) { document.getElementById(id).addEventListener("input", calc2); });
+  ["p3x", "p3y"].forEach(function (id) { document.getElementById(id).addEventListener("input", calc3); });
+
+  calc1(); calc2(); calc3();
+})();
+</script>
+</body>
+</html>

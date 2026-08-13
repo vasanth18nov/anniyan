@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UUID Generator — Free Online Tool | Anniyan</title>
+<meta name="description" content="Generate unique v4 UUIDs for development use, right in your browser." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/uuid-generator/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Generators</p>
+    <h1>UUID Generator</h1>
+    <p>Generate cryptographically random v4 UUIDs for development use.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <div class="tool-row">
+      <div class="tool-field">
+        <label for="count">How many</label>
+        <input class="tool-input" id="count" type="number" min="1" max="100" value="5" style="width: 110px;" />
+      </div>
+      <label class="tool-checkbox-row" style="margin-bottom: 11px;"><input type="checkbox" id="uppercase" /> Uppercase</label>
+      <label class="tool-checkbox-row" style="margin-bottom: 11px;"><input type="checkbox" id="noHyphens" /> No hyphens</label>
+      <button class="btn btn-primary btn-sm" id="btnGenerate" type="button">Generate</button>
+      <button class="btn btn-outline btn-sm" id="btnCopyAll" type="button">Copy All</button>
+    </div>
+
+    <div class="tool-list" id="list"></div>
+    <p class="tool-status" id="status"></p>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var count = document.getElementById("count");
+  var uppercase = document.getElementById("uppercase");
+  var noHyphens = document.getElementById("noHyphens");
+  var list = document.getElementById("list");
+  var status = document.getElementById("status");
+  var current = [];
+
+  function uuidv4() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    var hex = Array.prototype.map.call(bytes, function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
+    return hex.slice(0, 8) + "-" + hex.slice(8, 12) + "-" + hex.slice(12, 16) + "-" + hex.slice(16, 20) + "-" + hex.slice(20);
+  }
+
+  function format(id) {
+    if (noHyphens.checked) id = id.replace(/-/g, "");
+    if (uppercase.checked) id = id.toUpperCase();
+    return id;
+  }
+
+  function render() {
+    list.innerHTML = "";
+    current.forEach(function (id, idx) {
+      var display = format(id);
+      var row = document.createElement("div");
+      row.className = "tool-list-item";
+      row.innerHTML = '<span class="tool-list-text" style="font-family: \'JetBrains Mono\', monospace;">' + display + '</span><button type="button" data-idx="' + idx + '">Copy</button>';
+      list.appendChild(row);
+    });
+  }
+
+  document.getElementById("btnGenerate").addEventListener("click", function () {
+    var n = Math.min(100, Math.max(1, parseInt(count.value, 10) || 1));
+    current = [];
+    for (var i = 0; i < n; i++) current.push(uuidv4());
+    render();
+    status.textContent = "Generated " + n + " UUID" + (n === 1 ? "" : "s") + ".";
+    status.classList.add("is-saved");
+  });
+
+  list.addEventListener("click", function (e) {
+    if (e.target.tagName !== "BUTTON") return;
+    var idx = Number(e.target.dataset.idx);
+    navigator.clipboard.writeText(format(current[idx]));
+    status.textContent = "Copied one UUID to clipboard.";
+  });
+
+  document.getElementById("btnCopyAll").addEventListener("click", function () {
+    if (current.length === 0) return;
+    navigator.clipboard.writeText(current.map(format).join("\n"));
+    status.textContent = "Copied all " + current.length + " UUIDs to clipboard.";
+  });
+
+  uppercase.addEventListener("change", render);
+  noHyphens.addEventListener("change", render);
+
+  document.getElementById("btnGenerate").click();
+})();
+</script>
+</body>
+</html>

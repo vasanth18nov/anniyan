@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Unit Converter — Free Online Tool | Anniyan</title>
+<meta name="description" content="Convert between length, weight, volume and temperature units instantly." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/unit-converter/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Productivity</p>
+    <h1>Unit Converter</h1>
+    <p>Convert between length, weight, volume and temperature units.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <div class="tool-row">
+      <div class="tool-field">
+        <label for="category">Category</label>
+        <select class="tool-select" id="category">
+          <option value="length">Length</option>
+          <option value="weight">Weight</option>
+          <option value="volume">Volume</option>
+          <option value="temperature">Temperature</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tool-row">
+      <div class="tool-field" style="flex: 1; min-width: 160px;">
+        <label for="value">Value</label>
+        <input class="tool-input" id="value" type="number" value="1" style="width: 100%;" />
+      </div>
+      <div class="tool-field">
+        <label for="fromUnit">From</label>
+        <select class="tool-select" id="fromUnit"></select>
+      </div>
+      <button class="btn btn-outline btn-sm" id="btnSwap" type="button" style="margin-bottom: 2px;">⇄</button>
+      <div class="tool-field">
+        <label for="toUnit">To</label>
+        <select class="tool-select" id="toUnit"></select>
+      </div>
+    </div>
+
+    <div class="tool-result">
+      <div class="tool-result-value" id="resultValue">—</div>
+      <div class="tool-result-label" id="resultLabel"></div>
+    </div>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var UNITS = {
+    length: {
+      label: "Length",
+      base: "m",
+      units: { mm: 0.001, cm: 0.01, m: 1, km: 1000, in: 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344 }
+    },
+    weight: {
+      label: "Weight",
+      base: "kg",
+      units: { mg: 0.000001, g: 0.001, kg: 1, lb: 0.453592, oz: 0.0283495, ton: 1000 }
+    },
+    volume: {
+      label: "Volume",
+      base: "l",
+      units: { ml: 0.001, l: 1, "gal (US)": 3.78541, qt: 0.946353, pt: 0.473176, cup: 0.24, "fl oz": 0.0295735 }
+    },
+    temperature: {
+      label: "Temperature",
+      units: { "°C": "c", "°F": "f", K: "k" }
+    }
+  };
+
+  var category = document.getElementById("category");
+  var fromUnit = document.getElementById("fromUnit");
+  var toUnit = document.getElementById("toUnit");
+  var value = document.getElementById("value");
+  var resultValue = document.getElementById("resultValue");
+  var resultLabel = document.getElementById("resultLabel");
+
+  function populateUnits() {
+    var def = UNITS[category.value];
+    var keys = Object.keys(def.units);
+    fromUnit.innerHTML = keys.map(function (k) { return '<option value="' + k + '">' + k + "</option>"; }).join("");
+    toUnit.innerHTML = fromUnit.innerHTML;
+    fromUnit.selectedIndex = 0;
+    toUnit.selectedIndex = keys.length > 1 ? 1 : 0;
+    calc();
+  }
+
+  function convertTemperature(v, from, to) {
+    var celsius;
+    if (from === "c") celsius = v;
+    else if (from === "f") celsius = (v - 32) * 5 / 9;
+    else celsius = v - 273.15;
+
+    if (to === "c") return celsius;
+    if (to === "f") return celsius * 9 / 5 + 32;
+    return celsius + 273.15;
+  }
+
+  function calc() {
+    var def = UNITS[category.value];
+    var v = parseFloat(value.value);
+    if (isNaN(v)) { resultValue.textContent = "—"; resultLabel.textContent = ""; return; }
+
+    var result;
+    if (category.value === "temperature") {
+      result = convertTemperature(v, def.units[fromUnit.value], def.units[toUnit.value]);
+    } else {
+      var factors = def.units;
+      var base = v * factors[fromUnit.value];
+      result = base / factors[toUnit.value];
+    }
+
+    var rounded = Math.round(result * 1000000) / 1000000;
+    resultValue.textContent = rounded.toLocaleString(undefined, { maximumFractionDigits: 6 });
+    resultLabel.textContent = v + " " + fromUnit.value + " = " + rounded.toLocaleString(undefined, { maximumFractionDigits: 6 }) + " " + toUnit.value;
+  }
+
+  category.addEventListener("change", populateUnits);
+  fromUnit.addEventListener("change", calc);
+  toUnit.addEventListener("change", calc);
+  value.addEventListener("input", calc);
+  document.getElementById("btnSwap").addEventListener("click", function () {
+    var tmp = fromUnit.value;
+    fromUnit.value = toUnit.value;
+    toUnit.value = tmp;
+    calc();
+  });
+
+  populateUnits();
+})();
+</script>
+</body>
+</html>

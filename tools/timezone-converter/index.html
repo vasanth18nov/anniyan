@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Timezone Converter — Free Online Tool | Anniyan</title>
+<meta name="description" content="Compare a date and time across multiple timezones instantly." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/timezone-converter/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Productivity</p>
+    <h1>Timezone Converter</h1>
+    <p>Pick a date, time and source timezone, and see the equivalent time across common timezones.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <div class="tool-row">
+      <div class="tool-field">
+        <label for="dateTime">Date &amp; Time</label>
+        <input class="tool-input" id="dateTime" type="datetime-local" />
+      </div>
+      <div class="tool-field" style="flex: 1; min-width: 220px;">
+        <label for="sourceZone">Source Timezone</label>
+        <select class="tool-select" id="sourceZone" style="width: 100%;"></select>
+      </div>
+    </div>
+    <div class="tool-list" id="results"></div>
+    <p class="tool-status" id="status"></p>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var ZONES = [
+    { id: "UTC", label: "UTC" },
+    { id: "America/Los_Angeles", label: "Los Angeles" },
+    { id: "America/New_York", label: "New York" },
+    { id: "America/Chicago", label: "Chicago" },
+    { id: "Europe/London", label: "London" },
+    { id: "Europe/Paris", label: "Paris" },
+    { id: "Asia/Dubai", label: "Dubai" },
+    { id: "Asia/Kolkata", label: "India (Kolkata)" },
+    { id: "Asia/Kuala_Lumpur", label: "Kuala Lumpur" },
+    { id: "Asia/Singapore", label: "Singapore" },
+    { id: "Asia/Tokyo", label: "Tokyo" },
+    { id: "Australia/Sydney", label: "Sydney" }
+  ];
+
+  var dateTimeInput = document.getElementById("dateTime");
+  var sourceZone = document.getElementById("sourceZone");
+  var results = document.getElementById("results");
+  var status = document.getElementById("status");
+
+  sourceZone.innerHTML = ZONES.map(function (z) {
+    return '<option value="' + z.id + '">' + z.label + " (" + z.id + ")</option>";
+  }).join("");
+
+  function zonedTimeToUtc(dateTimeLocalStr, timeZone) {
+    var naiveDate = new Date(dateTimeLocalStr + "Z");
+    var tzString = naiveDate.toLocaleString("en-US", { timeZone: timeZone });
+    var utcString = naiveDate.toLocaleString("en-US", { timeZone: "UTC" });
+    var offset = new Date(utcString).getTime() - new Date(tzString).getTime();
+    return new Date(naiveDate.getTime() + offset);
+  }
+
+  function formatInZone(date, timeZone) {
+    return new Intl.DateTimeFormat("en-US", {
+      timeZone: timeZone,
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    }).format(date);
+  }
+
+  function render() {
+    if (!dateTimeInput.value) { status.textContent = "Pick a date and time."; return; }
+    var utcInstant;
+    try {
+      utcInstant = zonedTimeToUtc(dateTimeInput.value, sourceZone.value);
+    } catch (err) {
+      status.textContent = "Couldn't convert: " + err.message;
+      return;
+    }
+
+    results.innerHTML = "";
+    ZONES.forEach(function (z) {
+      var row = document.createElement("div");
+      row.className = "tool-list-item";
+      row.innerHTML = '<span class="tool-list-text"><strong>' + z.label + "</strong> — " + formatInZone(utcInstant, z.id) + "</span>";
+      results.appendChild(row);
+    });
+    status.textContent = "";
+  }
+
+  dateTimeInput.addEventListener("input", render);
+  sourceZone.addEventListener("change", render);
+
+  var now = new Date();
+  var pad = function (n) { return ("0" + n).slice(-2); };
+  dateTimeInput.value = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + "T" + pad(now.getHours()) + ":" + pad(now.getMinutes());
+  var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var match = ZONES.some(function (z) { return z.id === localZone; });
+  if (match) sourceZone.value = localZone;
+  else sourceZone.value = "UTC";
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QR Code Generator — Free Online Tool | Anniyan</title>
+<meta name="description" content="Create scannable QR codes from text or links, and download them as PNG." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/qr-generator/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Generators</p>
+    <h1>QR Code Generator</h1>
+    <p>Turn any text or link into a scannable QR code, generated locally and ready to download.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <div class="tool-row">
+      <div class="tool-field" style="flex: 1; min-width: 240px;">
+        <label for="text">Text or URL</label>
+        <input class="tool-input" id="text" type="text" style="width: 100%;" />
+      </div>
+      <div class="tool-field">
+        <label for="ecLevel">Error Correction</label>
+        <select class="tool-select" id="ecLevel">
+          <option value="L">Low</option>
+          <option value="M" selected>Medium</option>
+          <option value="Q">Quartile</option>
+          <option value="H">High</option>
+        </select>
+      </div>
+    </div>
+    <div class="tool-toolbar">
+      <button class="btn btn-primary btn-sm" id="btnGenerate" type="button">Generate</button>
+      <button class="btn btn-outline btn-sm" id="btnDownload" type="button">Download PNG</button>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <div style="display: inline-block; background: #ffffff; padding: 18px; border-radius: 16px;">
+        <canvas id="qrCanvas"></canvas>
+      </div>
+    </div>
+    <p class="tool-status" id="status" style="text-align: center;"></p>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+(function () {
+  "use strict";
+  var textInput = document.getElementById("text");
+  var canvas = document.getElementById("qrCanvas");
+  var status = document.getElementById("status");
+  var ecLevel = document.getElementById("ecLevel");
+
+  function generate() {
+    var text = textInput.value.trim();
+    if (!text) {
+      status.textContent = "Enter some text or a URL.";
+      status.classList.remove("is-saved");
+      return;
+    }
+    try {
+      var qr = qrcode(0, ecLevel.value);
+      qr.addData(text);
+      qr.make();
+      var count = qr.getModuleCount();
+      var cell = Math.max(1, Math.floor(320 / count));
+      var size = cell * count;
+      canvas.width = size;
+      canvas.height = size;
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, size, size);
+      ctx.fillStyle = "#0a0e1a";
+      for (var row = 0; row < count; row++) {
+        for (var col = 0; col < count; col++) {
+          if (qr.isDark(row, col)) ctx.fillRect(col * cell, row * cell, cell, cell);
+        }
+      }
+      status.textContent = "QR code generated (" + count + "×" + count + " modules).";
+      status.classList.add("is-saved");
+    } catch (err) {
+      status.textContent = "Couldn't generate a QR code for that input: " + err.message;
+      status.classList.remove("is-saved");
+    }
+  }
+
+  document.getElementById("btnGenerate").addEventListener("click", generate);
+  document.getElementById("btnDownload").addEventListener("click", function () {
+    if (!canvas.width) return;
+    var url = canvas.toDataURL("image/png");
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "qrcode.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  textInput.value = "https://anniyan.online";
+  generate();
+})();
+</script>
+</body>
+</html>

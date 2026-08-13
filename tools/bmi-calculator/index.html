@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BMI Calculator — Free Online Tool | Anniyan</title>
+<meta name="description" content="Calculate body mass index from height and weight, in metric or imperial units." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/bmi-calculator/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Calculators</p>
+    <h1>BMI Calculator</h1>
+    <p>Calculate body mass index from your height and weight. For general reference only, not medical advice.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <div class="tool-row">
+      <label class="tool-checkbox-row"><input type="radio" name="unit" id="unitMetric" checked /> Metric (cm, kg)</label>
+      <label class="tool-checkbox-row"><input type="radio" name="unit" id="unitImperial" /> Imperial (ft/in, lb)</label>
+    </div>
+
+    <div class="tool-row" id="metricRow">
+      <div class="tool-field"><label for="heightCm">Height (cm)</label><input class="tool-input" id="heightCm" type="number" value="170" style="width: 130px;" /></div>
+      <div class="tool-field"><label for="weightKg">Weight (kg)</label><input class="tool-input" id="weightKg" type="number" value="65" style="width: 130px;" /></div>
+    </div>
+
+    <div class="tool-row" id="imperialRow" style="display: none;">
+      <div class="tool-field"><label for="heightFt">Height (ft)</label><input class="tool-input" id="heightFt" type="number" value="5" style="width: 100px;" /></div>
+      <div class="tool-field"><label for="heightIn">Height (in)</label><input class="tool-input" id="heightIn" type="number" value="7" style="width: 100px;" /></div>
+      <div class="tool-field"><label for="weightLb">Weight (lb)</label><input class="tool-input" id="weightLb" type="number" value="143" style="width: 120px;" /></div>
+    </div>
+
+    <div class="tool-result">
+      <div class="tool-result-value" id="bmiValue">—</div>
+      <div class="tool-result-label" id="bmiCategory">Enter your height and weight</div>
+    </div>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var unitMetric = document.getElementById("unitMetric");
+  var unitImperial = document.getElementById("unitImperial");
+  var metricRow = document.getElementById("metricRow");
+  var imperialRow = document.getElementById("imperialRow");
+  var bmiValue = document.getElementById("bmiValue");
+  var bmiCategory = document.getElementById("bmiCategory");
+
+  function category(bmi) {
+    if (bmi < 18.5) return "Underweight";
+    if (bmi < 25) return "Normal weight";
+    if (bmi < 30) return "Overweight";
+    return "Obese";
+  }
+
+  function calc() {
+    var heightM, weightKg;
+    if (unitMetric.checked) {
+      heightM = (parseFloat(document.getElementById("heightCm").value) || 0) / 100;
+      weightKg = parseFloat(document.getElementById("weightKg").value) || 0;
+    } else {
+      var ft = parseFloat(document.getElementById("heightFt").value) || 0;
+      var inch = parseFloat(document.getElementById("heightIn").value) || 0;
+      heightM = (ft * 12 + inch) * 0.0254;
+      var lb = parseFloat(document.getElementById("weightLb").value) || 0;
+      weightKg = lb * 0.453592;
+    }
+
+    if (heightM <= 0 || weightKg <= 0) {
+      bmiValue.textContent = "—";
+      bmiCategory.textContent = "Enter your height and weight";
+      return;
+    }
+
+    var bmi = weightKg / (heightM * heightM);
+    bmiValue.textContent = bmi.toFixed(1);
+    bmiCategory.textContent = category(bmi);
+  }
+
+  function toggleUnits() {
+    metricRow.style.display = unitMetric.checked ? "flex" : "none";
+    imperialRow.style.display = unitImperial.checked ? "flex" : "none";
+    calc();
+  }
+
+  unitMetric.addEventListener("change", toggleUnits);
+  unitImperial.addEventListener("change", toggleUnits);
+  document.querySelectorAll("#metricRow input, #imperialRow input").forEach(function (el) {
+    el.addEventListener("input", calc);
+  });
+
+  calc();
+})();
+</script>
+</body>
+</html>

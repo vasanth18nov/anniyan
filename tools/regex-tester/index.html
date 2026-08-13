@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Regex Tester — Free Online Tool | Anniyan</title>
+<meta name="description" content="Test regular expressions against sample text with live match highlighting." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://anniyan.online/tools/regex-tester/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300eaff'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a0e1a'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial, sans-serif' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../tools.css" />
+</head>
+<body class="tool-body">
+
+<header class="tool-topbar">
+  <div class="tool-topbar-inner">
+    <a href="../../index.html#tools" class="tool-back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Anniyan
+    </a>
+    <span class="tool-brand"><span class="logo-mark">A</span> Anniyan Tools</span>
+  </div>
+</header>
+
+<main class="tool-main">
+  <div class="tool-heading">
+    <p class="section-eyebrow">Developer</p>
+    <h1>Regex Tester</h1>
+    <p>Write a pattern, paste your test text, and see matches highlighted live.</p>
+  </div>
+
+  <section class="card tool-panel">
+    <div class="tool-row">
+      <div class="tool-field" style="flex: 1; min-width: 240px;">
+        <label for="pattern">Pattern</label>
+        <input class="tool-input" id="pattern" type="text" placeholder="e.g. \b[\w.-]+@[\w.-]+\.\w+\b" style="width: 100%;" />
+      </div>
+      <div class="tool-field">
+        <label for="flags">Flags</label>
+        <input class="tool-input" id="flags" type="text" value="g" style="width: 90px;" />
+      </div>
+    </div>
+
+    <span class="tool-split-label">Test String</span>
+    <textarea class="tool-textarea" id="testString" placeholder="Paste text to test against your pattern…" style="min-height: 200px; margin-top: 8px;"></textarea>
+
+    <p class="tool-status" id="status"></p>
+
+    <span class="tool-split-label">Highlighted Matches</span>
+    <div class="tool-preview" id="highlighted" style="min-height: 140px; margin-top: 8px; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;"></div>
+
+    <div id="matchesWrap" style="margin-top: 20px;">
+      <span class="tool-split-label">Matches &amp; Groups</span>
+      <div class="tool-list" id="matchesList"></div>
+    </div>
+  </section>
+
+  <p class="tool-footer-note">Need more tools? <a href="../../index.html#tools">Browse the full toolkit</a>.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var patternEl = document.getElementById("pattern");
+  var flagsEl = document.getElementById("flags");
+  var testEl = document.getElementById("testString");
+  var status = document.getElementById("status");
+  var highlighted = document.getElementById("highlighted");
+  var matchesList = document.getElementById("matchesList");
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function run() {
+    var patternSrc = patternEl.value;
+    var flags = flagsEl.value;
+    var text = testEl.value;
+
+    matchesList.innerHTML = "";
+
+    if (!patternSrc) {
+      highlighted.innerHTML = escapeHtml(text);
+      status.textContent = "";
+      return;
+    }
+
+    var re;
+    try {
+      re = new RegExp(patternSrc, flags.indexOf("g") === -1 ? flags + "g" : flags);
+    } catch (err) {
+      status.textContent = "Invalid pattern: " + err.message;
+      status.classList.remove("is-saved");
+      highlighted.innerHTML = escapeHtml(text);
+      return;
+    }
+
+    var lastIndex = 0;
+    var out = "";
+    var count = 0;
+    var match;
+    var guard = 0;
+    while ((match = re.exec(text)) !== null && guard < 5000) {
+      guard++;
+      out += escapeHtml(text.slice(lastIndex, match.index));
+      out += "<mark>" + escapeHtml(match[0] || "") + "</mark>";
+      lastIndex = match.index + (match[0].length || 1);
+      count++;
+
+      var row = document.createElement("div");
+      row.className = "tool-list-item";
+      var groupsText = match.length > 1 ? " — groups: " + match.slice(1).map(function (g) { return g === undefined ? "∅" : g; }).join(", ") : "";
+      row.innerHTML = '<span class="tool-list-text">#' + count + ' "' + escapeHtml(match[0]) + '" at index ' + match.index + groupsText + "</span>";
+      matchesList.appendChild(row);
+
+      if (match[0].length === 0) re.lastIndex++;
+    }
+    out += escapeHtml(text.slice(lastIndex));
+    highlighted.innerHTML = out || "<span style=\"color: var(--text-faint)\">No text to test.</span>";
+
+    status.textContent = count + " match" + (count === 1 ? "" : "es") + " found.";
+    status.classList.add("is-saved");
+  }
+
+  patternEl.addEventListener("input", run);
+  flagsEl.addEventListener("input", run);
+  testEl.addEventListener("input", run);
+
+  patternEl.value = "\\b[\\w.-]+@[\\w.-]+\\.\\w+\\b";
+  testEl.value = "Reach us at vasanth18nov@gmail.com or support@anniyan.online for project enquiries.";
+  run();
+})();
+</script>
+</body>
+</html>
