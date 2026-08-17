@@ -2084,6 +2084,58 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   #snl-dice { width: 58px; height: 58px; font-size: 2rem; }
   #trv-qtext { font-size: .96rem; }
 }
+
+/* ===== BACK TO TOP (namespaced to avoid clashing with game UI styles) ===== */
+.ann-back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(10,10,26,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.13);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(238,240,246,0.7);
+  cursor: pointer;
+  z-index: 590;
+  opacity: 0;
+  transform: translateY(12px) scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+.ann-back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.ann-back-to-top:hover {
+  border-color: #2dd4bf;
+  box-shadow: 0 8px 24px rgba(18,184,134,0.3);
+  color: #2dd4bf;
+}
+.ann-back-to-top:active { transform: scale(0.92); }
+.ann-back-to-top-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ann-back-to-top-track { stroke: rgba(255,255,255,0.13); }
+.ann-back-to-top-fill {
+  stroke-dasharray: 119.4;
+  stroke-dashoffset: 119.4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.1s linear;
+}
+.ann-back-to-top-arrow { position: relative; width: 18px; height: 18px; }
+@media (max-width: 780px) {
+  .ann-back-to-top { right: 16px; bottom: 16px; width: 44px; height: 44px; }
+}
 </style>
 </head>
 <body>
@@ -7261,6 +7313,41 @@ document.addEventListener('DOMContentLoaded',()=>{
   resetTetrisGame();
 });
 
+</script>
+
+<button type="button" class="ann-back-to-top" id="annBackToTop" aria-label="Back to top">
+  <svg class="ann-back-to-top-ring" viewBox="0 0 44 44" aria-hidden="true">
+    <defs>
+      <linearGradient id="annBackToTopGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#12b886"/>
+        <stop offset="1" stop-color="#f5a623"/>
+      </linearGradient>
+    </defs>
+    <circle class="ann-back-to-top-track" cx="22" cy="22" r="19" fill="none" stroke-width="2.5"/>
+    <circle class="ann-back-to-top-fill" cx="22" cy="22" r="19" fill="none" stroke-width="2.5" stroke="url(#annBackToTopGrad)" id="annBackToTopFill"/>
+  </svg>
+  <svg class="ann-back-to-top-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<script>
+(function () {
+  "use strict";
+  var backToTop = document.getElementById("annBackToTop");
+  var backToTopFill = document.getElementById("annBackToTopFill");
+  var CIRCUMFERENCE = 119.4;
+  if (!backToTop) return;
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    if (backToTopFill) backToTopFill.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct / 100));
+    backToTop.classList.toggle("is-visible", window.scrollY > 480);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  backToTop.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+  });
+})();
 </script>
 </body>
 </html>

@@ -11,6 +11,9 @@
   var header = document.getElementById("siteHeader");
   var progressBar = document.getElementById("scrollProgress");
   var spineFill = document.getElementById("spineFill");
+  var backToTop = document.getElementById("backToTop");
+  var backToTopFill = document.getElementById("backToTopFill");
+  var BTT_CIRCUMFERENCE = 119.4;
   function onScroll() {
     if (window.scrollY > 12) header.classList.add("is-scrolled");
     else header.classList.remove("is-scrolled");
@@ -19,9 +22,14 @@
     var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
     if (progressBar) progressBar.style.width = pct + "%";
     if (spineFill) spineFill.style.height = pct + "%";
+    if (backToTopFill) backToTopFill.style.strokeDashoffset = String(BTT_CIRCUMFERENCE * (1 - pct / 100));
+    if (backToTop) backToTop.classList.toggle("is-visible", window.scrollY > 480);
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
+  if (backToTop) {
+    backToTop.addEventListener("click", function () { window.scrollTo(0, 0); });
+  }
 
   /* ---------- Scroll spine node scrollspy: lights up as each section crosses viewport centre ---------- */
   var spineNodes = document.querySelectorAll(".scroll-spine-node");

@@ -152,6 +152,20 @@
   </div>
 </footer>
 
+<button type="button" class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg class="back-to-top-ring" viewBox="0 0 44 44" aria-hidden="true">
+    <defs>
+      <linearGradient id="backToTopGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#12b886"/>
+        <stop offset="1" stop-color="#f5a623"/>
+      </linearGradient>
+    </defs>
+    <circle class="back-to-top-track" cx="22" cy="22" r="19" fill="none" stroke-width="2.5"/>
+    <circle class="back-to-top-fill" cx="22" cy="22" r="19" fill="none" stroke-width="2.5" stroke="url(#backToTopGrad)" id="backToTopFill"/>
+  </svg>
+  <svg class="back-to-top-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
 <script src="../data.js"></script>
 <script>
 (function () {
@@ -162,18 +176,24 @@
 
   var header = document.getElementById("siteHeader");
   var progressBar = document.getElementById("scrollProgress");
+  var backToTop = document.getElementById("backToTop");
+  var backToTopFill = document.getElementById("backToTopFill");
+  var BTT_CIRCUMFERENCE = 119.4;
   function onScroll() {
     if (window.scrollY > 12) header.classList.add("is-scrolled");
     else header.classList.remove("is-scrolled");
 
-    if (progressBar) {
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
-      progressBar.style.width = pct + "%";
-    }
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    if (progressBar) progressBar.style.width = pct + "%";
+    if (backToTopFill) backToTopFill.style.strokeDashoffset = String(BTT_CIRCUMFERENCE * (1 - pct / 100));
+    if (backToTop) backToTop.classList.toggle("is-visible", window.scrollY > 480);
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
+  if (backToTop) {
+    backToTop.addEventListener("click", function () { window.scrollTo(0, 0); });
+  }
 
   var navToggle = document.getElementById("navToggle");
   var mainNav = document.getElementById("mainNav");
