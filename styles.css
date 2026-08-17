@@ -204,6 +204,101 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
   transition: width 0.1s linear;
 }
 
+/* ============ Scroll spine (side progress rail + section jump nav) ============ */
+.scroll-spine {
+  display: none;
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: min(58vh, 460px);
+  width: 16px;
+  z-index: 90;
+}
+@media (min-width: 1320px) {
+  .scroll-spine { display: block; }
+}
+.scroll-spine-track {
+  position: absolute;
+  inset: 0;
+}
+.scroll-spine-track::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--border-strong);
+  border-radius: 2px;
+}
+.scroll-spine-fill {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 0%;
+  transform: translateX(-50%);
+  background: var(--gradient-1);
+  border-radius: 2px;
+  transition: height 0.1s linear;
+}
+.scroll-spine-fill::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--cyan);
+  box-shadow: 0 0 10px 3px rgba(45,212,191,0.7);
+}
+.scroll-spine-nodes {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.scroll-spine-node {
+  position: relative;
+  width: 16px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scroll-spine-node::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  transition: background 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.scroll-spine-node:hover::before {
+  background: var(--cyan);
+  transform: scale(1.3);
+}
+.scroll-spine-node.is-active::before {
+  background: var(--gradient-1);
+  box-shadow: 0 0 10px 3px rgba(18,184,134,0.6);
+  transform: scale(1.6);
+  animation: spine-pulse 2s ease-in-out infinite;
+}
+@keyframes spine-pulse {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(18,184,134,0.5); }
+  50% { box-shadow: 0 0 16px 5px rgba(18,184,134,0.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-spine-fill { transition: none; }
+  .scroll-spine-node.is-active::before { animation: none; }
+}
+
 .site-header {
   position: fixed;
   top: 0; left: 0; right: 0;

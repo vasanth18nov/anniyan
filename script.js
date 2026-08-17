@@ -7,21 +7,40 @@
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ---------- Header scroll state + scroll progress bar ---------- */
+  /* ---------- Header scroll state + scroll progress bar + spine fill ---------- */
   var header = document.getElementById("siteHeader");
   var progressBar = document.getElementById("scrollProgress");
+  var spineFill = document.getElementById("spineFill");
   function onScroll() {
     if (window.scrollY > 12) header.classList.add("is-scrolled");
     else header.classList.remove("is-scrolled");
 
-    if (progressBar) {
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
-      progressBar.style.width = pct + "%";
-    }
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    if (progressBar) progressBar.style.width = pct + "%";
+    if (spineFill) spineFill.style.height = pct + "%";
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
+
+  /* ---------- Scroll spine node scrollspy: lights up as each section crosses viewport centre ---------- */
+  var spineNodes = document.querySelectorAll(".scroll-spine-node");
+  if (spineNodes.length && "IntersectionObserver" in window) {
+    var spineIO = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var id = entry.target.id;
+          var node = document.querySelector('.scroll-spine-node[href="#' + id + '"]');
+          if (node) node.classList.toggle("is-active", entry.isIntersecting);
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    spineNodes.forEach(function (node) {
+      var target = document.getElementById(node.getAttribute("href").slice(1));
+      if (target) spineIO.observe(target);
+    });
+  }
 
   /* ---------- Mobile nav toggle ---------- */
   var navToggle = document.getElementById("navToggle");
