@@ -32,7 +32,7 @@
 
 /* ============ Reset ============ */
 * , *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
 body {
   margin: 0;
   background: var(--bg);
@@ -159,7 +159,19 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
   background: var(--gradient-1);
   color: var(--on-gradient);
   box-shadow: 0 8px 24px rgba(18,184,134,0.35);
+  position: relative;
+  overflow: hidden;
 }
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -75%;
+  width: 45%; height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.65s ease;
+}
+.btn-primary:hover::before { left: 130%; }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(18,184,134,0.5); }
 .btn-primary:active { transform: translateY(0) scale(0.97); box-shadow: 0 6px 16px rgba(18,184,134,0.4); }
 .btn-ghost {
@@ -342,12 +354,21 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
 }
 .hero-title {
   font-size: clamp(2.6rem, 6vw, 5rem);
-  background: var(--gradient-1);
+  background: linear-gradient(110deg, var(--blue), var(--violet), var(--cyan), var(--blue));
+  background-size: 300% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   margin-bottom: 24px;
   letter-spacing: -0.02em;
+  animation: hero-title-shift 10s ease-in-out infinite;
+}
+@keyframes hero-title-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-title { animation: none; }
 }
 .hero-sub {
   font-size: 1.15rem;

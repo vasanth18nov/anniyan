@@ -109,14 +109,25 @@
     });
   }
 
-  /* ---------- Cursor-spotlight on cards ---------- */
+  /* ---------- Cursor-spotlight + 3D tilt on cards (delegated so it still ---------- */
+  /* works for cards added/rebuilt later, e.g. tools search/filter re-renders) */
   if (!prefersReducedMotion && window.matchMedia("(hover: hover)").matches) {
     document.addEventListener("pointermove", function (e) {
       var card = e.target.closest(".card");
       if (!card) return;
       var rect = card.getBoundingClientRect();
-      card.style.setProperty("--spot-x", ((e.clientX - rect.left) / rect.width) * 100 + "%");
-      card.style.setProperty("--spot-y", ((e.clientY - rect.top) / rect.height) * 100 + "%");
+      var relX = (e.clientX - rect.left) / rect.width;
+      var relY = (e.clientY - rect.top) / rect.height;
+      card.style.setProperty("--spot-x", relX * 100 + "%");
+      card.style.setProperty("--spot-y", relY * 100 + "%");
+      var tiltX = (relY - 0.5) * -7;
+      var tiltY = (relX - 0.5) * 7;
+      card.style.transform = "perspective(900px) rotateX(" + tiltX + "deg) rotateY(" + tiltY + "deg) translateY(-6px)";
+    });
+    document.addEventListener("pointerout", function (e) {
+      var card = e.target.closest(".card");
+      if (!card || (e.relatedTarget && card.contains(e.relatedTarget))) return;
+      card.style.transform = "";
     });
   }
 
@@ -132,6 +143,21 @@
     });
     heroSection.addEventListener("pointerleave", function () {
       heroVisual.style.transform = "rotateY(0deg) rotateX(0deg)";
+    });
+  }
+
+  /* ---------- Magnetic hover on hero CTA buttons ---------- */
+  if (!prefersReducedMotion && window.matchMedia("(hover: hover)").matches) {
+    document.querySelectorAll(".hero-cta .btn").forEach(function (btn) {
+      btn.addEventListener("pointermove", function (e) {
+        var rect = btn.getBoundingClientRect();
+        var relX = e.clientX - rect.left - rect.width / 2;
+        var relY = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = "translate(" + relX * 0.25 + "px, " + relY * 0.25 + "px)";
+      });
+      btn.addEventListener("pointerleave", function () {
+        btn.style.transform = "";
+      });
     });
   }
 

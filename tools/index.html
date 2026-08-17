@@ -196,8 +196,18 @@
       var card = e.target.closest(".card");
       if (!card) return;
       var rect = card.getBoundingClientRect();
-      card.style.setProperty("--spot-x", ((e.clientX - rect.left) / rect.width) * 100 + "%");
-      card.style.setProperty("--spot-y", ((e.clientY - rect.top) / rect.height) * 100 + "%");
+      var relX = (e.clientX - rect.left) / rect.width;
+      var relY = (e.clientY - rect.top) / rect.height;
+      card.style.setProperty("--spot-x", relX * 100 + "%");
+      card.style.setProperty("--spot-y", relY * 100 + "%");
+      var tiltX = (relY - 0.5) * -7;
+      var tiltY = (relX - 0.5) * 7;
+      card.style.transform = "perspective(900px) rotateX(" + tiltX + "deg) rotateY(" + tiltY + "deg) translateY(-6px)";
+    });
+    document.addEventListener("pointerout", function (e) {
+      var card = e.target.closest(".card");
+      if (!card || (e.relatedTarget && card.contains(e.relatedTarget))) return;
+      card.style.transform = "";
     });
   }
 
