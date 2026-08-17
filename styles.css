@@ -443,6 +443,28 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
 .trust-icon { width: 20px; height: 20px; color: var(--cyan); flex-shrink: 0; transition: transform 0.25s ease; }
 .trust-item:hover .trust-icon { transform: scale(1.15); }
 
+/* ============ Brand statement ============ */
+.brand-statement {
+  padding: 56px 0;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.brand-statement-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.55;
+  max-width: 780px;
+  margin: 0 auto;
+  color: var(--text);
+}
+.grad-text {
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* ============ Sections ============ */
 .section { padding: 110px 0; position: relative; }
 .section-alt { background: var(--bg-alt); }
