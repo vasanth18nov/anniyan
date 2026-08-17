@@ -176,7 +176,7 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
   border-color: rgba(45,212,191,0.4);
 }
 .btn-outline:hover { background: rgba(45,212,191,0.08); border-color: var(--cyan); }
-.btn-sm { padding: 9px 18px; font-size: 0.85rem; }
+.btn-sm { padding: 11px 18px; font-size: 0.85rem; }
 .btn-lg { padding: 16px 32px; font-size: 1rem; }
 .btn-block { width: 100%; }
 
@@ -269,10 +269,13 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
 .nav-toggle {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
   background: none;
   border: none;
-  padding: 6px;
+  width: 44px;
+  height: 44px;
 }
 .nav-toggle span {
   width: 22px; height: 2px;

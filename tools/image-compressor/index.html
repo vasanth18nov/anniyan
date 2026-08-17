@@ -58,7 +58,7 @@
   </div>
 
   <section class="card tool-panel">
-    <div class="tool-dropzone" id="dropzone">
+    <div class="tool-dropzone" id="dropzone" role="button" tabindex="0" aria-label="Choose a file or drag and drop here">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       <div>Drop an image here, or click to choose one</div>
       <input type="file" id="fileInput" accept="image/*" />
@@ -160,6 +160,9 @@
   }
 
   dropzone.addEventListener("click", function () { fileInput.click(); });
+  dropzone.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); }
+  });
   fileInput.addEventListener("change", function () { handleFile(fileInput.files[0]); });
   dropzone.addEventListener("dragover", function (e) { e.preventDefault(); dropzone.classList.add("is-dragover"); });
   dropzone.addEventListener("dragleave", function () { dropzone.classList.remove("is-dragover"); });
