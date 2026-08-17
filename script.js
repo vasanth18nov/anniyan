@@ -1,15 +1,24 @@
 (function () {
   "use strict";
 
+  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* ---------- Footer year ---------- */
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ---------- Header scroll state ---------- */
+  /* ---------- Header scroll state + scroll progress bar ---------- */
   var header = document.getElementById("siteHeader");
+  var progressBar = document.getElementById("scrollProgress");
   function onScroll() {
     if (window.scrollY > 12) header.classList.add("is-scrolled");
     else header.classList.remove("is-scrolled");
+
+    if (progressBar) {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      progressBar.style.width = pct + "%";
+    }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -27,27 +36,6 @@
         mainNav.classList.remove("is-open");
         navToggle.setAttribute("aria-expanded", "false");
       });
-    });
-  }
-
-  /* ---------- Scroll reveal for sections ---------- */
-  var revealTargets = document.querySelectorAll(".card, .why-point, .section-title, .section-sub");
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.style.animation = "reveal-in 0.7s cubic-bezier(0.16,1,0.3,1) forwards";
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
-    revealTargets.forEach(function (el) {
-      el.style.opacity = "0";
-      el.style.transform = "translateY(20px)";
-      io.observe(el);
     });
   }
 
@@ -89,6 +77,61 @@
           '<a class="btn btn-outline btn-sm" href="' + game.href + '">Play Now</a>' +
         "</div>";
       gamesGrid.appendChild(card);
+    });
+  }
+
+  /* ---------- Scroll reveal for sections, staggered within each grid ---------- */
+  /* Runs after the tools/games cards above are built, so they're included too. */
+  var revealTargets = document.querySelectorAll(".card, .why-point, .section-title, .section-sub");
+  if ("IntersectionObserver" in window && !prefersReducedMotion) {
+    var groupCounters = new Map();
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            var delay = el.dataset.revealDelay || "0";
+            el.style.animation = "reveal-in 0.7s cubic-bezier(0.16,1,0.3,1) " + delay + "s forwards";
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    revealTargets.forEach(function (el) {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      var parent = el.parentElement;
+      var count = groupCounters.get(parent) || 0;
+      groupCounters.set(parent, count + 1);
+      el.dataset.revealDelay = String(Math.min(count, 7) * 0.06);
+      io.observe(el);
+    });
+  }
+
+  /* ---------- Cursor-spotlight on cards ---------- */
+  if (!prefersReducedMotion && window.matchMedia("(hover: hover)").matches) {
+    document.addEventListener("pointermove", function (e) {
+      var card = e.target.closest(".card");
+      if (!card) return;
+      var rect = card.getBoundingClientRect();
+      card.style.setProperty("--spot-x", ((e.clientX - rect.left) / rect.width) * 100 + "%");
+      card.style.setProperty("--spot-y", ((e.clientY - rect.top) / rect.height) * 100 + "%");
+    });
+  }
+
+  /* ---------- Hero visual parallax tilt ---------- */
+  var heroVisual = document.querySelector(".hero-visual");
+  var heroSection = document.querySelector(".hero");
+  if (heroVisual && heroSection && !prefersReducedMotion && window.matchMedia("(hover: hover)").matches) {
+    heroSection.addEventListener("pointermove", function (e) {
+      var rect = heroSection.getBoundingClientRect();
+      var relX = (e.clientX - rect.left) / rect.width - 0.5;
+      var relY = (e.clientY - rect.top) / rect.height - 0.5;
+      heroVisual.style.transform = "rotateY(" + (relX * 10) + "deg) rotateX(" + (relY * -10) + "deg)";
+    });
+    heroSection.addEventListener("pointerleave", function () {
+      heroVisual.style.transform = "rotateY(0deg) rotateX(0deg)";
     });
   }
 

@@ -44,6 +44,7 @@
 <body>
 
 <a class="skip-link" href="#main">Skip to main content</a>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
 <div class="bg-grid" aria-hidden="true"></div>
 <div class="bg-aurora" aria-hidden="true">
@@ -160,9 +161,16 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   var header = document.getElementById("siteHeader");
+  var progressBar = document.getElementById("scrollProgress");
   function onScroll() {
     if (window.scrollY > 12) header.classList.add("is-scrolled");
     else header.classList.remove("is-scrolled");
+
+    if (progressBar) {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      progressBar.style.width = pct + "%";
+    }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -179,6 +187,17 @@
         mainNav.classList.remove("is-open");
         navToggle.setAttribute("aria-expanded", "false");
       });
+    });
+  }
+
+  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!prefersReducedMotion && window.matchMedia("(hover: hover)").matches) {
+    document.addEventListener("pointermove", function (e) {
+      var card = e.target.closest(".card");
+      if (!card) return;
+      var rect = card.getBoundingClientRect();
+      card.style.setProperty("--spot-x", ((e.clientX - rect.left) / rect.width) * 100 + "%");
+      card.style.setProperty("--spot-y", ((e.clientY - rect.top) / rect.height) * 100 + "%");
     });
   }
 
