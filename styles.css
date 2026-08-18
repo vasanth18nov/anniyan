@@ -526,6 +526,17 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
   max-width: 560px;
   margin: 0 0 40px;
 }
+.hero-cycle-wrap { display: inline-block; }
+.hero-cycle {
+  display: inline-block;
+  color: var(--cyan);
+  font-weight: 600;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cycle { transition: none; }
+}
+.count-up { font-variant-numeric: tabular-nums; }
 .hero-cta {
   display: flex;
   gap: 18px;

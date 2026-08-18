@@ -66,6 +66,61 @@
     });
   }
 
+  /* ---------- Hero rotating word ---------- */
+  var HERO_CYCLE_WORDS = ["custom websites", "web apps", "business automation", "AI-integrated systems"];
+  var heroCycle = document.getElementById("heroCycle");
+  if (heroCycle && !prefersReducedMotion) {
+    var heroCycleIndex = 0;
+    setInterval(function () {
+      heroCycleIndex = (heroCycleIndex + 1) % HERO_CYCLE_WORDS.length;
+      heroCycle.style.opacity = "0";
+      heroCycle.style.transform = "translateY(8px)";
+      setTimeout(function () {
+        heroCycle.textContent = HERO_CYCLE_WORDS[heroCycleIndex];
+        heroCycle.style.opacity = "1";
+        heroCycle.style.transform = "translateY(0)";
+      }, 300);
+    }, 2600);
+  }
+
+  /* ---------- Count-up numbers (real, verifiable catalog counts) ---------- */
+  var countEls = document.querySelectorAll(".count-up");
+  if (countEls.length) {
+    var runCount = function (el) {
+      var target = parseInt(el.dataset.countTo, 10) || 0;
+      if (prefersReducedMotion) {
+        el.textContent = String(target);
+        return;
+      }
+      var start = null;
+      var duration = 900;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = String(Math.round(eased * target));
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    };
+    if ("IntersectionObserver" in window) {
+      var countIO = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              runCount(entry.target);
+              countIO.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.6 }
+      );
+      countEls.forEach(function (el) { countIO.observe(el); });
+    } else {
+      countEls.forEach(runCount);
+    }
+  }
+
   /* ---------- Tools preview (full catalog lives at /tools/) ---------- */
   var FEATURED_TOOL_NAMES = ["Text Editor", "Word Counter", "Code Formatter", "JSON Formatter", "Image Compressor", "Unit Converter", "QR Generator", "BMI Calculator"];
   var toolsGrid = document.getElementById("toolsGrid");

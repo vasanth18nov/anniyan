@@ -249,7 +249,7 @@
     });
 
     toolsGrid.innerHTML = "";
-    filtered.forEach(function (tool) {
+    filtered.forEach(function (tool, i) {
       var card = document.createElement("a");
       card.className = "card tool-card";
       card.href = tool.href;
@@ -259,6 +259,11 @@
         "<h4>" + tool.name + "</h4>" +
         "<p>" + tool.desc + "</p>" +
         '<span class="tool-link">Open Tool &rarr;</span>';
+      if (!prefersReducedMotion) {
+        card.style.opacity = "0";
+        card.style.transform = "translateY(16px)";
+        card.style.animation = "reveal-in 0.5s cubic-bezier(0.16,1,0.3,1) " + (Math.min(i, 11) * 0.035) + "s forwards";
+      }
       toolsGrid.appendChild(card);
     });
 
