@@ -18,12 +18,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Anniyan Arcade &#183; Play Our Games</title>
-<meta name="description" content="16 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
+<meta name="description" content="17 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://anniyan.online/games/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Anniyan Arcade — Play Our Games">
-<meta property="og:description" content="16 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
+<meta property="og:description" content="17 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
 <meta property="og:url" content="https://anniyan.online/games/">
 <meta property="og:site_name" content="Anniyan — The Alpha">
 <meta property="og:image" content="https://anniyan.online/images/og-image.png">
@@ -31,7 +31,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Anniyan Arcade — Play Our Games">
-<meta name="twitter:description" content="16 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
+<meta name="twitter:description" content="17 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
 <meta name="twitter:image" content="https://anniyan.online/images/og-image.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2312b886'/%3E%3Cstop offset='1' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cpath fill='%230a0b10' d='M50 18 L78 68 L60 68 L50 50 L40 68 L22 68 Z'/%3E%3Cpath fill='%230a0b10' opacity='0.55' d='M32 82 L50 50 L68 82 Z'/%3E%3C/svg%3E" />
 <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
@@ -1891,6 +1891,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 .game-card.brick   .game-card-title { color: #e2725b; }
 .game-card.tetris  .game-card-title { color: #5c7cfa; }
 .game-card.bazooka .game-card-title { color: #84cc16; }
+.game-card.mahjong .game-card-title { color: #2dd4bf; }
 
 /* shared setup overlay for the new games */
 .ng-overlay {
@@ -2078,6 +2079,32 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 .dab-box.filled { opacity: 1; }
 #dab-status { text-align: center; font-size: .86rem; font-weight: 700; margin-top: 14px; min-height: 22px; }
 
+/* ===== MAHJONG ===== */
+#screen-mahjong { background: radial-gradient(ellipse at 50% 0%, #0d3b2e 0%, #041410 100%); min-height: 100vh; padding: 56px 14px 32px; }
+#mahjong-setup .ng-start { background: #2dd4bf; color: #04211c; }
+#screen-mahjong .ng-header h2 { color: #2dd4bf; }
+#mj-board {
+  position: relative; width: 100%; max-width: 480px; aspect-ratio: 8 / 6;
+  background: rgba(255,255,255,.06); border-radius: 14px; touch-action: manipulation;
+}
+.mj-tile {
+  position: absolute; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; cursor: pointer; user-select: none;
+  background: linear-gradient(155deg, #fdf6e3 0%, #e9dfc0 100%);
+  border: 1px solid rgba(0,0,0,.25);
+  font-size: 1.3rem; line-height: 1;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .2s ease, filter .12s ease;
+}
+.mj-tile[data-layer="0"] { z-index: 1; box-shadow: 0 2px 4px rgba(0,0,0,.35); }
+.mj-tile[data-layer="1"] { z-index: 2; box-shadow: 0 4px 8px rgba(0,0,0,.45); }
+.mj-tile[data-layer="2"] { z-index: 3; box-shadow: 0 6px 12px rgba(0,0,0,.55); }
+.mj-tile.mj-covered { filter: brightness(.5) saturate(.6); cursor: default; }
+.mj-tile.mj-blocked:not(.mj-covered) { filter: brightness(.82); }
+.mj-tile.mj-selected { box-shadow: 0 0 0 3px #2dd4bf, 0 6px 14px rgba(0,0,0,.5); transform: translateY(-3px); }
+.mj-tile.mj-hint { animation: mjHintPulse 1s ease-in-out infinite; }
+@keyframes mjHintPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(245,166,35,.9); } 50% { box-shadow: 0 0 0 3px rgba(245,166,35,.2); } }
+#mj-actions { display: flex; gap: 9px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
+
 @media (max-width: 600px) {
   .ng-box { padding: 30px 22px; }
   .ng-box h2 { font-size: 1.6rem; }
@@ -2261,6 +2288,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <span class="game-card-icon">&#128165;</span>
       <div class="game-card-title">Bazooka Man</div>
       <div class="game-card-desc">Physics puzzle &middot; 10 levels<br>Aim, fire, chain the barrels</div>
+    </div>
+    <div class="game-card mahjong" onclick="showScreen('mahjong')">
+      <span class="game-card-icon">🀄</span>
+      <div class="game-card-title">Mahjong</div>
+      <div class="game-card-desc">Classic tile-matching solitaire<br>80 tiles &middot; hints &amp; shuffle</div>
     </div>
   </div>
 </div>
@@ -2984,6 +3016,41 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="tet-hint">&#8592;&#8594; move &#183; &#8593; or X rotate CW &#183; Z rotate CCW<br>&#8595; soft drop &#183; Space hard drop &#183; P to pause</div>
 </div>
 
+<!-- ===== MAHJONG SCREEN ===== -->
+<div id="screen-mahjong" class="screen" style="display:none">
+  <div class="ng-overlay" id="mahjong-setup">
+    <div class="ng-box">
+      <h2>Mahjong</h2>
+      <p class="ng-sub">Classic tile-matching solitaire &#183; 80 tiles, 20 kinds</p>
+      <div class="ng-note">Match two identical tiles that are uncovered and open on the left or right to clear them. Clear the whole board to win. Stuck? Use Shuffle or Hint.</div>
+      <button class="ng-start" id="mahjong-start" onclick="mjStart()">&#9654; Start Game</button>
+    </div>
+  </div>
+
+  <div class="ng-wrap">
+    <div class="ng-header">
+      <h2>Mahjong</h2>
+      <div class="ng-badges">
+        <span class="ng-badge">Pairs Left <b id="mj-pairs">0</b></span>
+        <span class="ng-badge">Moves <b id="mj-moves">0</b></span>
+        <span class="ng-badge">Time <b id="mj-time">00:00</b></span>
+      </div>
+    </div>
+    <div class="ng-banner" id="mj-banner">
+      <h2 id="mj-banner-title"></h2>
+      <p id="mj-banner-msg"></p>
+      <button class="btn btn-green" onclick="mjNewGame()">Play Again</button>
+    </div>
+    <div id="mj-board"></div>
+    <div id="mj-actions">
+      <button class="btn btn-purple" onclick="mjHint()">&#128161; Hint</button>
+      <button class="btn btn-blue" onclick="mjShuffleRemaining()">&#128260; Shuffle</button>
+      <button class="btn btn-red" onclick="mjNewGame()">New Game</button>
+    </div>
+    <div class="ng-hint">Tap two matching tiles that are uncovered and open on at least one side.</div>
+  </div>
+</div>
+
 <script>
 // =====================================================================
 // NAVIGATION
@@ -3016,9 +3083,10 @@ function showScreen(name) {
   if (name !== 'brick') stopBrickGame();
   if (name === 'brick') resetBrickGame();
   if (name === 'tetris') tetResumeLoop(); else tetPauseLoop();
+  if (name === 'mahjong') mjResumeTimer(); else mjPauseTimer();
 }
 
-const VALID_SCREENS = ['rummy','chess','pong','snake','sudoku','wordpuzzle','darts','pacman','platformer','ladders','carrom','trivia','g2048','dots','brick','tetris'];
+const VALID_SCREENS = ['rummy','chess','pong','snake','sudoku','wordpuzzle','darts','pacman','platformer','ladders','carrom','trivia','g2048','dots','brick','tetris','mahjong'];
 document.addEventListener('DOMContentLoaded', () => {
   const requested = (location.hash || '').slice(1);
   showScreen(VALID_SCREENS.includes(requested) ? requested : 'home');
@@ -7312,6 +7380,301 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   resetTetrisGame();
 });
+
+// =====================================================================
+// MAHJONG SOLITAIRE
+// =====================================================================
+const MJ_COLS = 8, MJ_ROWS = 6;
+const MJ_FACES = ['🀄','🎋','🎍','🌸','🍁','🍀','⭐','🌙','☀️','⚡','🔥','💎','🎯','🎨','🎲','🔔','🌊','🦋','🍄','🌵'];
+let mj = null;
+
+function mjBuildShape() {
+  const cells = [];
+  let id = 0;
+  function addRect(layer, c0, c1, r0, r1) {
+    for (let r = r0; r <= r1; r++) {
+      for (let c = c0; c <= c1; c++) {
+        cells.push({ id: id++, col: c, row: r, layer: layer });
+      }
+    }
+  }
+  addRect(0, 0, 7, 0, 5); // 8x6 = 48
+  addRect(1, 1, 6, 1, 4); // 6x4 = 24
+  addRect(2, 2, 5, 2, 3); // 4x2 = 8
+  return cells; // 80 total
+}
+
+function mjShuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
+
+function mjIsCoveredId(id, presentSet) {
+  const cell = mj.cells[id];
+  const above = mj.byKey.get(cell.col + '_' + cell.row + '_' + (cell.layer + 1));
+  return above ? presentSet.has(above.id) : false;
+}
+function mjIsOpenSide(id, presentSet) {
+  const cell = mj.cells[id];
+  const left = mj.byKey.get((cell.col - 1) + '_' + cell.row + '_' + cell.layer);
+  const right = mj.byKey.get((cell.col + 1) + '_' + cell.row + '_' + cell.layer);
+  const leftOpen = !left || !presentSet.has(left.id);
+  const rightOpen = !right || !presentSet.has(right.id);
+  return leftOpen || rightOpen;
+}
+function mjIsFreeId(id, presentSet) {
+  return presentSet.has(id) && !mjIsCoveredId(id, presentSet) && mjIsOpenSide(id, presentSet);
+}
+
+function mjTrySolvableOrder(initialIds) {
+  let present = new Set(initialIds);
+  const pairs = [];
+  let safety = 20000;
+  while (present.size > 0 && safety-- > 0) {
+    const free = [];
+    present.forEach(id => { if (mjIsFreeId(id, present)) free.push(id); });
+    if (free.length < 2) break;
+    mjShuffleArray(free);
+    const a = free[0], b = free[1];
+    present.delete(a); present.delete(b);
+    pairs.push([a, b]);
+  }
+  return { pairs: pairs, leftover: present.size };
+}
+function mjGenerateSolvableOrder(initialIds) {
+  // The greedy pass can occasionally paint itself into a corner (a layered
+  // tile left stranded with no free match). Retrying with a fresh random
+  // order almost always finds a clean solve within a couple of attempts,
+  // but oddly-shaped mid-game remnants sometimes need many more tries
+  // before a valid full ordering turns up, so retry generously.
+  let best = null;
+  for (let attempt = 0; attempt < 400; attempt++) {
+    const result = mjTrySolvableOrder(initialIds);
+    if (result.leftover === 0) return { pairs: result.pairs, ok: true };
+    best = result;
+  }
+  // Genuinely dead: whatever tiles are left are blocked by *position*
+  // (one physically covers another), not by which face is on them, so no
+  // face reassignment can ever fix it. Force-pair them only so every id
+  // still has a face and nothing renders as blank — the caller is
+  // responsible for telling the player this specific board is stuck.
+  const covered = new Set();
+  best.pairs.forEach(p => { covered.add(p[0]); covered.add(p[1]); });
+  const stray = initialIds.filter(id => !covered.has(id));
+  for (let i = 0; i + 1 < stray.length; i += 2) best.pairs.push([stray[i], stray[i + 1]]);
+  return { pairs: best.pairs, ok: false };
+}
+
+function mjAssignFaces(pairs) {
+  const totalPairs = pairs.length;
+  const pairsPerFace = Math.floor(totalPairs / MJ_FACES.length);
+  const faceList = [];
+  for (let f = 0; f < MJ_FACES.length; f++) {
+    for (let k = 0; k < pairsPerFace; k++) faceList.push(f);
+  }
+  while (faceList.length < totalPairs) faceList.push(Math.floor(Math.random() * MJ_FACES.length));
+  mjShuffleArray(faceList);
+  pairs.forEach((pair, i) => {
+    mj.face.set(pair[0], faceList[i]);
+    mj.face.set(pair[1], faceList[i]);
+  });
+}
+
+function mjInit() {
+  const cells = mjBuildShape();
+  const byKey = new Map();
+  cells.forEach(c => byKey.set(c.col + '_' + c.row + '_' + c.layer, c));
+  mj = {
+    cells: cells,
+    byKey: byKey,
+    present: new Set(cells.map(c => c.id)),
+    face: new Map(),
+    selected: null,
+    moves: 0,
+    startTime: Date.now(),
+    elapsed: 0,
+    timerHandle: null,
+    over: false
+  };
+}
+
+function mjStart() {
+  const overlay = document.getElementById('mahjong-setup');
+  if (overlay) overlay.style.display = 'none';
+  mjNewGame();
+}
+
+function mjNewGame() {
+  mjInit();
+  mjAssignFaces(mjGenerateSolvableOrder(mj.cells.map(c => c.id)).pairs);
+  const banner = document.getElementById('mj-banner');
+  if (banner) banner.classList.remove('show');
+  mjStartTimerLoop();
+  mjRender();
+}
+
+function mjStartTimerLoop() {
+  mjStopTimerHandle();
+  mj.timerHandle = setInterval(() => {
+    if (!mj || mj.over) return;
+    mj.elapsed = Math.floor((Date.now() - mj.startTime) / 1000);
+    const mm = String(Math.floor(mj.elapsed / 60)).padStart(2, '0');
+    const ss = String(mj.elapsed % 60).padStart(2, '0');
+    const el = document.getElementById('mj-time');
+    if (el) el.textContent = mm + ':' + ss;
+  }, 1000);
+}
+function mjStopTimerHandle() {
+  if (mj && mj.timerHandle) { clearInterval(mj.timerHandle); mj.timerHandle = null; }
+}
+function mjResumeTimer() {
+  if (!mj || mj.over) return;
+  mj.startTime = Date.now() - mj.elapsed * 1000;
+  mjStartTimerLoop();
+}
+function mjPauseTimer() {
+  mjStopTimerHandle();
+}
+
+function mjRender() {
+  const board = document.getElementById('mj-board');
+  if (!board || !mj) return;
+  board.innerHTML = '';
+  const GAP_X = 1.4;
+  const GAP_Y = GAP_X * (MJ_COLS / MJ_ROWS);
+  const cellW = 100 / MJ_COLS - GAP_X;
+  const cellH = 100 / MJ_ROWS - GAP_Y;
+  mj.cells.forEach(cell => {
+    if (!mj.present.has(cell.id)) return;
+    const t = document.createElement('div');
+    t.className = 'mj-tile';
+    t.dataset.layer = String(cell.layer);
+    t.dataset.id = String(cell.id);
+    const covered = mjIsCoveredId(cell.id, mj.present);
+    const open = mjIsOpenSide(cell.id, mj.present);
+    if (covered) t.classList.add('mj-covered');
+    else if (!open) t.classList.add('mj-blocked');
+    if (mj.selected === cell.id) t.classList.add('mj-selected');
+    t.style.left = (cell.col * (100 / MJ_COLS) + GAP_X / 2) + '%';
+    t.style.top = (cell.row * (100 / MJ_ROWS) + GAP_Y / 2) + '%';
+    t.style.width = cellW + '%';
+    t.style.height = cellH + '%';
+    t.textContent = MJ_FACES[mj.face.get(cell.id)];
+    t.addEventListener('click', () => mjOnTileClick(cell.id));
+    board.appendChild(t);
+  });
+  const pairsEl = document.getElementById('mj-pairs');
+  if (pairsEl) pairsEl.textContent = String(mj.present.size / 2);
+  const movesEl = document.getElementById('mj-moves');
+  if (movesEl) movesEl.textContent = String(mj.moves);
+}
+
+function mjOnTileClick(id) {
+  if (!mj || mj.over || !mj.present.has(id)) return;
+  if (mjIsCoveredId(id, mj.present) || !mjIsOpenSide(id, mj.present)) return;
+  if (mj.selected === id) { mj.selected = null; mjRender(); return; }
+  if (mj.selected === null) { mj.selected = id; mjRender(); return; }
+
+  const a = mj.selected, b = id;
+  if (mj.face.get(a) === mj.face.get(b)) {
+    mj.present.delete(a);
+    mj.present.delete(b);
+    mj.selected = null;
+    mj.moves++;
+    const banner = document.getElementById('mj-banner');
+    if (banner) banner.classList.remove('show');
+    mjRender();
+    if (mj.present.size === 0) mjWin();
+    else if (!mjHasAnyMove()) mjStuck();
+  } else {
+    mj.selected = id;
+    mjRender();
+  }
+}
+
+function mjHasAnyMove() {
+  const free = [];
+  mj.present.forEach(id => { if (mjIsFreeId(id, mj.present)) free.push(id); });
+  for (let i = 0; i < free.length; i++) {
+    for (let j = i + 1; j < free.length; j++) {
+      if (mj.face.get(free[i]) === mj.face.get(free[j])) return true;
+    }
+  }
+  return false;
+}
+
+function mjHint() {
+  if (!mj || mj.over) return;
+  const free = [];
+  mj.present.forEach(id => { if (mjIsFreeId(id, mj.present)) free.push(id); });
+  for (let i = 0; i < free.length; i++) {
+    for (let j = i + 1; j < free.length; j++) {
+      if (mj.face.get(free[i]) === mj.face.get(free[j])) {
+        mjFlashHint(free[i], free[j]);
+        return;
+      }
+    }
+  }
+  mjStuck();
+}
+function mjFlashHint(a, b) {
+  [a, b].forEach(id => {
+    const el = document.querySelector('.mj-tile[data-id="' + id + '"]');
+    if (el) el.classList.add('mj-hint');
+  });
+  setTimeout(() => {
+    [a, b].forEach(id => {
+      const el = document.querySelector('.mj-tile[data-id="' + id + '"]');
+      if (el) el.classList.remove('mj-hint');
+    });
+  }, 1400);
+}
+
+function mjShuffleRemaining() {
+  if (!mj || mj.over || mj.present.size === 0) return;
+  const remainingIds = Array.from(mj.present);
+  mj.face.clear();
+  const result = mjGenerateSolvableOrder(remainingIds);
+  mjAssignFaces(result.pairs);
+  mj.selected = null;
+  mjRender();
+  if (result.ok) {
+    const banner = document.getElementById('mj-banner');
+    if (banner) banner.classList.remove('show');
+  } else {
+    // The remaining tiles are blocked by position (one physically covers
+    // another) — no face shuffle can ever free them, so say so plainly
+    // instead of leaving the player clicking Shuffle forever.
+    mjDeadEnd();
+  }
+}
+
+function mjWin() {
+  mj.over = true;
+  mjStopTimerHandle();
+  const banner = document.getElementById('mj-banner');
+  const timeText = document.getElementById('mj-time').textContent;
+  document.getElementById('mj-banner-title').textContent = 'Board Cleared!';
+  document.getElementById('mj-banner-msg').textContent = 'Solved in ' + mj.moves + ' moves, ' + timeText + '.';
+  if (banner) banner.classList.add('show');
+}
+function mjStuck() {
+  const banner = document.getElementById('mj-banner');
+  document.getElementById('mj-banner-title').textContent = 'No Moves Left';
+  document.getElementById('mj-banner-msg').textContent = 'Use Shuffle to rearrange the remaining tiles, or start a new board.';
+  if (banner) banner.classList.add('show');
+}
+function mjDeadEnd() {
+  mj.over = true;
+  mjStopTimerHandle();
+  const banner = document.getElementById('mj-banner');
+  document.getElementById('mj-banner-title').textContent = 'This Board Is Stuck';
+  document.getElementById('mj-banner-msg').textContent = 'The last tiles are physically blocking each other, so no shuffle can free them. Start a new board to keep playing.';
+  if (banner) banner.classList.add('show');
+}
 
 </script>
 

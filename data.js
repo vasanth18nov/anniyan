@@ -187,5 +187,9 @@ var GAMES = [
   {
     title: "Bazooka Man", desc: "Physics puzzle, 10 levels — aim, fire, chain the barrels.", href: "/games/bazooka-man/",
     icon: '<svg viewBox="0 0 24 24" fill="none" class="game-thumb-icon"><rect x="2.5" y="10.2" width="12" height="4.6" rx="1.6" transform="rotate(-18 8.5 12.5)" stroke="currentColor" stroke-width="1.3"/><path d="M16.5 7.5 18 9M19.7 5l1.8.5-.5 1.8M17 10l2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  },
+  {
+    title: "Mahjong", desc: "Classic tile-matching solitaire — 80 tiles, hints & shuffle.", href: "/games/#mahjong",
+    icon: '<svg viewBox="0 0 24 24" fill="none" class="game-thumb-icon"><rect x="4" y="3.5" width="16" height="17" rx="2.3" stroke="currentColor" stroke-width="1.3"/><path d="M12 8v3M9.5 12.5h5M10 15.5l2-2.3 2 2.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   }
 ];
