@@ -193,7 +193,7 @@ var GAMES = [
     icon: '<svg viewBox="0 0 24 24" fill="none" class="game-thumb-icon"><rect x="4" y="3.5" width="16" height="17" rx="2.3" stroke="currentColor" stroke-width="1.3"/><path d="M12 8v3M9.5 12.5h5M10 15.5l2-2.3 2 2.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   },
   {
-    title: "One Line", desc: "Trace the sailboat in one stroke — no lifting, no repeats.", href: "/games/#oneline",
+    title: "One Line", desc: "Trace 30 shapes in one stroke — no lifting, no repeats.", href: "/games/#oneline",
     icon: '<svg viewBox="0 0 24 24" fill="none" class="game-thumb-icon"><path d="M12 4v9M12 4l5 9M7 13h10M6 13l-1.5 6h15L18 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   }
 ];

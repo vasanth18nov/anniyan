@@ -2119,6 +2119,24 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 #ol-canvas { width: 100%; max-width: 320px; aspect-ratio: 300 / 330; touch-action: none; cursor: pointer; border-radius: 10px; background: #000; }
 .ol-actions { display: flex; gap: 9px; margin-top: 16px; }
 .ol-hint { font-size: .72rem; color: rgba(255,255,255,.4); margin-top: 12px; text-align: center; line-height: 1.6; }
+.ol-badges { display: flex; gap: 8px; }
+.ol-badge {
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); color: #fff;
+  border-radius: 8px; padding: 6px 12px; font-weight: 800; font-size: .78rem; letter-spacing: .5px;
+}
+.ol-shape-name { color: rgba(255,255,255,.55); font-size: .8rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+.ol-levels-toggle { margin-top: 10px; width: 100%; max-width: 320px; background: rgba(255,255,255,.08); color: #fff; }
+.ol-level-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; width: 100%; max-width: 320px; margin-top: 12px; }
+.ol-level-btn {
+  aspect-ratio: 1; border-radius: 8px; border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.06); color: #fff; font-weight: 700; font-size: .78rem;
+  cursor: pointer; position: relative; touch-action: manipulation;
+}
+.ol-level-btn.is-current { border-color: #fde047; background: rgba(253,224,71,.2); color: #fde047; }
+.ol-level-btn.is-done::after {
+  content: "\2713"; position: absolute; top: -5px; right: -5px; width: 16px; height: 16px;
+  background: #2ecc71; border-radius: 50%; font-size: .6rem; line-height: 16px; text-align: center; color: #04211c;
+}
 
 @media (max-width: 600px) {
   .ng-box { padding: 30px 22px; }
@@ -2312,7 +2330,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="game-card oneline" onclick="showScreen('oneline')">
       <span class="game-card-icon">⛵</span>
       <div class="game-card-title">One Line</div>
-      <div class="game-card-desc">Trace the sailboat in one stroke<br>No lifting &middot; no repeats</div>
+      <div class="game-card-desc">30 shapes to trace in one stroke<br>No lifting &middot; no repeats</div>
     </div>
   </div>
 </div>
@@ -3076,17 +3094,26 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="ol-wrap">
     <div class="ol-header">
       <h2>One Line</h2>
-      <span class="ol-iq" id="ol-iq">IQ 85</span>
+      <div class="ol-badges">
+        <span class="ol-badge" id="ol-level-badge">Level 1/30</span>
+        <span class="ol-iq" id="ol-iq">IQ 85</span>
+      </div>
     </div>
+    <div class="ol-shape-name" id="ol-shape-name">&nbsp;</div>
     <div class="ng-banner" id="ol-banner">
       <h2>Solved!</h2>
-      <p>You traced the whole sailboat without lifting or repeating a line.</p>
-      <button class="btn btn-green" onclick="olRestart()">Play Again</button>
+      <p id="ol-banner-msg">You traced the whole shape without lifting or repeating a line.</p>
+      <button class="btn btn-green" onclick="olNextLevel()">Next Level &#8594;</button>
+      <button class="btn btn-purple" onclick="olRestart()" style="margin-left:8px">Replay</button>
     </div>
     <canvas id="ol-canvas" width="300" height="330"></canvas>
     <div class="ol-actions">
+      <button class="btn btn-blue" onclick="olPrevLevel()">&#8592; Prev</button>
       <button class="btn btn-red" onclick="olRestart()">&#8635; Restart</button>
+      <button class="btn btn-blue" onclick="olNextLevel()">Next &#8594;</button>
     </div>
+    <button type="button" class="btn btn-purple ol-levels-toggle" onclick="olToggleLevelPicker()">&#9776; All 30 Levels</button>
+    <div class="ol-level-grid" id="ol-level-grid" hidden></div>
     <div class="ol-hint">Drag from a glowing node, through connected lines, to trace every line exactly once without lifting your finger. Right-click or Restart to try again.</div>
   </div>
 </div>
@@ -7719,44 +7746,110 @@ function mjDeadEnd() {
 // =====================================================================
 // ONE LINE — trace-without-lifting puzzle (graph of nodes + edges)
 // =====================================================================
-const OL_NODES = [
-  { id: 0, x: 150, y: 50 },  // sail apex
-  { id: 1, x: 105, y: 210 }, // mast foot / hull top-left
-  { id: 2, x: 195, y: 210 }, // sail base right / hull top-right
-  { id: 3, x: 85,  y: 270 }, // hull bottom-left
-  { id: 4, x: 215, y: 270 }  // hull bottom-right
+const OL_LEVELS = [
+  { name: "Letter L", nodes: [{x:100,y:60},{x:100,y:260},{x:220,y:260}], edges: [[0,1],[1,2]] },
+  { name: "Sailboat", nodes: [{x:150,y:50},{x:105,y:210},{x:195,y:210},{x:85,y:270},{x:215,y:270}], edges: [[0,1],[0,2],[1,2],[2,4],[4,3],[3,1]] },
+  { name: "Envelope", nodes: [{x:150,y:60},{x:80,y:130},{x:220,y:130},{x:80,y:260},{x:220,y:260}], edges: [[0,1],[0,2],[1,2],[2,4],[4,3],[3,1],[1,4],[2,3]] },
+  { name: "Star", nodes: [{x:150,y:70},{x:255,y:146},{x:215,y:269},{x:85,y:269},{x:45,y:146}], edges: [[0,2],[2,4],[4,1],[1,3],[3,0]] },
+  { name: "House", nodes: [{x:150,y:50},{x:90,y:140},{x:210,y:140},{x:90,y:260},{x:210,y:260}], edges: [[1,0],[0,2],[1,2],[2,4],[4,3],[3,1],[1,4],[2,3]] },
+  { name: "Bowtie", nodes: [{x:90,y:90},{x:210,y:90},{x:150,y:180},{x:90,y:270},{x:210,y:270}], edges: [[0,1],[1,2],[2,0],[2,3],[3,4],[4,2]] },
+  { name: "Arrow", nodes: [{x:60,y:180},{x:240,y:180},{x:190,y:120},{x:190,y:240}], edges: [[0,1],[1,2],[2,3],[3,1]] },
+  { name: "Heart", nodes: [{x:100,y:90},{x:150,y:130},{x:200,y:90},{x:70,y:150},{x:230,y:150},{x:150,y:260}], edges: [[3,0],[0,1],[1,2],[2,4],[4,5],[5,3],[1,5]] },
+  { name: "Kite", nodes: [{x:150,y:60},{x:220,y:150},{x:150,y:260},{x:80,y:150},{x:150,y:310}], edges: [[0,1],[1,2],[2,3],[3,0],[2,4],[0,2]] },
+  { name: "Diamond Cross", nodes: [{x:150,y:60},{x:240,y:180},{x:150,y:300},{x:60,y:180},{x:150,y:180}], edges: [[0,1],[1,2],[2,3],[3,0],[0,4],[4,2]] },
+  { name: "Flag", nodes: [{x:80,y:60},{x:80,y:280},{x:80,y:140},{x:220,y:60},{x:220,y:140}], edges: [[0,2],[2,1],[0,3],[3,4],[4,2]] },
+  { name: "Tree", nodes: [{x:150,y:50},{x:90,y:180},{x:210,y:180},{x:150,y:180},{x:150,y:280}], edges: [[0,1],[0,2],[1,3],[3,2],[3,4]] },
+  { name: "Circuit 1", nodes: [{x:150,y:65},{x:250,y:122},{x:250,y:238},{x:150,y:295},{x:50,y:238},{x:50,y:122}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[4,1]] },
+  { name: "Circuit 2", nodes: [{x:150,y:55},{x:241,y:128},{x:258,y:242},{x:150,y:285},{x:42,y:242},{x:59,y:127}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[1,5],[4,2],[5,2]] },
+  { name: "Circuit 3", nodes: [{x:150,y:65},{x:240,y:108},{x:262,y:206},{x:200,y:284},{x:100,y:284},{x:38,y:206},{x:60,y:108}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[5,3],[1,5]] },
+  { name: "Circuit 4", nodes: [{x:150,y:53},{x:231,y:116},{x:274,y:208},{x:195,y:273},{x:95,y:294},{x:50,y:203},{x:51,y:101}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[1,5],[6,1],[0,5]] },
+  { name: "Circuit 5", nodes: [{x:150,y:65},{x:231,y:99},{x:265,y:180},{x:231,y:261},{x:150,y:295},{x:69,y:261},{x:35,y:180},{x:69,y:99}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[5,1],[0,4],[5,0]] },
+  { name: "Circuit 6", nodes: [{x:150,y:51},{x:221,y:109},{x:279,y:180},{x:221,y:251},{x:150,y:309},{x:79,y:251},{x:21,y:180},{x:79,y:109}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[4,1],[3,7],[7,4]] },
+  { name: "Circuit 7", nodes: [{x:150,y:65},{x:231,y:99},{x:265,y:180},{x:231,y:261},{x:150,y:295},{x:69,y:261},{x:35,y:180},{x:69,y:99}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[3,6],[7,4],[2,6],[1,4],[2,7]] },
+  { name: "Circuit 8", nodes: [{x:150,y:55},{x:217,y:100},{x:273,y:158},{x:241,y:232},{x:193,y:297},{x:114,y:279},{x:42,y:242},{x:47,y:162},{x:70,y:84}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,0],[6,4],[6,3],[1,4]] },
+  { name: "Circuit 9", nodes: [{x:150,y:65},{x:224,y:92},{x:263,y:160},{x:250,y:238},{x:189,y:288},{x:111,y:288},{x:50,y:238},{x:37,y:160},{x:76,y:92}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,0],[1,3],[4,8],[4,6],[2,4],[2,6],[8,3]] },
+  { name: "Circuit 10", nodes: [{x:150,y:65},{x:218,y:87},{x:259,y:144},{x:259,y:216},{x:218,y:273},{x:150,y:295},{x:82,y:273},{x:41,y:216},{x:41,y:144},{x:82,y:87}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,0],[6,9],[3,6],[7,4],[9,4]] },
+  { name: "Circuit 11", nodes: [{x:150,y:53},{x:211,y:97},{x:271,y:141},{x:248,y:212},{x:225,y:283},{x:150,y:283},{x:75,y:283},{x:52,y:212},{x:29,y:141},{x:89,y:97}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,0],[3,5],[7,3],[9,2],[3,6],[2,6],[3,9]] },
+  { name: "Circuit 12", nodes: [{x:150,y:65},{x:218,y:87},{x:259,y:144},{x:259,y:216},{x:218,y:273},{x:150,y:295},{x:82,y:273},{x:41,y:216},{x:41,y:144},{x:82,y:87}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,0],[7,9],[9,4],[2,5],[3,8],[7,0],[0,8],[2,4]] },
+  { name: "Circuit 13", nodes: [{x:150,y:55},{x:207,y:92},{x:264,y:128},{x:254,y:195},{x:244,y:262},{x:180,y:281},{x:115,y:300},{x:71,y:249},{x:26,y:198},{x:54,y:136},{x:82,y:75}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,0],[4,0],[5,3],[6,0],[1,4],[1,6]] },
+  { name: "Circuit 14", nodes: [{x:150,y:58},{x:211,y:74},{x:256,y:119},{x:272,y:180},{x:256,y:241},{x:211,y:286},{x:150,y:302},{x:89,y:286},{x:44,y:241},{x:28,y:180},{x:44,y:119},{x:89,y:74}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,0],[3,9],[1,5],[10,3],[0,2],[1,10],[9,0]] },
+  { name: "Circuit 15", nodes: [{x:150,y:48},{x:206,y:83},{x:264,y:114},{x:262,y:180},{x:264,y:246},{x:206,y:277},{x:150,y:312},{x:94,y:277},{x:36,y:246},{x:38,y:180},{x:36,y:114},{x:94,y:83}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,0],[1,8],[1,5],[8,4],[4,10],[5,7]] },
+  { name: "Circuit 16", nodes: [{x:150,y:58},{x:207,y:72},{x:250,y:111},{x:271,y:165},{x:264,y:223},{x:231,y:271},{x:179,y:298},{x:121,y:298},{x:69,y:271},{x:36,y:223},{x:29,y:165},{x:50,y:111},{x:93,y:72}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12],[12,0],[11,9],[8,11],[4,0],[12,10],[1,11],[0,10],[8,4],[12,1]] },
+  { name: "Circuit 17", nodes: [{x:150,y:48},{x:207,y:61},{x:253,y:98},{x:279,y:151},{x:279,y:209},{x:253,y:262},{x:207,y:299},{x:150,y:312},{x:93,y:299},{x:47,y:262},{x:21,y:209},{x:21,y:151},{x:47,y:98},{x:93,y:61}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12],[12,13],[13,0],[6,13],[2,8],[6,11],[1,11],[7,12],[12,8],[7,2]] },
+  { name: "Circuit 18", nodes: [{x:150,y:48},{x:204,y:59},{x:248,y:92},{x:276,y:139},{x:281,y:194},{x:264,y:246},{x:228,y:287},{x:177,y:309},{x:123,y:309},{x:72,y:287},{x:36,y:246},{x:19,y:194},{x:24,y:139},{x:52,y:92},{x:96,y:59}], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12],[12,13],[13,14],[14,0],[2,4],[1,11],[12,0],[9,7],[5,9],[12,8],[1,4],[2,11],[0,8]] },
 ];
-const OL_EDGES = [
-  [0, 1], // mast
-  [0, 2], // sail hypotenuse
-  [1, 2], // sail base / hull top rail
-  [2, 4], // hull right side
-  [4, 3], // hull bottom
-  [3, 1]  // hull left side
-];
-const OL_TOTAL_EDGES = OL_EDGES.length;
+
 const OL_NODE_RADIUS = 24;
 let ol = null;
 
 function olEdgeKey(a, b) { return Math.min(a, b) + '_' + Math.max(a, b); }
+function olCurrentLevel() { return OL_LEVELS[ol.levelIndex]; }
 function olFindEdge(a, b) {
-  return OL_EDGES.find(e => (e[0] === a && e[1] === b) || (e[0] === b && e[1] === a));
+  const edges = olCurrentLevel().edges;
+  return edges.find(e => (e[0] === a && e[1] === b) || (e[0] === b && e[1] === a));
 }
 
-function olInit() {
-  ol = { drawn: new Set(), active: null, dragging: false, dragX: 0, dragY: 0, solved: false };
+function olGetCompleted() {
+  try { return new Set(JSON.parse(localStorage.getItem('nexusArcadeOneLineCompleted') || '[]')); }
+  catch (e) { return new Set(); }
+}
+function olSaveCompleted(set) {
+  try { localStorage.setItem('nexusArcadeOneLineCompleted', JSON.stringify(Array.from(set))); } catch (e) {}
+}
+
+function olInit(levelIndex) {
+  if (typeof levelIndex !== 'number') levelIndex = (ol && ol.levelIndex) || 0;
+  if (levelIndex < 0) levelIndex = OL_LEVELS.length - 1;
+  if (levelIndex >= OL_LEVELS.length) levelIndex = 0;
+  ol = { levelIndex: levelIndex, drawn: new Set(), active: null, dragging: false, dragX: 0, dragY: 0, solved: false };
+  try { localStorage.setItem('nexusArcadeOneLineLevel', String(levelIndex)); } catch (e) {}
   const banner = document.getElementById('ol-banner');
   if (banner) banner.classList.remove('show');
   olUpdateIQ();
+  olUpdateLevelBadge();
+  olRenderLevelGrid();
   olDraw();
 }
-function olRestart() { olInit(); }
+function olRestart() { olInit(ol.levelIndex); }
+function olNextLevel() { olInit(ol.levelIndex + 1); }
+function olPrevLevel() { olInit(ol.levelIndex - 1); }
+function olGoToLevel(i) { olInit(i); }
+
+function olUpdateLevelBadge() {
+  const badge = document.getElementById('ol-level-badge');
+  if (badge) badge.textContent = 'Level ' + (ol.levelIndex + 1) + '/' + OL_LEVELS.length;
+  const nameEl = document.getElementById('ol-shape-name');
+  if (nameEl) nameEl.textContent = olCurrentLevel().name;
+}
 
 function olUpdateIQ() {
   const iqEl = document.getElementById('ol-iq');
   if (!iqEl || !ol) return;
-  const pct = ol.drawn.size / OL_TOTAL_EDGES;
+  const total = olCurrentLevel().edges.length;
+  const pct = ol.drawn.size / total;
   iqEl.textContent = 'IQ ' + Math.round(85 + pct * 42);
+}
+
+function olToggleLevelPicker() {
+  const grid = document.getElementById('ol-level-grid');
+  if (!grid) return;
+  grid.hidden = !grid.hidden;
+  if (!grid.hidden) olRenderLevelGrid();
+}
+function olRenderLevelGrid() {
+  const grid = document.getElementById('ol-level-grid');
+  if (!grid || grid.hidden || !ol) return;
+  const completed = olGetCompleted();
+  grid.innerHTML = '';
+  OL_LEVELS.forEach((lvl, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ol-level-btn' + (i === ol.levelIndex ? ' is-current' : '') + (completed.has(i) ? ' is-done' : '');
+    btn.textContent = String(i + 1);
+    btn.title = lvl.name;
+    btn.addEventListener('click', () => { olGoToLevel(i); });
+    grid.appendChild(btn);
+  });
 }
 
 function olGetCanvasPoint(evt) {
@@ -7769,9 +7862,9 @@ function olGetCanvasPoint(evt) {
 
 function olNodeAt(x, y) {
   let closest = null, closestDist = Infinity;
-  OL_NODES.forEach(n => {
+  olCurrentLevel().nodes.forEach((n, idx) => {
     const d = Math.hypot(n.x - x, n.y - y);
-    if (d < OL_NODE_RADIUS && d < closestDist) { closest = n; closestDist = d; }
+    if (d < OL_NODE_RADIUS && d < closestDist) { closest = idx; closestDist = d; }
   });
   return closest;
 }
@@ -7780,9 +7873,9 @@ function olPointerDown(evt) {
   if (!ol || ol.solved) return;
   evt.preventDefault();
   const p = olGetCanvasPoint(evt);
-  const node = olNodeAt(p.x, p.y);
-  if (!node) return;
-  ol.active = node.id;
+  const idx = olNodeAt(p.x, p.y);
+  if (idx === null) return;
+  ol.active = idx;
   ol.dragging = true;
   ol.dragX = p.x; ol.dragY = p.y;
   olDraw();
@@ -7794,16 +7887,16 @@ function olPointerMove(evt) {
   const p = olGetCanvasPoint(evt);
   ol.dragX = p.x; ol.dragY = p.y;
 
-  const node = olNodeAt(p.x, p.y);
-  if (node && node.id !== ol.active) {
-    const edge = olFindEdge(ol.active, node.id);
+  const idx = olNodeAt(p.x, p.y);
+  if (idx !== null && idx !== ol.active) {
+    const edge = olFindEdge(ol.active, idx);
     if (edge) {
       const key = olEdgeKey(edge[0], edge[1]);
       if (!ol.drawn.has(key)) {
         ol.drawn.add(key);
-        ol.active = node.id;
+        ol.active = idx;
         olUpdateIQ();
-        if (ol.drawn.size === OL_TOTAL_EDGES) olWin();
+        if (ol.drawn.size === olCurrentLevel().edges.length) olWin();
       }
     }
   }
@@ -7819,6 +7912,12 @@ function olPointerUp() {
 function olWin() {
   ol.solved = true;
   ol.dragging = false;
+  const completed = olGetCompleted();
+  completed.add(ol.levelIndex);
+  olSaveCompleted(completed);
+  olRenderLevelGrid();
+  const msg = document.getElementById('ol-banner-msg');
+  if (msg) msg.textContent = 'You traced "' + olCurrentLevel().name + '" without lifting or repeating a line.';
   const banner = document.getElementById('ol-banner');
   if (banner) banner.classList.add('show');
 }
@@ -7827,15 +7926,16 @@ function olDraw() {
   const canvas = document.getElementById('ol-canvas');
   if (!canvas || !ol) return;
   const ctx = canvas.getContext('2d');
+  const level = olCurrentLevel();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
-  OL_EDGES.forEach(e => {
+  level.edges.forEach(e => {
     if (ol.drawn.has(olEdgeKey(e[0], e[1]))) return;
-    const a = OL_NODES[e[0]], b = OL_NODES[e[1]];
+    const a = level.nodes[e[0]], b = level.nodes[e[1]];
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
@@ -7846,9 +7946,9 @@ function olDraw() {
     ctx.stroke();
   });
 
-  OL_EDGES.forEach(e => {
+  level.edges.forEach(e => {
     if (!ol.drawn.has(olEdgeKey(e[0], e[1]))) return;
-    const a = OL_NODES[e[0]], b = OL_NODES[e[1]];
+    const a = level.nodes[e[0]], b = level.nodes[e[1]];
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
@@ -7860,7 +7960,7 @@ function olDraw() {
   });
 
   if (ol.dragging && ol.active !== null && !ol.solved) {
-    const a = OL_NODES[ol.active];
+    const a = level.nodes[ol.active];
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(ol.dragX, ol.dragY);
@@ -7872,14 +7972,14 @@ function olDraw() {
   }
 
   ctx.shadowBlur = 0;
-  OL_NODES.forEach(n => {
+  level.nodes.forEach(n => {
     ctx.beginPath();
     ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(255,255,255,0.25)';
     ctx.fill();
   });
   if (ol.active !== null && !ol.solved) {
-    const a = OL_NODES[ol.active];
+    const a = level.nodes[ol.active];
     ctx.beginPath();
     ctx.arc(a.x, a.y, 7, 0, Math.PI * 2);
     ctx.fillStyle = '#ffe600';
@@ -7899,7 +7999,9 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('pointerleave', olPointerUp);
     canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); olRestart(); });
   }
-  olInit();
+  let startLevel = 0;
+  try { startLevel = parseInt(localStorage.getItem('nexusArcadeOneLineLevel') || '0', 10) || 0; } catch (e) {}
+  olInit(startLevel);
 });
 
 </script>
