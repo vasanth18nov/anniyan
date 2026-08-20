@@ -18,12 +18,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Anniyan Arcade &#183; Play Our Games</title>
-<meta name="description" content="17 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
+<meta name="description" content="18 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://anniyan.online/games/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Anniyan Arcade — Play Our Games">
-<meta property="og:description" content="17 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
+<meta property="og:description" content="18 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
 <meta property="og:url" content="https://anniyan.online/games/">
 <meta property="og:site_name" content="Anniyan — The Alpha">
 <meta property="og:image" content="https://anniyan.online/images/og-image.png">
@@ -31,7 +31,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Anniyan Arcade — Play Our Games">
-<meta name="twitter:description" content="17 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
+<meta name="twitter:description" content="18 free browser games — Rummy, Chess, Tetris, 2048, Carrom and more — playable instantly, no download.">
 <meta name="twitter:image" content="https://anniyan.online/images/og-image.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2312b886'/%3E%3Cstop offset='1' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cpath fill='%230a0b10' d='M50 18 L78 68 L60 68 L50 50 L40 68 L22 68 Z'/%3E%3Cpath fill='%230a0b10' opacity='0.55' d='M32 82 L50 50 L68 82 Z'/%3E%3C/svg%3E" />
 <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
@@ -1892,6 +1892,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 .game-card.tetris  .game-card-title { color: #5c7cfa; }
 .game-card.bazooka .game-card-title { color: #84cc16; }
 .game-card.mahjong .game-card-title { color: #2dd4bf; }
+.game-card.oneline .game-card-title { color: #fde047; }
 
 /* shared setup overlay for the new games */
 .ng-overlay {
@@ -2105,6 +2106,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 @keyframes mjHintPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(245,166,35,.9); } 50% { box-shadow: 0 0 0 3px rgba(245,166,35,.2); } }
 #mj-actions { display: flex; gap: 9px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
 
+/* ===== ONE LINE ===== */
+#screen-oneline { background: #000; min-height: 100vh; padding: 56px 14px 32px; }
+.ol-wrap { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.ol-header { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 14px; }
+.ol-header h2 { font-size: 1.15rem; letter-spacing: 2px; color: #fde047; }
+.ol-iq {
+  background: rgba(253,224,71,.12); border: 1px solid rgba(253,224,71,.4); color: #fde047;
+  border-radius: 8px; padding: 6px 14px; font-weight: 800; font-size: .85rem; letter-spacing: 1px;
+}
+#screen-oneline .ng-banner { background: rgba(253,224,71,.12); border-color: #fde047; }
+#ol-canvas { width: 100%; max-width: 320px; aspect-ratio: 300 / 330; touch-action: none; cursor: pointer; border-radius: 10px; background: #000; }
+.ol-actions { display: flex; gap: 9px; margin-top: 16px; }
+.ol-hint { font-size: .72rem; color: rgba(255,255,255,.4); margin-top: 12px; text-align: center; line-height: 1.6; }
+
 @media (max-width: 600px) {
   .ng-box { padding: 30px 22px; }
   .ng-box h2 { font-size: 1.6rem; }
@@ -2293,6 +2308,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <span class="game-card-icon">🀄</span>
       <div class="game-card-title">Mahjong</div>
       <div class="game-card-desc">Classic tile-matching solitaire<br>80 tiles &middot; hints &amp; shuffle</div>
+    </div>
+    <div class="game-card oneline" onclick="showScreen('oneline')">
+      <span class="game-card-icon">⛵</span>
+      <div class="game-card-title">One Line</div>
+      <div class="game-card-desc">Trace the sailboat in one stroke<br>No lifting &middot; no repeats</div>
     </div>
   </div>
 </div>
@@ -3051,6 +3071,26 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
 </div>
 
+<!-- ===== ONE LINE SCREEN ===== -->
+<div id="screen-oneline" class="screen" style="display:none">
+  <div class="ol-wrap">
+    <div class="ol-header">
+      <h2>One Line</h2>
+      <span class="ol-iq" id="ol-iq">IQ 85</span>
+    </div>
+    <div class="ng-banner" id="ol-banner">
+      <h2>Solved!</h2>
+      <p>You traced the whole sailboat without lifting or repeating a line.</p>
+      <button class="btn btn-green" onclick="olRestart()">Play Again</button>
+    </div>
+    <canvas id="ol-canvas" width="300" height="330"></canvas>
+    <div class="ol-actions">
+      <button class="btn btn-red" onclick="olRestart()">&#8635; Restart</button>
+    </div>
+    <div class="ol-hint">Drag from a glowing node, through connected lines, to trace every line exactly once without lifting your finger. Right-click or Restart to try again.</div>
+  </div>
+</div>
+
 <script>
 // =====================================================================
 // NAVIGATION
@@ -3086,7 +3126,7 @@ function showScreen(name) {
   if (name === 'mahjong') mjResumeTimer(); else mjPauseTimer();
 }
 
-const VALID_SCREENS = ['rummy','chess','pong','snake','sudoku','wordpuzzle','darts','pacman','platformer','ladders','carrom','trivia','g2048','dots','brick','tetris','mahjong'];
+const VALID_SCREENS = ['rummy','chess','pong','snake','sudoku','wordpuzzle','darts','pacman','platformer','ladders','carrom','trivia','g2048','dots','brick','tetris','mahjong','oneline'];
 document.addEventListener('DOMContentLoaded', () => {
   const requested = (location.hash || '').slice(1);
   showScreen(VALID_SCREENS.includes(requested) ? requested : 'home');
@@ -7675,6 +7715,192 @@ function mjDeadEnd() {
   document.getElementById('mj-banner-msg').textContent = 'The last tiles are physically blocking each other, so no shuffle can free them. Start a new board to keep playing.';
   if (banner) banner.classList.add('show');
 }
+
+// =====================================================================
+// ONE LINE — trace-without-lifting puzzle (graph of nodes + edges)
+// =====================================================================
+const OL_NODES = [
+  { id: 0, x: 150, y: 50 },  // sail apex
+  { id: 1, x: 105, y: 210 }, // mast foot / hull top-left
+  { id: 2, x: 195, y: 210 }, // sail base right / hull top-right
+  { id: 3, x: 85,  y: 270 }, // hull bottom-left
+  { id: 4, x: 215, y: 270 }  // hull bottom-right
+];
+const OL_EDGES = [
+  [0, 1], // mast
+  [0, 2], // sail hypotenuse
+  [1, 2], // sail base / hull top rail
+  [2, 4], // hull right side
+  [4, 3], // hull bottom
+  [3, 1]  // hull left side
+];
+const OL_TOTAL_EDGES = OL_EDGES.length;
+const OL_NODE_RADIUS = 24;
+let ol = null;
+
+function olEdgeKey(a, b) { return Math.min(a, b) + '_' + Math.max(a, b); }
+function olFindEdge(a, b) {
+  return OL_EDGES.find(e => (e[0] === a && e[1] === b) || (e[0] === b && e[1] === a));
+}
+
+function olInit() {
+  ol = { drawn: new Set(), active: null, dragging: false, dragX: 0, dragY: 0, solved: false };
+  const banner = document.getElementById('ol-banner');
+  if (banner) banner.classList.remove('show');
+  olUpdateIQ();
+  olDraw();
+}
+function olRestart() { olInit(); }
+
+function olUpdateIQ() {
+  const iqEl = document.getElementById('ol-iq');
+  if (!iqEl || !ol) return;
+  const pct = ol.drawn.size / OL_TOTAL_EDGES;
+  iqEl.textContent = 'IQ ' + Math.round(85 + pct * 42);
+}
+
+function olGetCanvasPoint(evt) {
+  const canvas = document.getElementById('ol-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return { x: (evt.clientX - rect.left) * scaleX, y: (evt.clientY - rect.top) * scaleY };
+}
+
+function olNodeAt(x, y) {
+  let closest = null, closestDist = Infinity;
+  OL_NODES.forEach(n => {
+    const d = Math.hypot(n.x - x, n.y - y);
+    if (d < OL_NODE_RADIUS && d < closestDist) { closest = n; closestDist = d; }
+  });
+  return closest;
+}
+
+function olPointerDown(evt) {
+  if (!ol || ol.solved) return;
+  evt.preventDefault();
+  const p = olGetCanvasPoint(evt);
+  const node = olNodeAt(p.x, p.y);
+  if (!node) return;
+  ol.active = node.id;
+  ol.dragging = true;
+  ol.dragX = p.x; ol.dragY = p.y;
+  olDraw();
+}
+
+function olPointerMove(evt) {
+  if (!ol || !ol.dragging || ol.solved) return;
+  evt.preventDefault();
+  const p = olGetCanvasPoint(evt);
+  ol.dragX = p.x; ol.dragY = p.y;
+
+  const node = olNodeAt(p.x, p.y);
+  if (node && node.id !== ol.active) {
+    const edge = olFindEdge(ol.active, node.id);
+    if (edge) {
+      const key = olEdgeKey(edge[0], edge[1]);
+      if (!ol.drawn.has(key)) {
+        ol.drawn.add(key);
+        ol.active = node.id;
+        olUpdateIQ();
+        if (ol.drawn.size === OL_TOTAL_EDGES) olWin();
+      }
+    }
+  }
+  olDraw();
+}
+
+function olPointerUp() {
+  if (!ol) return;
+  ol.dragging = false;
+  olDraw();
+}
+
+function olWin() {
+  ol.solved = true;
+  ol.dragging = false;
+  const banner = document.getElementById('ol-banner');
+  if (banner) banner.classList.add('show');
+}
+
+function olDraw() {
+  const canvas = document.getElementById('ol-canvas');
+  if (!canvas || !ol) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  OL_EDGES.forEach(e => {
+    if (ol.drawn.has(olEdgeKey(e[0], e[1]))) return;
+    const a = OL_NODES[e[0]], b = OL_NODES[e[1]];
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = '#ffffff';
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 12;
+    ctx.lineWidth = 6;
+    ctx.stroke();
+  });
+
+  OL_EDGES.forEach(e => {
+    if (!ol.drawn.has(olEdgeKey(e[0], e[1]))) return;
+    const a = OL_NODES[e[0]], b = OL_NODES[e[1]];
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = '#ffe600';
+    ctx.shadowColor = '#ffe600';
+    ctx.shadowBlur = 16;
+    ctx.lineWidth = 7;
+    ctx.stroke();
+  });
+
+  if (ol.dragging && ol.active !== null && !ol.solved) {
+    const a = OL_NODES[ol.active];
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(ol.dragX, ol.dragY);
+    ctx.strokeStyle = '#ffe600';
+    ctx.shadowColor = '#ffe600';
+    ctx.shadowBlur = 16;
+    ctx.lineWidth = 7;
+    ctx.stroke();
+  }
+
+  ctx.shadowBlur = 0;
+  OL_NODES.forEach(n => {
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fill();
+  });
+  if (ol.active !== null && !ol.solved) {
+    const a = OL_NODES[ol.active];
+    ctx.beginPath();
+    ctx.arc(a.x, a.y, 7, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffe600';
+    ctx.shadowColor = '#ffe600';
+    ctx.shadowBlur = 10;
+    ctx.fill();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('ol-canvas');
+  if (canvas) {
+    canvas.addEventListener('pointerdown', olPointerDown);
+    canvas.addEventListener('pointermove', olPointerMove);
+    canvas.addEventListener('pointerup', olPointerUp);
+    canvas.addEventListener('pointercancel', olPointerUp);
+    canvas.addEventListener('pointerleave', olPointerUp);
+    canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); olRestart(); });
+  }
+  olInit();
+});
 
 </script>
 
