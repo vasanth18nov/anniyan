@@ -3254,6 +3254,7 @@ function isSequence(cards){
 }
 function isSet(cards){
   if(cards.length<3) return [false,'need \u22653 cards'];
+  if(cards.length>4) return [false,'a set can have at most 4 cards (one per suit)'];
   const normal=cards.filter(c=>!isJoker(c));
   if(!normal.length) return [false,'no normal cards'];
   if(new Set(normal.map(c=>c.rank)).size>1) return [false,'must be same rank'];
@@ -3438,8 +3439,9 @@ function discardCard(cardId){
   checkJokerReveal();
   if(state.playerHand.length===0){
     if(!state.jokerRevealed){ toast('Form a pure sequence first to reveal the Joker!'); state.playerHand.push(state.discardPile.pop()); state.drawn=true; return; }
-    const [ok]=checkAllMelds(state.melds);
+    const [ok,msg]=checkAllMelds(state.melds);
     if(ok){ scores.player++; state.gameOver=true; render(); showBanner('win','You Win! \u{1F389}','Congratulations!'); return; }
+    toast('Cannot finish: '+msg+' — card returned to your hand.'); state.playerHand.push(state.discardPile.pop()); state.drawn=true; render(); return;
   }
   render(); if(!state.gameOver) cpuTurn();
 }
