@@ -68,6 +68,96 @@
 
   main{display:block;}
 
+  /* ---------- PAPER GRAIN ---------- */
+  .paper-grain{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    opacity:0.05;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- READING RAIL ---------- */
+  .reading-rail{
+    display:none;
+    position:fixed;
+    right:30px;
+    top:50%;
+    transform:translateY(-50%);
+    height:min(62vh,540px);
+    width:14px;
+    z-index:55;
+  }
+  @media (min-width:1240px){ .reading-rail{ display:block; } }
+  .rail-track{position:absolute;inset:0;}
+  .rail-track::before{
+    content:"";
+    position:absolute;
+    left:50%;top:0;bottom:0;
+    width:1px;
+    transform:translateX(-50%);
+    background:var(--line);
+  }
+  .rail-fill{
+    position:absolute;
+    left:50%;top:0;
+    width:2px;
+    height:0%;
+    transform:translateX(-50%);
+    background:linear-gradient(180deg, var(--gold), var(--stamp));
+    transition:height 0.1s linear;
+  }
+  .rail-nodes{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .rail-node{
+    position:relative;
+    width:14px;height:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .rail-node::before{
+    content:"";
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--paper);
+    border:1.5px solid var(--muted);
+    transition:transform 0.3s cubic-bezier(.22,1,.36,1), border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .rail-node::after{
+    content:attr(data-label);
+    position:absolute;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%) translateX(4px);
+    white-space:nowrap;
+    font-size:11px;
+    font-family:'Inter',sans-serif;
+    background:var(--ink);
+    color:#F2EEDF;
+    padding:4px 9px;
+    letter-spacing:0.02em;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .rail-node:hover::after{opacity:1;transform:translateY(-50%) translateX(0);}
+  .rail-node:hover::before{border-color:var(--stamp);transform:scale(1.3);}
+  .rail-node.is-active::before{
+    background:var(--stamp);
+    border-color:var(--stamp);
+    box-shadow:0 0 0 4px rgba(156,59,59,0.14);
+    transform:scale(1.35);
+  }
+
   /* ---------- BACK TO SITE ---------- */
   .back-home{
     position:fixed;
@@ -127,17 +217,28 @@
   }
   .site-nav-links::-webkit-scrollbar{display:none;}
   .site-nav-links a{
+    position:relative;
     flex:none;
     font-size:13px;
     color:var(--muted);
     text-decoration:none;
     white-space:nowrap;
     padding:4px 0;
-    border-bottom:1.5px solid transparent;
-    transition:color 0.2s ease, border-color 0.2s ease;
+    transition:color 0.2s ease;
+  }
+  .site-nav-links a::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:0;
+    height:1.5px;
+    background:var(--stamp);
+    transform:scaleX(0);
+    transition:transform 0.3s cubic-bezier(.22,1,.36,1);
   }
   .site-nav-links a:hover{color:var(--ink);}
-  .site-nav-links a.active{color:var(--stamp);border-bottom-color:var(--stamp);}
+  .site-nav-links a:hover::after{transform:scaleX(0.6);}
+  .site-nav-links a.active{color:var(--stamp);}
+  .site-nav-links a.active::after{transform:scaleX(1);}
 
   /* ---------- SCROLL PROGRESS ---------- */
   .scroll-progress{
@@ -174,6 +275,18 @@
     border:1px solid rgba(27,42,65,0.14);
     pointer-events:none;
   }
+  .cover-corner{
+    position:absolute;
+    width:22px;
+    height:22px;
+    border:1.5px solid var(--gold);
+    opacity:0.7;
+    pointer-events:none;
+  }
+  .cover-corner.tl{top:26px;left:26px;border-right:none;border-bottom:none;}
+  .cover-corner.tr{top:26px;right:26px;border-left:none;border-bottom:none;}
+  .cover-corner.bl{bottom:26px;left:26px;border-right:none;border-top:none;}
+  .cover-corner.br{bottom:26px;right:26px;border-left:none;border-top:none;}
   .cover-inner{
     max-width:1080px;
     margin:0 auto;
@@ -342,6 +455,30 @@
   }
   .lede{color:var(--muted);font-size:15.5px;max-width:640px;}
   .lede strong{color:var(--text);}
+  .lede.dropcap::first-letter{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    color:var(--stamp);
+    float:left;
+    font-size:60px;
+    line-height:0.82;
+    padding:4px 9px 0 0;
+  }
+
+  /* ---------- CHAPTER DIVIDER ---------- */
+  .chapter-divider{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-top:60px;
+    color:var(--gold);
+  }
+  .chapter-divider span{
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--line) 45%, var(--line) 55%, transparent);
+  }
+  .chapter-divider svg{flex:none;}
 
   /* ---------- reveal-on-scroll ---------- */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease, transform 0.7s ease;}
@@ -402,7 +539,7 @@
     background:var(--paper);
     border:1px solid var(--line);
     border-left:4px solid var(--ink);
-    box-shadow:0 14px 28px -24px rgba(27,42,65,0.4);
+    box-shadow:0 14px 28px -24px rgba(27,42,65,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
     transition:box-shadow 0.3s ease, border-left-color 0.3s ease;
   }
   .day:hover{box-shadow:0 18px 34px -20px rgba(27,42,65,0.5);border-left-color:var(--stamp);}
@@ -481,7 +618,7 @@
     padding:26px 22px 24px;
     background:var(--paper);
     border:1px solid var(--line);
-    box-shadow:0 14px 30px -22px rgba(27,42,65,0.35);
+    box-shadow:0 14px 30px -22px rgba(27,42,65,0.35), inset 0 1px 0 rgba(255,255,255,0.5);
     transition:transform 0.3s ease, box-shadow 0.3s ease;
   }
   .domain-card:hover{transform:translateY(-4px);box-shadow:0 20px 38px -20px rgba(27,42,65,0.45);}
@@ -600,7 +737,7 @@
     gap:16px;
     margin:24px 0;
   }
-  .rotation .col{padding:18px 20px;background:var(--paper);border:1px solid var(--line);box-shadow:0 14px 28px -24px rgba(27,42,65,0.35);transition:transform 0.25s ease;}
+  .rotation .col{padding:18px 20px;background:var(--paper);border:1px solid var(--line);box-shadow:0 14px 28px -24px rgba(27,42,65,0.35), inset 0 1px 0 rgba(255,255,255,0.5);transition:transform 0.25s ease;}
   .rotation .col:hover{transform:translateY(-3px);}
   .rotation h4{margin:0 0 10px;font-size:14px;color:var(--ink);font-family:'Fraunces',serif;}
   .rotation p{margin:0 0 8px;font-size:13.8px;}
@@ -638,7 +775,7 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    box-shadow:0 16px 32px -24px rgba(27,42,65,0.4);
+    box-shadow:0 16px 32px -24px rgba(27,42,65,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
     transition:transform 0.3s ease, box-shadow 0.3s ease;
   }
   .stamp:hover{transform:translateY(-5px) rotate(-1deg);box-shadow:0 22px 40px -20px rgba(27,42,65,0.5);}
@@ -686,7 +823,7 @@
 
   /* ---------- OUTCOME ---------- */
   .questions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0;}
-  .q-card{background:var(--paper);border:1px solid var(--line);padding:20px 18px 16px;box-shadow:0 14px 28px -24px rgba(27,42,65,0.35);transition:transform 0.25s ease;}
+  .q-card{background:var(--paper);border:1px solid var(--line);padding:20px 18px 16px;box-shadow:0 14px 28px -24px rgba(27,42,65,0.35), inset 0 1px 0 rgba(255,255,255,0.5);transition:transform 0.25s ease;}
   .q-card:hover{transform:translateY(-3px);}
   .q-card .qnum{font-family:'Fraunces',serif;color:var(--stamp);font-size:22px;display:block;margin-bottom:8px;}
   .q-card p{margin:0;font-size:13.8px;}
@@ -829,7 +966,26 @@
 </head>
 <body>
 
+<div class="paper-grain" aria-hidden="true"></div>
 <div class="scroll-progress" id="scrollProgress"></div>
+
+<nav class="reading-rail" aria-label="Chapter progress">
+  <div class="rail-track">
+    <div class="rail-fill" id="railFill"></div>
+  </div>
+  <div class="rail-nodes">
+    <a class="rail-node" href="#s1" data-label="Philosophy" data-s="1"></a>
+    <a class="rail-node" href="#s2" data-label="Weekly Structure" data-s="2"></a>
+    <a class="rail-node" href="#s3" data-label="Domains" data-s="3"></a>
+    <a class="rail-node" href="#s4" data-label="Passport" data-s="4"></a>
+    <a class="rail-node" href="#s5" data-label="Support Model" data-s="5"></a>
+    <a class="rail-node" href="#s6" data-label="Ownership" data-s="6"></a>
+    <a class="rail-node" href="#s7" data-label="Challenges" data-s="7"></a>
+    <a class="rail-node" href="#s8" data-label="Staff Roles" data-s="8"></a>
+    <a class="rail-node" href="#s9" data-label="Pilot Approach" data-s="9"></a>
+    <a class="rail-node" href="#s10" data-label="Outcome" data-s="10"></a>
+  </div>
+</nav>
 
 <a href="https://anniyan.online/" class="back-home">
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -837,6 +993,10 @@
 </a>
 
 <div class="cover">
+  <span class="cover-corner tl" aria-hidden="true"></span>
+  <span class="cover-corner tr" aria-hidden="true"></span>
+  <span class="cover-corner bl" aria-hidden="true"></span>
+  <span class="cover-corner br" aria-hidden="true"></span>
   <div class="cover-inner">
     <div class="cover-top">
       <div class="cover-main">
@@ -926,7 +1086,7 @@
       <div class="chapter-num">1</div>
       <h2 class="chapter-title">Programme Philosophy</h2>
     </div>
-    <p class="lede">The Home Support Programme should be viewed as an <strong>independent-living learning programme</strong>, with the homestay environment serving as the context in which students practise real-world skills.</p>
+    <p class="lede dropcap">The Home Support Programme should be viewed as an <strong>independent-living learning programme</strong>, with the homestay environment serving as the context in which students practise real-world skills.</p>
     <p class="lede">Rather than staff completing tasks for students, the programme uses a <strong>&ldquo;support, teach, fade&rdquo;</strong> approach, with adult assistance decreasing as each student demonstrates competence &mdash; while appropriate safety and supervision are maintained throughout.</p>
     <div class="flow">
       <div class="flow-step">I do</div>
@@ -938,6 +1098,7 @@
       <div class="flow-step">You do independently</div>
     </div>
     <p class="flow-caption">Staff involvement decreases left to right as student independence grows</p>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1005,6 +1166,7 @@
       <p class="day-label">Wednesday &mdash; Independent Living Skills</p>
       <p>Repeat breakfast and morning routines while intentionally <strong>fading prompts</strong>. Before school, students complete a &ldquo;Reset the Home&rdquo; routine: make bed, put clothes away, place dirty laundry in the basket, clear the breakfast area, wash dishes, wipe the table, check belongings and leave shared spaces tidy. Then attend regular classes at 9:00 AM and return home after school.</p>
     </div>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1047,6 +1209,7 @@
         <p>Communicating needs, managing frustration, peer negotiation, turn-taking, coping with change, boundaries, minor conflict resolution</p>
       </div>
     </div>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1076,6 +1239,7 @@
       <div class="week"><span>Week 4</span><b>Level 4</b></div>
     </div>
     <p class="lede" style="margin-top:14px;">This provides measurable evidence of progress rather than simply recording that a student participated.</p>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1109,6 +1273,7 @@
       <div><b>Tuesday</b>&ldquo;Check your morning checklist.&rdquo;</div>
       <div><b>Wednesday</b>Student independently checks the schedule</div>
     </div>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1136,6 +1301,7 @@
     </div>
     <p style="font-size:13px;color:var(--muted);text-align:center;">Roles rotate the following week</p>
     <div class="pullquote"><p>The long-term aim is for students to experience the space as &ldquo;our home&rdquo; with shared responsibilities, rather than as a place where adults provide services.</p></div>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1164,6 +1330,7 @@
         <div class="month">December</div><div class="challenge">Community Challenge</div><div class="goal">Independently order, pay and communicate during a community outing</div>
       </div>
     </div>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1179,6 +1346,7 @@
       &ldquo;Teacher Jack will lead the programme, supported by an additional staff member during overnight hours. Staff will provide appropriate supervision, guidance and safety support while encouraging students to complete tasks as independently as possible. Individual levels of support will be adjusted according to each student's needs, with the aim of gradually reducing adult prompting as students develop greater confidence and competence.&rdquo;
       <div class="who">Recommended programme wording</div>
     </div>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1200,6 +1368,7 @@
       <li>Student reflection after key activities</li>
       <li>Regular communication with families about progress and next goals</li>
     </ul>
+    <div class="chapter-divider" aria-hidden="true"><span></span><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" transform="rotate(45 5 5)" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span></span></div>
     </div>
   </section>
 
@@ -1246,7 +1415,11 @@
 <script>
   const nav = document.getElementById('siteNav');
   const links = document.querySelectorAll('.site-nav-links a');
+  const railNodes = document.querySelectorAll('.rail-node');
+  const railFill = document.getElementById('railFill');
   const sections = document.querySelectorAll('section.chapter');
+  const ghostNums = document.querySelectorAll('.ghost-num');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function updateScrollFx() {
     const scrollTop = window.scrollY;
@@ -1255,6 +1428,7 @@
 
     document.getElementById('scrollProgress').style.width = pct + '%';
     nav.classList.toggle('visible', scrollTop > window.innerHeight * 0.7);
+    if (railFill) railFill.style.height = pct + '%';
 
     const toTop = document.getElementById('toTop');
     const show = scrollTop > window.innerHeight * 0.9;
@@ -1262,6 +1436,16 @@
     const ring = document.getElementById('toTopRing');
     const offset = 125.6 - (pct / 100) * 125.6;
     ring.style.strokeDashoffset = offset;
+
+    if (!reduceMotion) {
+      const vh = window.innerHeight;
+      ghostNums.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const drift = (center - vh / 2) * -0.035;
+        el.style.transform = `translateY(${drift}px)`;
+      });
+    }
   }
   window.addEventListener('scroll', updateScrollFx, { passive: true });
   updateScrollFx();
@@ -1274,7 +1458,9 @@
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const id = entry.target.getAttribute('id');
-        links.forEach(a => a.classList.toggle('active', a.dataset.s === id.replace('s','')));
+        const num = id.replace('s', '');
+        links.forEach(a => a.classList.toggle('active', a.dataset.s === num));
+        railNodes.forEach(n => n.classList.toggle('is-active', n.dataset.s === num));
       }
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
