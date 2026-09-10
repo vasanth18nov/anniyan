@@ -75,6 +75,8 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
+    flex-wrap:wrap;
+    row-gap:12px;
     padding:16px clamp(20px,4vw,48px);
     max-width:1120px;
     margin:0 auto;
@@ -82,31 +84,32 @@
   .brand{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:14px;
   }
   .brand-mark{
-    width:34px;height:34px;
+    width:46px;height:46px;
     border:1.5px solid var(--accent);
-    border-radius:8px;
+    border-radius:10px;
     display:flex;align-items:center;justify-content:center;
     color:var(--accent);
     flex:none;
   }
+  .brand-mark svg{width:24px;height:24px;}
   .brand-text{
     font-family:'Rajdhani',sans-serif;
     font-weight:700;
-    font-size:18px;
-    letter-spacing:0.02em;
-    line-height:1.05;
+    font-size:clamp(22px,3.4vw,30px);
+    letter-spacing:0.015em;
+    line-height:1.02;
   }
   .brand-text span{
     display:block;
     font-family:'JetBrains Mono',monospace;
     font-weight:500;
-    font-size:10px;
-    letter-spacing:0.16em;
+    font-size:clamp(10px,1.3vw,12.5px);
+    letter-spacing:0.14em;
     color:var(--text-dim);
-    margin-top:2px;
+    margin-top:4px;
   }
   .nav-cta{
     display:flex;
