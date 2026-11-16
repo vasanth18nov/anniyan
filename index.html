@@ -44,7 +44,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles.css?v=2" />
+<script>
+  /* Turn on scroll animations only when JS runs and the visitor hasn't asked for reduced motion. */
+  (function (d) {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce && "IntersectionObserver" in window) d.documentElement.classList.add("motion");
+  })(document);
+</script>
 
 <script type="application/ld+json">
 {
@@ -74,6 +81,7 @@
     <a class="scroll-spine-node" href="#services" aria-label="Services"></a>
     <a class="scroll-spine-node" href="#tools" aria-label="Tools"></a>
     <a class="scroll-spine-node" href="#games" aria-label="Games"></a>
+    <a class="scroll-spine-node" href="#process" aria-label="How We Work"></a>
     <a class="scroll-spine-node" href="#why-us" aria-label="Why Us"></a>
     <a class="scroll-spine-node" href="#about" aria-label="About"></a>
     <a class="scroll-spine-node" href="#contact" aria-label="Contact"></a>
@@ -203,6 +211,7 @@
       </div>
     </div>
     <div class="hero-glow" aria-hidden="true"></div>
+    <a href="#services" class="scroll-cue" aria-label="Scroll to services"><span class="scroll-cue-text">Scroll</span><span class="scroll-cue-line" aria-hidden="true"></span></a>
 
     <svg class="skyline-divider" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
       <defs>
@@ -327,6 +336,68 @@
     </div>
   </section>
 
+  <!-- ================= HOW WE WORK (pinned on scroll) ================= -->
+  <section class="process" id="process" aria-labelledby="processTitle">
+    <div class="process-sticky">
+      <div class="container process-inner">
+        <div class="process-copy">
+          <p class="section-eyebrow">How We Work</p>
+          <h2 class="section-title" id="processTitle">From first call to long after launch</h2>
+          <ol class="process-steps">
+            <li class="process-step is-active">
+              <span class="process-num">01</span>
+              <h3>Discover</h3>
+              <p>We sit down with you, map how the work really flows today, and agree on what success looks like before any code is written.</p>
+            </li>
+            <li class="process-step">
+              <span class="process-num">02</span>
+              <h3>Design</h3>
+              <p>Screens, data and integrations are sketched and reviewed with you, so nothing about the build comes as a surprise.</p>
+            </li>
+            <li class="process-step">
+              <span class="process-num">03</span>
+              <h3>Build</h3>
+              <p>We ship in short, visible steps. You see working software early and steer it while it takes shape.</p>
+            </li>
+            <li class="process-step">
+              <span class="process-num">04</span>
+              <h3>Support</h3>
+              <p>After launch we stay on for fixes, improvements and new features as your business grows.</p>
+            </li>
+          </ol>
+          <div class="process-meter" aria-hidden="true">
+            <span class="process-meter-track"><span class="process-meter-fill" id="processFill"></span></span>
+            <span class="process-meter-count"><span id="processNow">01</span> / 04</span>
+          </div>
+        </div>
+
+        <div class="process-visual" aria-hidden="true">
+          <svg viewBox="0 0 320 320" class="process-ring">
+            <defs>
+              <linearGradient id="processGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#12b886"/>
+                <stop offset="1" stop-color="#f5a623"/>
+              </linearGradient>
+            </defs>
+            <circle cx="160" cy="160" r="140" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+            <circle cx="160" cy="160" r="112" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="2 8" class="process-ring-inner"/>
+            <circle cx="160" cy="160" r="140" fill="none" stroke="url(#processGrad)" stroke-width="3" stroke-linecap="round" class="process-ring-fill" id="processRing" transform="rotate(-90 160 160)"/>
+            <g class="process-nodes">
+              <circle class="process-node" cx="160" cy="20" r="7"/>
+              <circle class="process-node" cx="300" cy="160" r="7"/>
+              <circle class="process-node" cx="160" cy="300" r="7"/>
+              <circle class="process-node" cx="20" cy="160" r="7"/>
+            </g>
+          </svg>
+          <div class="process-center">
+            <span class="process-center-num" id="processBigNum">01</span>
+            <span class="process-center-label" id="processBigLabel">Discover</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= WHY US ================= -->
   <section class="section section-alt" id="why-us">
     <div class="container why-us-inner">
@@ -338,27 +409,6 @@
           built on technology that won&rsquo;t need replacing next year, and supported after launch
           &mdash; not abandoned once the invoice is paid.
         </p>
-        <div class="flow-graphic card" aria-hidden="true">
-          <div class="flow-step">
-            <span class="flow-dot"></span>
-            <span>Discover</span>
-          </div>
-          <span class="flow-line"></span>
-          <div class="flow-step">
-            <span class="flow-dot"></span>
-            <span>Design</span>
-          </div>
-          <span class="flow-line"></span>
-          <div class="flow-step">
-            <span class="flow-dot"></span>
-            <span>Build</span>
-          </div>
-          <span class="flow-line"></span>
-          <div class="flow-step">
-            <span class="flow-dot"></span>
-            <span>Support</span>
-          </div>
-        </div>
       </div>
       <div class="why-us-points">
         <div class="why-point">
@@ -390,8 +440,19 @@
   <section class="section" id="about">
     <div class="container about-inner">
       <div class="about-avatar-wrap">
-        <div class="about-avatar">
-          <img src="images/founder.jpg" alt="Vasanth, Founder of Anniyan" width="343" height="500" loading="lazy" />
+        <div class="about-avatar about-mark" aria-hidden="true">
+          <span class="about-mark-core">
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="aboutGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#12b886"/>
+                  <stop offset="1" stop-color="#f5a623"/>
+                </linearGradient>
+              </defs>
+              <path fill="url(#aboutGrad)" d="M50 18 L78 68 L60 68 L50 50 L40 68 L22 68 Z"/>
+              <path fill="url(#aboutGrad)" opacity="0.55" d="M32 82 L50 50 L68 82 Z"/>
+            </svg>
+          </span>
         </div>
         <div class="about-badge">CEO &amp; Founder</div>
       </div>
@@ -520,6 +581,7 @@
       </div>
     </nav>
   </div>
+  <div class="footer-word" id="footerWord" aria-hidden="true">ANNIYAN</div>
   <div class="container footer-bottom">
     <p>&copy; <span id="year"></span> Anniyan. All rights reserved. &middot; <a href="privacy/">Privacy</a> &middot; <a href="terms/">Terms</a></p>
   </div>
@@ -540,6 +602,7 @@
 </button>
 
 <script src="data.js"></script>
-<script src="script.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="script.js?v=2"></script>
 </body>
 </html>

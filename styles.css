@@ -1000,13 +1000,13 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
   border: 1px dashed rgba(45,212,191,0.35);
   animation: spin 40s linear infinite;
 }
-.about-avatar img {
+.about-mark-core {
   width: 100%; height: 100%;
   border-radius: 50%;
-  object-fit: cover;
-  object-position: center 22%;
-  display: block;
+  background: radial-gradient(circle at 50% 35%, #161a26, var(--bg) 70%);
+  display: flex; align-items: center; justify-content: center;
 }
+.about-mark-core svg { width: 58%; height: 58%; filter: drop-shadow(0 6px 18px rgba(18,184,134,0.35)); }
 .about-badge {
   font-size: 0.75rem;
   font-weight: 600;
@@ -1168,3 +1168,319 @@ html { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thi
 @media (max-width: 480px) {
   .hero-cta { flex-direction: column; align-items: stretch; }
 }
+
+/* =====================================================================
+   Homepage scroll motion
+   Hidden "before" states only apply under html.motion, which index.html
+   sets when JS runs and the visitor hasn't asked for reduced motion, so
+   the page is fully readable without it.
+   ===================================================================== */
+:root { --ease-out: cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Lenis smooth scrolling (desktop wheel/trackpad only) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Header tucks away while scrolling down, comes back on the way up */
+.site-header { transition: border-color 0.3s ease, background 0.3s ease, translate 0.45s var(--ease-out); }
+.site-header.is-hidden { translate: 0 -100%; }
+.main-nav a.is-active { color: var(--text); }
+.main-nav a.is-active::after { width: 100%; }
+
+/* Hero scroll cue */
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  translate: -50% 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  transition: color 0.2s ease;
+}
+.scroll-cue:hover { color: var(--text); }
+.scroll-cue-line {
+  position: relative;
+  width: 1px;
+  height: 42px;
+  overflow: hidden;
+  background: linear-gradient(rgba(45,212,191,0.5), transparent);
+}
+.scroll-cue-line::after {
+  content: "";
+  position: absolute;
+  left: 0; top: -40%;
+  width: 100%; height: 40%;
+  background: var(--text);
+  animation: cue-drop 1.8s var(--ease-out) infinite;
+}
+@keyframes cue-drop { to { top: 100%; } }
+@media (max-width: 900px), (max-height: 760px) { .scroll-cue { display: none; } }
+
+html.motion .hero-copy,
+html.motion .hero-orbit,
+html.motion .hero-glow { will-change: translate, opacity; }
+
+/* Generic scroll reveal. Individual translate/scale/rotate properties are
+   used so they stack with the hover tilt, which writes `transform`. */
+html.motion [data-reveal] {
+  opacity: 0;
+  translate: 0 48px;
+  transition:
+    opacity 0.9s var(--ease-out) var(--rd, 0s),
+    translate 1.05s var(--ease-out) var(--rd, 0s),
+    scale 1.05s var(--ease-out) var(--rd, 0s),
+    rotate 1.1s var(--ease-out) var(--rd, 0s),
+    filter 0.9s var(--ease-out) var(--rd, 0s),
+    transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease,
+    padding-left 0.25s ease, background 0.25s ease, color 0.2s ease;
+}
+html.motion [data-reveal="left"] { translate: -64px 0; }
+html.motion [data-reveal="right"] { translate: 64px 0; }
+html.motion [data-reveal="zoom"] { translate: 0 36px; scale: 0.92; filter: blur(10px); }
+html.motion [data-reveal="flip"] { translate: 0 70px; rotate: x 28deg; }
+html.motion [data-reveal="fade"] { translate: none; }
+html.motion [data-reveal].is-in { opacity: 1; translate: none; scale: none; rotate: none; filter: none; }
+html.motion .services-grid,
+html.motion .games-grid,
+html.motion .tools-grid { perspective: 1400px; }
+
+/* Section titles rise word by word from behind a mask */
+.split-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.split-wi { display: inline-block; transform-origin: 0 100%; }
+html.motion .is-split .split-wi {
+  translate: 0 110%;
+  rotate: 7deg;
+  transition:
+    translate 1s var(--ease-out) calc(var(--wi) * 55ms),
+    rotate 1s var(--ease-out) calc(var(--wi) * 55ms);
+}
+html.motion .is-split.is-in .split-wi { translate: none; rotate: none; }
+
+/* Brand statement: words light up as the line scrolls through */
+html.motion .brand-statement-text .bw { opacity: 0.14; transition: opacity 0.18s linear; }
+
+/* Trust strip becomes a marquee whose speed and direction follow the scroll */
+.trust-strip.is-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.trust-strip.is-marquee .trust-grid {
+  display: flex;
+  width: max-content;
+  max-width: none;
+  margin: 0;
+  padding: 30px 0;
+  gap: 0;
+  will-change: transform;
+}
+.trust-strip.is-marquee .trust-item {
+  flex: none;
+  padding: 0 30px;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.7vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.trust-strip.is-marquee .trust-icon { width: 24px; height: 24px; }
+.trust-strip.is-marquee .trust-item::after {
+  content: "";
+  flex: none;
+  width: 7px; height: 7px;
+  margin-left: 46px;
+  border-radius: 50%;
+  background: var(--gradient-1);
+  box-shadow: 0 0 12px rgba(18,184,134,0.7);
+}
+
+/* ============ How We Work ============ */
+/* Default (no JS / reduced motion): a plain 2x2 list */
+.process { position: relative; padding: 110px 0; }
+.process-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px; }
+.process-step {
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+}
+.process-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: var(--violet);
+}
+.process-step h3 { font-size: 1.4rem; margin: 6px 0 10px; }
+.process-step p { color: var(--text-dim); }
+.process-meter, .process-visual { display: none; }
+@media (max-width: 780px) {
+  .process { padding: 80px 0; }
+  .process-steps { grid-template-columns: 1fr; }
+}
+
+/* Motion: the section pins and the steps advance with the scroll */
+html.motion .process { padding: 0; height: 400vh; }
+html.motion .process-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+html.motion .process-inner {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 60px;
+  align-items: center;
+}
+html.motion .process-steps { grid-template-columns: 1fr; gap: 0; margin-top: 30px; min-height: 200px; }
+html.motion .process-step {
+  grid-area: 1 / 1;
+  padding: 0;
+  border: 0;
+  background: none;
+  opacity: 0;
+  translate: 0 44px;
+  pointer-events: none;
+  transition: opacity 0.55s var(--ease-out), translate 0.75s var(--ease-out);
+}
+html.motion .process-step.is-past { translate: 0 -44px; }
+html.motion .process-step.is-active { opacity: 1; translate: none; pointer-events: auto; }
+html.motion .process-step h3 {
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  letter-spacing: -0.02em;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  width: fit-content;
+}
+html.motion .process-step p { font-size: 1.1rem; max-width: 480px; }
+html.motion .process-meter { display: flex; align-items: center; gap: 16px; margin-top: 26px; }
+.process-meter-track {
+  flex: 0 1 240px;
+  height: 2px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--border-strong);
+}
+.process-meter-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-1);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.process-meter-count {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+html.motion .process-visual {
+  display: block;
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1;
+  justify-self: center;
+}
+.process-ring { width: 100%; height: 100%; overflow: visible; }
+.process-ring-fill {
+  stroke-dasharray: 879.65;
+  stroke-dashoffset: 879.65;
+  filter: drop-shadow(0 0 8px rgba(18,184,134,0.55));
+}
+.process-ring-inner { transform-origin: 160px 160px; }
+.process-node {
+  fill: var(--surface-2);
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  transition: fill 0.4s ease, stroke 0.4s ease;
+}
+.process-node.is-lit { fill: #12b886; stroke: rgba(45,212,191,0.65); }
+.process-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.process-center-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.6rem, 8.5vw, 6.8rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.process-center-label {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.process-center.is-swap .process-center-num,
+.process-center.is-swap .process-center-label { animation: num-pop 0.55s var(--ease-out); }
+@keyframes num-pop { from { opacity: 0; translate: 0 18px; } }
+@media (max-width: 900px) {
+  html.motion .process { height: 360vh; }
+  html.motion .process-inner { grid-template-columns: 1fr; gap: 12px; }
+  html.motion .process-visual { order: -1; width: min(46vw, 200px); justify-self: start; }
+  html.motion .process-steps { margin-top: 14px; min-height: 180px; }
+  html.motion .process-step p { font-size: 1rem; }
+  html.motion .process .section-title { margin-bottom: 0; }
+  .process-center-num { font-size: 3.2rem; }
+  .process-center-label { font-size: 0.66rem; margin-top: 4px; }
+}
+
+/* ============ Footer wordmark that fills as you reach the bottom ============ */
+.footer-word {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.4rem, 17vw, 15rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 10px 0 34px;
+  color: transparent;
+  /* gradient layer grows with --fill over a faint "ghost" layer */
+  background:
+    var(--gradient-1) no-repeat 0 0 / var(--fill, 100%) 100%,
+    linear-gradient(rgba(255,255,255,0.05), rgba(255,255,255,0.05));
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+}
+html.motion .footer-word { --fill: 0%; }
