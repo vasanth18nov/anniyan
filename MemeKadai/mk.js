@@ -91,6 +91,9 @@ const state = {
 };
 let viewSeq = 0;
 const feedCache = { hash: null, frag: null, y: 0, view: 0 };
+// The shop owner always shows as "Anniyan.online", on old posts too.
+const OWNER_NAME = 'Anniyan.online';
+const shownName = (uid, name) => (ADMIN_UIDS.includes(uid) ? OWNER_NAME : name);
 const isAdmin = () => !!state.user && ADMIN_UIDS.includes(state.user.uid);
 const nowServer = () => Date.now() + state.offset;
 
@@ -202,7 +205,7 @@ function needSignIn(why = 'to do that') {
 
 async function ensureUser(u) {
   const ref = doc(db, 'users', u.uid);
-  const name = (u.displayName || 'Meme lover').slice(0, 60);
+  const name = (shownName(u.uid, u.displayName) || 'Meme lover').slice(0, 60);
   const photo = (u.photoURL || '').slice(0, 1000);
   const snap = await getDoc(ref);
   if (!snap.exists()) {
@@ -236,9 +239,9 @@ function renderAccount() {
   const box = $('#account');
   const u = state.user;
   if (!u) { box.innerHTML = '<button class="btn btn-ghost" id="signInBtn">Sign in</button>'; $('#signInBtn').onclick = signIn; return; }
-  box.innerHTML = `<button class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Your account">${avatar(u.photoURL, u.displayName)}</button>
+  box.innerHTML = `<button class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Your account">${avatar(u.photoURL, shownName(u.uid, u.displayName))}</button>
     <div class="menu" id="acctMenu" role="menu" hidden>
-      <div class="menu-head">${avatar(u.photoURL, u.displayName)}<div><b>${esc(u.displayName || 'You')}</b></div></div>
+      <div class="menu-head">${avatar(u.photoURL, shownName(u.uid, u.displayName))}<div><b>${esc(shownName(u.uid, u.displayName) || 'You')}</b></div></div>
       <a role="menuitem" href="#/u/${u.uid}">👤 My memes</a>
       <a role="menuitem" href="#/u/${u.uid}/upvoted">⬆️ Upvoted</a>
       <a role="menuitem" href="#/u/${u.uid}/saved">🔖 Saved</a>
@@ -307,7 +310,7 @@ function postCard(id, p, { full = false } = {}) {
     <header class="post-head">
       <a class="sec" href="#/s/${sec.id}"><span>${sec.ic}</span>${esc(sec.name)}</a>
       <span class="dot">·</span><time datetime="${p.createdAt?.toDate?.().toISOString?.() || ''}">${ago(p.createdAt)}</time>
-      <span class="dot">·</span><a class="by" href="#/u/${p.uid}">${esc(p.name)}</a>
+      <span class="dot">·</span><a class="by" href="#/u/${p.uid}">${esc(shownName(p.uid, p.name))}</a>
       <button class="icon-btn more" data-act="more" aria-label="More options" aria-haspopup="menu">⋯</button>
     </header>
     ${full ? `<h1 class="post-title">${esc(p.title)}</h1>` : `<h2 class="post-title"><a href="#/p/${id}">${esc(p.title)}</a></h2>`}
@@ -702,9 +705,9 @@ function commentHtml(c) {
   const liked = state.liked.has(c.id);
   const canDel = state.user && (state.user.uid === c.uid || isAdmin());
   return `<div class="cmt" data-cid="${c.id}" data-parent="${c.parent || c.id}">
-    <a href="#/u/${c.uid}">${avatar(c.photo, c.name)}</a>
+    <a href="#/u/${c.uid}">${avatar(c.photo, shownName(c.uid, c.name))}</a>
     <div class="cmt-body">
-      <div class="cmt-meta"><a class="by" href="#/u/${c.uid}">${esc(c.name)}</a> <span class="muted">· ${ago(c.createdAt)}</span></div>
+      <div class="cmt-meta"><a class="by" href="#/u/${c.uid}">${esc(shownName(c.uid, c.name))}</a> <span class="muted">· ${ago(c.createdAt)}</span></div>
       <p class="cmt-text">${esc(c.text)}</p>
       <div class="cmt-acts">
         <button class="cact ${liked ? 'on' : ''}" data-cact="like" aria-pressed="${liked}">${liked ? '❤️' : '🤍'} <span>${c.likes || ''}</span></button>
@@ -721,7 +724,7 @@ function renderComposer(box, pid, parent, prefill = '') {
     $('#cSign', box).onclick = () => needSignIn('to comment');
     return;
   }
-  box.innerHTML = `<form class="composer">${avatar(state.user.photoURL, state.user.displayName)}
+  box.innerHTML = `<form class="composer">${avatar(state.user.photoURL, shownName(state.user.uid, state.user.displayName))}
     <div class="composer-in"><textarea maxlength="1000" rows="${parent ? 2 : 2}" placeholder="${parent ? 'Write a reply…' : 'Leave a comment…'}" required>${esc(prefill)}</textarea>
     <div class="composer-row"><span class="muted count">0/1000</span>
     ${parent ? '<button type="button" class="btn btn-ghost btn-sm" data-cancel>Cancel</button>' : ''}
@@ -737,7 +740,7 @@ function renderComposer(box, pid, parent, prefill = '') {
     if (!state.ready) return toast('One moment, still signing you in…');
     const btn = $('button[type=submit]', box); btn.disabled = true;
     const ref = doc(collection(db, 'posts', pid, 'comments'));
-    const c = { text, uid: state.user.uid, name: (state.user.displayName || 'Meme lover').slice(0, 60), photo: (state.user.photoURL || '').slice(0, 1000), createdAt: serverTimestamp(), parent, likes: 0 };
+    const c = { text, uid: state.user.uid, name: (shownName(state.user.uid, state.user.displayName) || 'Meme lover').slice(0, 60), photo: (state.user.photoURL || '').slice(0, 1000), createdAt: serverTimestamp(), parent, likes: 0 };
     try {
       const b = writeBatch(db);
       b.set(ref, c);
@@ -771,7 +774,7 @@ document.addEventListener('click', async (e) => {
   if (act === 'reply') {
     if (needSignIn('to reply')) return;
     const slot = $('.reply-slot', cmt);
-    renderComposer(slot, pid, cmt.dataset.parent, c.parent ? `@${c.name} ` : '');
+    renderComposer(slot, pid, cmt.dataset.parent, c.parent ? `@${shownName(c.uid, c.name)} ` : '');
   }
   if (act === 'like') {
     if (needSignIn('to like comments')) return;
@@ -818,6 +821,7 @@ async function viewUser(uid, tab = 'posts') {
   if (myView !== state.view) return;
   if (!u || !u.exists()) { main.innerHTML = '<div class="empty card"><div class="empty-art">🫥</div><p>We couldn\'t find that person.</p></div>'; return; }
   const d = u.data();
+  d.name = shownName(uid, d.name);
   document.title = `${d.name} — MemeKadai`;
   const tabs = [['posts', 'Memes'], ...(own ? [['upvoted', 'Upvoted'], ['saved', 'Saved']] : [])];
   main.innerHTML = `<div class="card profile">${avatar(d.photo, d.name, 'av av-xl')}
@@ -957,7 +961,7 @@ async function createPost(processed, { title, section, tags, nsfw }) {
   const ref = doc(collection(db, 'posts'));
   const data = {
     title: t, section, tags, kw: keywords(t, tags), nsfw: !!nsfw,
-    uid: state.user.uid, name: (state.user.displayName || 'Meme lover').slice(0, 60), photo: (state.user.photoURL || '').slice(0, 1000),
+    uid: state.user.uid, name: (shownName(state.user.uid, state.user.displayName) || 'Meme lover').slice(0, 60), photo: (state.user.photoURL || '').slice(0, 1000),
     createdAt: serverTimestamp(), h0, hot: h0, dayNum: Math.floor(h0 / 24),
     up: 0, down: 0, score: 0, commentCount: 0, reports: 0, w: processed.w, h: processed.h, mime: processed.mime,
   };
