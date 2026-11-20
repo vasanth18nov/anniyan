@@ -24,6 +24,7 @@ const firebaseConfig = {
 const ADMIN_UIDS = ['yaBttsOx9RZeyEFcCkUKgcQgVCm2']; // keep in sync with firestore.rules
 const EMU = new URLSearchParams(location.search).has('emu');
 const PAGE = 8;
+const SHUFFLE_POOL = 600; // posts pulled per shuffled feed visit (metadata only, images load lazily)
 const HIDE_AT_REPORTS = 3;
 const MAX_MEDIA = 900_000;      // bytes, Firestore doc limit is ~1 MB
 const TARGET_MEDIA = 320_000;   // aim for this when compressing
@@ -50,6 +51,7 @@ export const SECTIONS = [
 ];
 const SECTION = Object.fromEntries(SECTIONS.map((s) => [s.id, s]));
 const SORTS = [
+  { id: 'shuffle', name: 'Shuffle', ic: '🎲' },
   { id: 'hot', name: 'Hot', ic: '🔥' },
   { id: 'trending', name: 'Trending', ic: '📈' },
   { id: 'fresh', name: 'Fresh', ic: '🌱' },
@@ -131,6 +133,7 @@ function toast(msg, kind = '') {
 function errMsg(e, fallback = 'Something went wrong. Try again.') {
   console.error(e);
   const c = e?.code || '';
+  if (c === 'mk/dup') return e.message;
   if (c.includes('permission-denied')) return fallback;
   if (c.includes('failed-precondition')) return 'This feed is still being set up. Try again in a few minutes.';
   if (c.includes('unavailable')) return 'You look offline. Check your connection.';
@@ -245,7 +248,7 @@ function renderAccount() {
       <a role="menuitem" href="#/u/${u.uid}">👤 My memes</a>
       <a role="menuitem" href="#/u/${u.uid}/upvoted">⬆️ Upvoted</a>
       <a role="menuitem" href="#/u/${u.uid}/saved">🔖 Saved</a>
-      ${isAdmin() ? '<a role="menuitem" href="#/bulk">📦 Bulk upload</a><a role="menuitem" href="#/mod">🛡️ Reports queue</a>' : ''}
+      ${isAdmin() ? '<a role="menuitem" href="#/bulk">📦 Bulk upload</a><a role="menuitem" href="#/mod">🛡️ Reports queue</a><a role="menuitem" href="#/dupes">🧹 Remove duplicates</a>' : ''}
       <button role="menuitem" id="signOutBtn">↩︎ Sign out</button>
     </div>`;
   const btn = $('#acctBtn'); const menu = $('#acctMenu');
@@ -577,6 +580,7 @@ function emptyState(f) {
 function infiniteList(list, fetchPage, emptyHtml) {
   const myView = state.view;
   let cursor = null; let done = false; let busy = false; let count = 0;
+  const seenIds = new Set(); const seenTitles = new Set();
   const sentinel = document.createElement('div');
   sentinel.className = 'sentinel';
   sentinel.innerHTML = skeleton();
@@ -588,7 +592,13 @@ function infiniteList(list, fetchPage, emptyHtml) {
       const page = await fetchPage(cursor);
       if (myView !== state.view) return;
       cursor = page.cursor; done = page.done;
-      const fresh = page.items.filter(([id, p]) => p && visible(p));
+      const fresh = page.items.filter(([id, p]) => {
+        if (!p || !visible(p) || seenIds.has(id)) return false;
+        const k = titleKey(p.title);
+        if (k && seenTitles.has(k)) return false;
+        seenIds.add(id); if (k) seenTitles.add(k);
+        return true;
+      });
       fresh.forEach(([id, p]) => state.posts.set(id, p));
       list.insertAdjacentHTML('beforeend', fresh.map(([id, p]) => postCard(id, p)).join(''));
       count += fresh.length;
@@ -618,6 +628,37 @@ function postsPager(f) {
   };
 }
 
+// Title key used to spot the same meme posted twice ("Funny cat (1).jpg" == "funny cat")
+function titleKey(t) {
+  return String(t || '').toLowerCase().replace(/\.(jpe?g|png|webp|gif)$/, '')
+    .replace(/\(\d+\)|\bcopy\b/g, ' ').replace(/[^\p{L}\p{M}\p{N}]+/gu, '');
+}
+function shuffled(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+// Random order on every visit. Firestore auto ids are random, so an unordered query
+// already gives a random spread of posts; we shuffle that pool and page through it.
+function shufflePager(f) {
+  let pool = null;
+  return async (cursor) => {
+    if (!pool) {
+      const parts = f.section ? [where('section', '==', f.section)] : [];
+      const s = await getDocs(query(collection(db, 'posts'), ...parts, limit(SHUFFLE_POOL)));
+      const best = new Map(); // one post per title, the best scored one wins
+      for (const d of s.docs) {
+        const p = d.data(); const k = titleKey(p.title) || d.id;
+        const cur = best.get(k);
+        if (!cur || (p.score || 0) > (cur[1].score || 0)) best.set(k, [d.id, p]);
+      }
+      pool = shuffled([...best.values()]);
+    }
+    const at = cursor || 0;
+    return { items: pool.slice(at, at + PAGE), cursor: at + PAGE, done: at + PAGE >= pool.length };
+  };
+}
+
 function skeleton() {
   return `<div class="card post skel" aria-hidden="true"><div class="sk sk-line w40"></div><div class="sk sk-line w80"></div><div class="sk sk-media"></div></div>`;
 }
@@ -642,7 +683,7 @@ function viewFeed(f) {
   }
   main.innerHTML = `${head}<div class="feed" id="feed"></div>`;
   main.dataset.feed = location.hash || '#/';
-  infiniteList($('#feed'), postsPager(f), emptyState(f));
+  infiniteList($('#feed'), f.sort === 'shuffle' && f.kind === 'feed' ? shufflePager(f) : postsPager(f), emptyState(f));
   setActiveNav(f.section ? 's:' + f.section : f.kind === 'feed' ? f.sort : '');
 }
 
@@ -657,7 +698,7 @@ async function viewPost(id, jumpToComments) {
   }
   if (myView !== state.view) return;
   if (!snap.exists()) {
-    main.innerHTML = `<div class="empty card"><div class="empty-art">🫥</div><p>This meme is gone. It may have been deleted.</p><a class="btn btn-accent" href="#/">Back to Hot</a></div>`;
+    main.innerHTML = `<div class="empty card"><div class="empty-art">🫥</div><p>This meme is gone. It may have been deleted.</p><a class="btn btn-accent" href="#/">Back to MemeKadai</a></div>`;
     return;
   }
   const p = snap.data(); state.posts.set(id, p);
@@ -957,6 +998,8 @@ function parseTags(s) {
 
 async function createPost(processed, { title, section, tags, nsfw }) {
   const t = title.trim().slice(0, 140);
+  const same = await getDocs(query(collection(db, 'posts'), where('title', '==', t), limit(1)));
+  if (!same.empty) { const e = new Error('A meme with this exact title is already posted.'); e.code = 'mk/dup'; throw e; }
   const h0 = nowServer() / 3600000;
   const ref = doc(collection(db, 'posts'));
   const data = {
@@ -1092,7 +1135,7 @@ function viewBulk() {
 
   const myView = state.view;
   const items = []; // { k, file, processed, error, status, postId }
-  let seq = 0; let posting = false;
+  let seq = 0; let posting = false; let skippedDup = 0;
   const rowsEl = $('#bRows');
 
   const valid = (it) => it.processed && it.status !== 'done' && rowVal(it, 'title').trim() && rowVal(it, 'section');
@@ -1142,6 +1185,9 @@ function viewBulk() {
         it.status = 'processing'; paintRow(it); summary();
         try {
           it.processed = await processImage(it.file);
+          it.sha = await sha256(it.processed.bytes);
+          const twin = items.find((o) => o !== it && o.sha && o.sha === it.sha && o.status !== 'bad');
+          if (twin) throw new Error(`Same image as ${twin.file.name}, skipped.`);
           it.thumb = URL.createObjectURL(new Blob([it.processed.bytes], { type: it.processed.mime }));
           it.status = 'ready';
         } catch (e) { it.error = e.message; it.status = 'bad'; }
@@ -1158,7 +1204,9 @@ function viewBulk() {
     const secAll = $('#bSecAll').value;
     const tagsAll = $('#bTagsAll').value;
     for (const file of files.slice(0, Math.max(0, room))) {
-      const it = { k: ++seq, file, status: 'queued' };
+      const nameK = titleKey(titleFromName(file.name));
+      if (items.some((i) => i.nameK === nameK)) { skippedDup++; continue; }
+      const it = { k: ++seq, file, status: 'queued', nameK };
       items.push(it);
       rowsEl.insertAdjacentHTML('beforeend', `<div class="brow card" data-k="${it.k}">
         <div class="brow-thumb"><img alt=""></div>
@@ -1174,6 +1222,7 @@ function viewBulk() {
         <button class="icon-btn brow-x" type="button" aria-label="Remove">✕</button>
       </div>`);
     }
+    if (skippedDup) { toast(`Skipped ${skippedDup} duplicate file name${skippedDup > 1 ? 's' : ''}.`); skippedDup = 0; }
     summary();
     processQueue();
   }
@@ -1257,6 +1306,139 @@ function viewBulk() {
   window.addEventListener('hashchange', off);
 }
 
+// ---------------------------------------------------------------- duplicate cleaner (admin)
+async function sha256(bytes) {
+  const h = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(h)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+// 256 bit difference hash: catches the same picture saved again at another size or quality
+async function dHash(blob) {
+  const bmp = await createImageBitmap(blob);
+  const W = 17; const H = 16;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(bmp, 0, 0, W, H); bmp.close?.();
+  const d = ctx.getImageData(0, 0, W, H).data;
+  const g = (x, y) => { const i = (y * W + x) * 4; return d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114; };
+  const bits = new Uint8Array(256);
+  for (let y = 0; y < H; y++) for (let x = 0; x < 16; x++) bits[y * 16 + x] = g(x, y) > g(x + 1, y) ? 1 : 0;
+  return bits;
+}
+function hamming(a, b) { let n = 0; for (let i = 0; i < a.length; i++) n += a[i] !== b[i]; return n; }
+
+async function viewDupes() {
+  const main = $('#main');
+  setActiveNav('');
+  if (!isAdmin()) { main.innerHTML = '<div class="empty card"><p>Only shop keepers can see this page.</p></div>'; return; }
+  document.title = 'Remove duplicates — MemeKadai';
+  const myView = state.view;
+  main.innerHTML = `<div class="feed-head card"><h1>🧹 Remove duplicates</h1>
+    <p class="muted">Finds memes posted more than once: same title or file name, or the same picture. In each group the one with the best score (then the oldest) is kept. Untick anything you want to keep.</p></div>
+    <div class="card dup-bar"><div class="bulk-sum"><b id="dStat">Loading posts…</b>
+      <div class="bulk-prog" id="dProg"><div id="dProgFill" style="width:0%"></div></div></div>
+      <button class="btn btn-danger" id="dGo" disabled>Delete duplicates</button></div>
+    <div id="dList" class="feed"></div>`;
+  const stat = (t) => { if ($('#dStat')) $('#dStat').textContent = t; };
+  try {
+    const posts = []; let cur = null;
+    for (;;) {
+      const s = await getDocs(query(collection(db, 'posts'), orderBy('createdAt', 'asc'), ...(cur ? [startAfter(cur)] : []), limit(300)));
+      s.docs.forEach((d) => posts.push({ id: d.id, p: d.data() }));
+      stat(`Loading posts… ${posts.length}`);
+      if (myView !== state.view) return;
+      if (s.size < 300) break; cur = s.docs[s.docs.length - 1];
+    }
+    let doneN = 0; const queue = posts.slice();
+    const worker = async () => {
+      for (;;) {
+        const it = queue.shift(); if (!it || myView !== state.view) return;
+        try {
+          const m = await getDoc(doc(db, 'media', it.id));
+          if (m.exists()) {
+            const bytes = m.get('data').toUint8Array();
+            it.sha = await sha256(bytes);
+            it.blob = new Blob([bytes], { type: m.get('mime') });
+            try { it.dh = await dHash(it.blob); } catch {}
+          }
+        } catch {}
+        doneN++;
+        stat(`Checking pictures… ${doneN} of ${posts.length}`);
+        const fill = $('#dProgFill'); if (fill) fill.style.width = `${(doneN / posts.length) * 100}%`;
+      }
+    };
+    await Promise.all([worker(), worker(), worker(), worker(), worker()]);
+    if (myView !== state.view) return;
+
+    const parent = posts.map((_, i) => i);
+    const find = (i) => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+    const join = (a, b) => { parent[find(a)] = find(b); };
+    const byKey = new Map();
+    posts.forEach((it, i) => {
+      const tk = titleKey(it.p.title);
+      for (const k of [it.sha && 's:' + it.sha, tk && 't:' + tk]) {
+        if (!k) continue;
+        if (byKey.has(k)) join(i, byKey.get(k)); else byKey.set(k, i);
+      }
+    });
+    for (let i = 0; i < posts.length; i++) {
+      const a = posts[i]; if (!a.dh) continue;
+      for (let j = i + 1; j < posts.length; j++) {
+        const b = posts[j]; if (!b.dh) continue;
+        if (Math.abs(a.p.w / a.p.h - b.p.w / b.p.h) > 0.03) continue;
+        if (hamming(a.dh, b.dh) <= 10) join(i, j);
+      }
+    }
+    const groups = new Map();
+    posts.forEach((it, i) => { const r = find(i); if (!groups.has(r)) groups.set(r, []); groups.get(r).push(it); });
+    const dupGroups = [...groups.values()].filter((g) => g.length > 1);
+    posts.forEach((it) => { if (!dupGroups.some((g) => g.includes(it))) it.blob = null; });
+    $('#dProg').hidden = true;
+    const list = $('#dList');
+    if (!dupGroups.length) {
+      stat(`Checked ${posts.length} memes`);
+      list.innerHTML = '<div class="empty card"><div class="empty-art">✨</div><p>No duplicates. Every meme on the shelf is one of a kind.</p></div>';
+      return;
+    }
+    const thumb = (it) => (it.blob ? URL.createObjectURL(it.blob) : '');
+    list.innerHTML = dupGroups.map((g) => {
+      g.sort((a, b) => ((b.p.score || 0) - (a.p.score || 0)) || ((a.p.h0 || 0) - (b.p.h0 || 0)));
+      const [keep, ...rest] = g;
+      const cell = (it, isKeep) => `<label class="dup-cell ${isKeep ? 'keep' : ''}">
+        <img src="${thumb(it)}" alt="">
+        <span class="small">${esc(it.p.title || '')}</span>
+        <span class="muted small">${SECTION[it.p.section]?.ic || ''} score ${it.p.score || 0}</span>
+        ${isKeep ? '<b class="small">Keeping</b>' : `<span class="small"><input type="checkbox" data-del="${it.id}" checked> Delete</span>`}
+      </label>`;
+      return `<div class="card dup-group">${cell(keep, true)}${rest.map((it) => cell(it, false)).join('')}</div>`;
+    }).join('');
+    const paint = () => {
+      const n = $$('[data-del]:checked', list).length;
+      stat(`${dupGroups.length} group${dupGroups.length > 1 ? 's' : ''} of duplicates, ${n} to delete`);
+      $('#dGo').disabled = !n; $('#dGo').textContent = n ? `Delete ${n} duplicate${n > 1 ? 's' : ''}` : 'Delete duplicates';
+    };
+    list.addEventListener('change', paint); paint();
+    $('#dGo').addEventListener('click', async () => {
+      const ids = $$('[data-del]:checked', list).map((x) => x.dataset.del);
+      if (!ids.length || !(await confirmBox(`Delete ${ids.length} duplicate meme${ids.length > 1 ? 's' : ''} for good?`, 'Delete all'))) return;
+      $('#dGo').disabled = true;
+      let ok = 0;
+      try {
+        for (let i = 0; i < ids.length; i += 200) {
+          const chunk = ids.slice(i, i + 200);
+          const b = writeBatch(db);
+          chunk.forEach((id) => { b.delete(doc(db, 'posts', id)); b.delete(doc(db, 'media', id)); });
+          await b.commit(); ok += chunk.length;
+          stat(`Deleted ${ok} of ${ids.length}…`);
+        }
+        ids.forEach((id) => state.posts.delete(id));
+        feedCache.hash = null; feedCache.frag = null;
+        toast(`Removed ${ok} duplicate${ok > 1 ? 's' : ''} 🧹`, 'good');
+        route();
+      } catch (e) { toast(errMsg(e, `Deleted ${ok}, then something failed. Run it again.`), 'bad'); $('#dGo').disabled = false; }
+    });
+  } catch (e) { stat(errMsg(e, 'Couldn\'t load posts.')); }
+}
+
 // ---------------------------------------------------------------- nav, router
 function buildNav() {
   $('#sectionLinks').innerHTML = SECTIONS.map((s) => `<a class="side-link" data-nav="s:${s.id}" href="#/s/${s.id}"><span class="ic">${s.ic}</span>${esc(s.name)}</a>`).join('');
@@ -1300,7 +1482,7 @@ function repaintAll() {
 }
 function refreshForUser() {
   const h = location.hash;
-  if (/^#\/(u|mod|bulk)/.test(h)) return route();
+  if (/^#\/(u|mod|bulk|dupes)/.test(h)) return route();
   const ids = $$('#main article.post').map((a) => a.dataset.id);
   repaintAll();
   loadMyVotes(ids);
@@ -1319,23 +1501,24 @@ function route() {
   const [a, b, c] = h.split('/');
   document.title = 'MemeKadai — Fresh memes, every day | Anniyan';
   window.scrollTo(0, 0);
-  if (!a || SORTS.some((s) => s.id === a)) viewFeed({ kind: 'feed', sort: a || 'hot' });
-  else if (a === 's' && SECTION[b]) viewFeed({ kind: 'feed', section: b, sort: SORTS.some((s) => s.id === c) ? c : 'hot' });
+  if (!a || SORTS.some((s) => s.id === a)) viewFeed({ kind: 'feed', sort: a || 'shuffle' });
+  else if (a === 's' && SECTION[b]) viewFeed({ kind: 'feed', section: b, sort: SORTS.some((s) => s.id === c) ? c : 'shuffle' });
   else if (a === 'p' && b) viewPost(b, c === 'c');
   else if (a === 'u' && b) { viewUser(b, c || 'posts'); setActiveNav(''); }
   else if (a === 'tag' && b) { viewFeed({ kind: 'search', q: b.toLowerCase() }); }
   else if (a === 'search' && b) { viewFeed({ kind: 'search', q: b.toLowerCase() }); }
   else if (a === 'mod') { viewMod(); setActiveNav(''); }
   else if (a === 'bulk') viewBulk();
+  else if (a === 'dupes') viewDupes();
   else if (a === 'rules') viewRules();
-  else if (a === 'upload') { viewFeed({ kind: 'feed', sort: 'hot' }); setTimeout(() => openUpload(), 50); }
-  else $('#main').innerHTML = '<div class="empty card"><div class="empty-art">🤷</div><p>Nothing on this shelf.</p><a class="btn btn-accent" href="#/">Back to Hot</a></div>';
+  else if (a === 'upload') { viewFeed({ kind: 'feed', sort: 'shuffle' }); setTimeout(() => openUpload(), 50); }
+  else $('#main').innerHTML = '<div class="empty card"><div class="empty-art">🤷</div><p>Nothing on this shelf.</p><a class="btn btn-accent" href="#/">Back to MemeKadai</a></div>';
   gtag?.('event', 'page_view', { page_path: location.pathname + location.hash });
 }
 
 function setActiveNavFor(hash) {
   const [a, b] = hash.replace(/^#\/?/, '').split('/');
-  setActiveNav(a === 's' ? 's:' + b : SORTS.some((s) => s.id === a) ? a : !a ? 'hot' : '');
+  setActiveNav(a === 's' ? 's:' + b : SORTS.some((s) => s.id === a) ? a : !a ? 'shuffle' : '');
 }
 
 function closeMenus() {

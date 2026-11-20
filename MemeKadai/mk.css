@@ -461,3 +461,11 @@ h1.post-title { font-size: 23px; }
   .brow-line .check { grid-column: 1 / -1; }
   .bulk-bar { border-radius: 14px; margin: 14px 8px 0; border: 1px solid var(--line-2); }
 }
+
+/* duplicate cleaner */
+.dup-bar { display: flex; align-items: center; gap: 12px; padding: 12px 14px; flex-wrap: wrap; }
+.dup-bar .bulk-sum { flex: 1; }
+.dup-group { display: flex; gap: 12px; padding: 12px; overflow-x: auto; }
+.dup-cell { display: flex; flex-direction: column; gap: 4px; width: 150px; flex: 0 0 150px; cursor: pointer; }
+.dup-cell img { width: 150px; height: 150px; object-fit: cover; border-radius: 10px; background: var(--surface-3); }
+.dup-cell.keep img { outline: 3px solid #12b886; outline-offset: 2px; opacity: 1; }
