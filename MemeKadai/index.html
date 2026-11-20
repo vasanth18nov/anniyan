@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F0HQ6NJQRB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-F0HQ6NJQRB');
+</script>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0b0c10" />
+<title>MemeKadai — Fresh memes, every day | Anniyan</title>
+<meta name="description" content="MemeKadai is a meme shop for everyone: Tamil, Malaysian, desi, cricket, gaming and plain funny memes. Upvote, comment, share and post your own." />
+<link rel="canonical" href="https://anniyan.online/MemeKadai/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="MemeKadai" />
+<meta property="og:title" content="MemeKadai — Fresh memes, every day" />
+<meta property="og:description" content="Upvote, comment, share and post your own memes." />
+<meta property="og:url" content="https://anniyan.online/MemeKadai/" />
+<meta property="og:image" content="https://anniyan.online/MemeKadai/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://firestore.googleapis.com">
+<link rel="stylesheet" href="mk.css?v=1" />
+<script>
+  try { var t = localStorage.getItem('mk-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to memes</a>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-in">
+    <button class="icon-btn only-mobile" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+    <a class="brand" href="#/" aria-label="MemeKadai home">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="6" y="18" width="28" height="18" rx="3" fill="var(--shop)"/>
+        <rect x="16" y="25" width="8" height="11" rx="1.5" fill="var(--bg)"/>
+        <path d="M3 10 L37 10 L35 18 Q32.5 22 30 18 Q27.5 22 25 18 Q22.5 22 20 18 Q17.5 22 15 18 Q12.5 22 10 18 Q7.5 22 5 18 Z" fill="var(--accent)"/>
+        <path d="M10 10 L10 18 M20 10 L20 18 M30 10 L30 18" stroke="var(--awning-stripe)" stroke-width="5"/>
+        <rect x="3" y="6" width="34" height="5" rx="2.5" fill="var(--accent-deep)"/>
+      </svg>
+      <span class="brand-word">Meme<b>Kadai</b></span>
+    </a>
+    <form class="search" id="searchForm" role="search">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="searchInput" type="search" placeholder="Search memes or #tags" aria-label="Search memes" autocomplete="off" />
+    </form>
+    <div class="top-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Switch light or dark">
+        <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" fill="currentColor"/></svg>
+      </button>
+      <button class="btn btn-accent" id="uploadBtn">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+        <span class="hide-xs">Post meme</span>
+      </button>
+      <div class="account" id="account">
+        <button class="btn btn-ghost" id="signInBtn">Sign in</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="side" id="side" aria-label="Feeds and sections">
+    <div class="side-group">
+      <a class="side-link" data-nav="hot" href="#/hot"><span class="ic">🔥</span>Hot</a>
+      <a class="side-link" data-nav="trending" href="#/trending"><span class="ic">📈</span>Trending</a>
+      <a class="side-link" data-nav="fresh" href="#/fresh"><span class="ic">🌱</span>Fresh</a>
+      <a class="side-link" data-nav="top" href="#/top"><span class="ic">🏆</span>Top</a>
+    </div>
+    <div class="side-title">Sections</div>
+    <div class="side-group" id="sectionLinks"></div>
+    <div class="side-foot">
+      <a href="#/rules">Meme rules</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a><br>
+      <a href="/">An Anniyan site</a><br>
+      <button class="link theme-link" data-theme-toggle>Switch light / dark</button>
+    </div>
+  </nav>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1"></main>
+
+  <aside class="rail" aria-label="About MemeKadai">
+    <div class="card rail-card">
+      <h3>Welcome to the Kadai 🛖</h3>
+      <p>Your corner shop for memes. Fresh stock every day, no bill to pay. Vote up the gold, vote down the stale.</p>
+      <button class="btn btn-accent btn-block" data-action="upload">Post a meme</button>
+    </div>
+    <div class="card rail-card">
+      <h3>Shop rules</h3>
+      <ol class="rules-mini">
+        <li>Post memes you made or are allowed to share.</li>
+        <li>No nudity, hate, gore or spam.</li>
+        <li>Mark crude stuff as sensitive.</li>
+        <li>Report anything that breaks the rules.</li>
+      </ol>
+      <a class="link" href="#/rules">All rules →</a>
+    </div>
+    <div class="card rail-card" id="hotSections">
+      <h3>Browse sections</h3>
+      <div class="chips" id="railSections"></div>
+    </div>
+    <p class="rail-foot"><a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="/">anniyan.online</a></p>
+  </aside>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div id="modalRoot"></div>
+
+<noscript><p class="noscript">MemeKadai needs JavaScript to show memes.</p></noscript>
+<script type="module" src="mk.js?v=1"></script>
+</body>
+</html>
