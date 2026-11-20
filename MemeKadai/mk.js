@@ -42,6 +42,7 @@ export const SECTIONS = [
   { id: 'wholesome', name: 'Wholesome', ic: '🥹' },
   { id: 'relationship', name: 'Relationship', ic: '💔' },
   { id: 'work', name: 'School & Work', ic: '💼' },
+  { id: 'science', name: 'Science', ic: '🔬' },
   { id: 'tech', name: 'Tech', ic: '💻' },
   { id: 'sports', name: 'Sports', ic: '⚽' },
   { id: 'food', name: 'Food', ic: '🍛' },
