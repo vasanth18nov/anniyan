@@ -3,7 +3,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js';
 import {
   getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut,
-  onAuthStateChanged, connectAuthEmulator, signInWithCredential,
+  onAuthStateChanged, connectAuthEmulator, signInWithCredential, signInWithCustomToken,
 } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
 import {
   initializeFirestore, persistentLocalCache, persistentMultipleTabManager, memoryLocalCache,
@@ -241,7 +241,7 @@ function renderAccount() {
       <a role="menuitem" href="#/u/${u.uid}">👤 My memes</a>
       <a role="menuitem" href="#/u/${u.uid}/upvoted">⬆️ Upvoted</a>
       <a role="menuitem" href="#/u/${u.uid}/saved">🔖 Saved</a>
-      ${isAdmin() ? '<a role="menuitem" href="#/mod">🛡️ Reports queue</a>' : ''}
+      ${isAdmin() ? '<a role="menuitem" href="#/bulk">📦 Bulk upload</a><a role="menuitem" href="#/mod">🛡️ Reports queue</a>' : ''}
       <button role="menuitem" id="signOutBtn">↩︎ Sign out</button>
     </div>`;
   const btn = $('#acctBtn'); const menu = $('#acctMenu');
@@ -950,6 +950,26 @@ function parseTags(s) {
   return [...new Set((s.toLowerCase().match(/[\p{L}\p{N}_]+/gu) || []).map((t) => t.slice(0, 24)))].slice(0, 5);
 }
 
+async function createPost(processed, { title, section, tags, nsfw }) {
+  const t = title.trim().slice(0, 140);
+  const h0 = nowServer() / 3600000;
+  const ref = doc(collection(db, 'posts'));
+  const data = {
+    title: t, section, tags, kw: keywords(t, tags), nsfw: !!nsfw,
+    uid: state.user.uid, name: (state.user.displayName || 'Meme lover').slice(0, 60), photo: (state.user.photoURL || '').slice(0, 1000),
+    createdAt: serverTimestamp(), h0, hot: h0, dayNum: Math.floor(h0 / 24),
+    up: 0, down: 0, score: 0, commentCount: 0, reports: 0, w: processed.w, h: processed.h, mime: processed.mime,
+  };
+  const b = writeBatch(db);
+  b.set(doc(db, 'media', ref.id), { data: Bytes.fromUint8Array(processed.bytes), mime: processed.mime, uid: state.user.uid });
+  b.set(ref, data);
+  b.update(doc(db, 'users', state.user.uid), { lastPostAt: serverTimestamp() });
+  await b.commit();
+  mediaCache.set(ref.id, URL.createObjectURL(new Blob([processed.bytes], { type: processed.mime })));
+  try { gtag('event', 'post_meme', { section }); } catch {}
+  return ref.id;
+}
+
 function openUpload(presetSection) {
   if (needSignIn('to post memes')) return;
   const sec = presetSection || (location.hash.match(/#\/s\/([^/]+)/)?.[1]) || '';
@@ -971,9 +991,11 @@ function openUpload(presetSection) {
       </div>
       <label class="check"><input type="checkbox" id="nsfw"> <span>Sensitive (crude or gross): blur it until tapped</span></label>
       <label class="check"><input type="checkbox" id="agree" required> <span>I made this or am allowed to share it, and it follows the <a href="#/rules" target="_blank">meme rules</a>.</span></label>
-      <div class="modal-actions"><button type="button" class="btn btn-ghost" data-x>Cancel</button>
+      <div class="modal-actions">${isAdmin() ? '<a class="link bulk-link" href="#/bulk" data-close>📦 Post many at once</a>' : ''}
+        <button type="button" class="btn btn-ghost" data-x>Cancel</button>
         <button class="btn btn-accent" id="postBtn" type="submit" disabled>Post meme</button></div>
     </form>`, { wide: true });
+  $('[data-close]', m)?.addEventListener('click', () => closeModal());
   let processed = null;
   const fileIn = $('#file', m); const drop = $('#drop', m); const prev = $('#preview', m);
   const note = $('#imgNote', m); const postBtn = $('#postBtn', m); const title = $('#title', m);
@@ -1009,33 +1031,225 @@ function openUpload(presetSection) {
     if (!processed) return;
     if (!state.ready) return toast('One moment, still signing you in…');
     postBtn.disabled = true; postBtn.textContent = 'Posting…';
-    const tags = parseTags($('#tags', m).value);
-    const t = title.value.trim().slice(0, 140);
-    const h0 = nowServer() / 3600000;
-    const ref = doc(collection(db, 'posts'));
-    const data = {
-      title: t, section: $('#section', m).value, tags, kw: keywords(t, tags), nsfw: $('#nsfw', m).checked,
-      uid: state.user.uid, name: (state.user.displayName || 'Meme lover').slice(0, 60), photo: (state.user.photoURL || '').slice(0, 1000),
-      createdAt: serverTimestamp(), h0, hot: h0, dayNum: Math.floor(h0 / 24),
-      up: 0, down: 0, score: 0, commentCount: 0, reports: 0, w: processed.w, h: processed.h, mime: processed.mime,
-    };
     try {
-      const b = writeBatch(db);
-      b.set(doc(db, 'media', ref.id), { data: Bytes.fromUint8Array(processed.bytes), mime: processed.mime, uid: state.user.uid });
-      b.set(ref, data);
-      b.update(doc(db, 'users', state.user.uid), { lastPostAt: serverTimestamp() });
-      await b.commit();
-      mediaCache.set(ref.id, URL.createObjectURL(new Blob([processed.bytes], { type: processed.mime })));
+      const id = await createPost(processed, {
+        title: title.value, section: $('#section', m).value, tags: parseTags($('#tags', m).value), nsfw: $('#nsfw', m).checked,
+      });
       closeModal();
       toast('Your meme is live! 🎉', 'good');
-      go(`#/p/${ref.id}`);
-      gtag?.('event', 'post_meme', { section: data.section });
+      go(`#/p/${id}`);
     } catch (err) {
       postBtn.disabled = false; postBtn.textContent = 'Post meme';
       note.className = 'small bad-text';
       note.textContent = errMsg(err, 'Couldn\'t post. You can post one meme a minute, so wait a bit and try again.');
     }
   });
+}
+
+// ---------------------------------------------------------------- bulk upload (admin)
+const BULK_MAX = 50;
+function titleFromName(name) {
+  return name.replace(/\.[a-z0-9]+$/i, '').replace(/[_\-.]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
+}
+function sectionOptions(sel, blank = 'Choose…') {
+  return `<option value="">${blank}</option>` + SECTIONS.map((s) => `<option value="${s.id}" ${s.id === sel ? 'selected' : ''}>${s.ic} ${esc(s.name)}</option>`).join('');
+}
+
+function viewBulk() {
+  const main = $('#main');
+  setActiveNav('');
+  if (!isAdmin()) { main.innerHTML = '<div class="empty card"><p>Only shop keepers can see this page.</p></div>'; return; }
+  document.title = 'Bulk upload — MemeKadai';
+  main.innerHTML = `<div class="feed-head card"><h1>📦 Bulk upload</h1>
+      <p class="muted">Only you can see this page. Add up to ${BULK_MAX} images at a time, give each a title and section, then post them all at once.</p></div>
+    <div class="card bulk-tools">
+      <label class="drop drop-sm" id="bDrop" tabindex="0">
+        <input type="file" id="bFiles" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
+        <div class="drop-empty"><div class="drop-ic">🖼️</div><b>Choose images or drop them here</b><span class="muted">Select many at once. JPG, PNG, WebP or GIF</span></div>
+      </label>
+      <div class="bulk-all">
+        <label class="field"><span>Section for all</span><select id="bSecAll">${sectionOptions('', 'Pick one to apply…')}</select></label>
+        <label class="field"><span>Add tags to all</span><input id="bTagsAll" placeholder="e.g. tamil, comedy"></label>
+        <button class="btn btn-ghost" id="bTagsApply" type="button">Add tags</button>
+      </div>
+      <div class="bulk-all-row">
+        <button class="link" id="bNames" type="button">Fill empty titles from file names</button>
+        <button class="link" id="bClear" type="button">Remove all</button>
+      </div>
+    </div>
+    <div id="bRows" class="bulk-rows"></div>
+    <div class="card bulk-bar" id="bBar" hidden>
+      <div class="bulk-sum"><b id="bCount">0 images</b><span class="muted small" id="bHint"></span>
+        <div class="bulk-prog" id="bProg" hidden><div id="bProgFill"></div></div></div>
+      <label class="check"><input type="checkbox" id="bAgree"> <span>I'm allowed to share these and they follow the <a href="#/rules" target="_blank">rules</a>.</span></label>
+      <button class="btn btn-accent" id="bPost" disabled>Post all</button>
+    </div>`;
+
+  const myView = state.view;
+  const items = []; // { k, file, processed, error, status, postId }
+  let seq = 0; let posting = false;
+  const rowsEl = $('#bRows');
+
+  const valid = (it) => it.processed && it.status !== 'done' && rowVal(it, 'title').trim() && rowVal(it, 'section');
+  function rowEl(it) { return $(`.brow[data-k="${it.k}"]`, rowsEl); }
+  function rowVal(it, name) {
+    const el = rowEl(it); if (!el) return '';
+    const f = $(`[name="${name}"]`, el);
+    return f.type === 'checkbox' ? f.checked : f.value;
+  }
+  function summary() {
+    const live = items.filter((i) => i.status !== 'done');
+    const ready = live.filter(valid).length;
+    const working = live.filter((i) => i.status === 'processing').length;
+    const bad = live.filter((i) => i.error && !i.processed).length;
+    const needs = live.filter((i) => i.processed && !valid(i)).length;
+    const done = items.filter((i) => i.status === 'done').length;
+    $('#bBar').hidden = items.length === 0;
+    $('#bCount').textContent = `${items.length} image${items.length === 1 ? '' : 's'}${done ? ` · ${done} posted` : ''}`;
+    $('#bHint').textContent = [working && `${working} getting ready`, needs && `${needs} need a title and section`, bad && `${bad} can't be used`].filter(Boolean).join(' · ');
+    $('#bPost').disabled = posting || !ready || !$('#bAgree').checked || working > 0;
+    $('#bPost').textContent = posting ? 'Posting…' : `Post ${ready || ''} meme${ready === 1 ? '' : 's'}`.replace('  ', ' ');
+  }
+  function paintRow(it) {
+    const el = rowEl(it); if (!el) return;
+    el.dataset.status = it.status;
+    const st = $('.brow-status', el);
+    const note = $('.brow-note', el);
+    if (it.status === 'processing') { st.textContent = 'Getting ready…'; }
+    else if (it.status === 'posting') { st.textContent = 'Posting…'; }
+    else if (it.status === 'done') { st.innerHTML = `<a href="#/p/${it.postId}" target="_blank">✓ Live</a>`; $$('input, select', el).forEach((f) => { f.disabled = true; }); }
+    else if (it.status === 'failed') { st.textContent = '✗ Failed'; }
+    else st.textContent = '';
+    if (it.processed) {
+      $('img', el).src = it.thumb;
+      note.textContent = `${it.processed.w}×${it.processed.h} · ${Math.round(it.processed.bytes.length / 1024)} KB${it.processed.note ? ' · ' + it.processed.note : ''}`;
+      note.className = 'brow-note muted small';
+    }
+    if (it.error) { note.textContent = it.error; note.className = 'brow-note bad-text'; }
+  }
+
+  async function processQueue() {
+    const todo = items.filter((i) => i.status === 'queued');
+    const worker = async () => {
+      for (;;) {
+        const it = todo.shift(); if (!it) return;
+        if (myView !== state.view) return;
+        it.status = 'processing'; paintRow(it); summary();
+        try {
+          it.processed = await processImage(it.file);
+          it.thumb = URL.createObjectURL(new Blob([it.processed.bytes], { type: it.processed.mime }));
+          it.status = 'ready';
+        } catch (e) { it.error = e.message; it.status = 'bad'; }
+        paintRow(it); summary();
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+  }
+
+  function addFiles(list) {
+    const files = [...list].filter((f) => f.type.startsWith('image/'));
+    const room = BULK_MAX - items.filter((i) => i.status !== 'done').length;
+    if (files.length > room) toast(`Only ${BULK_MAX} at a time. Added the first ${Math.max(0, room)}.`, 'bad');
+    const secAll = $('#bSecAll').value;
+    const tagsAll = $('#bTagsAll').value;
+    for (const file of files.slice(0, Math.max(0, room))) {
+      const it = { k: ++seq, file, status: 'queued' };
+      items.push(it);
+      rowsEl.insertAdjacentHTML('beforeend', `<div class="brow card" data-k="${it.k}">
+        <div class="brow-thumb"><img alt=""></div>
+        <div class="brow-fields">
+          <input name="title" maxlength="140" placeholder="Title for ${esc(file.name)}" aria-label="Title">
+          <div class="brow-line">
+            <select name="section" aria-label="Section">${sectionOptions(secAll)}</select>
+            <input name="tags" placeholder="tags" value="${esc(tagsAll)}" aria-label="Tags">
+            <label class="check small"><input type="checkbox" name="nsfw"> <span>Sensitive</span></label>
+          </div>
+          <div class="brow-foot"><span class="brow-note muted small">${esc(file.name)}</span><span class="brow-status"></span></div>
+        </div>
+        <button class="icon-btn brow-x" type="button" aria-label="Remove">✕</button>
+      </div>`);
+    }
+    summary();
+    processQueue();
+  }
+
+  const fileIn = $('#bFiles'); const drop = $('#bDrop');
+  fileIn.addEventListener('change', () => { addFiles(fileIn.files); fileIn.value = ''; });
+  drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
+  ['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', (e) => addFiles(e.dataTransfer.files));
+
+  rowsEl.addEventListener('input', summary);
+  rowsEl.addEventListener('change', summary);
+  rowsEl.addEventListener('click', (e) => {
+    const x = e.target.closest('.brow-x'); if (!x || posting) return;
+    const el = x.closest('.brow'); const k = +el.dataset.k;
+    const i = items.findIndex((it) => it.k === k);
+    if (i >= 0) items.splice(i, 1);
+    el.remove(); summary();
+  });
+  $('#bSecAll').addEventListener('change', (e) => {
+    if (!e.target.value) return;
+    $$('.brow:not([data-status="done"]) select[name="section"]', rowsEl).forEach((s) => { s.value = e.target.value; });
+    summary();
+  });
+  $('#bTagsApply').addEventListener('click', () => {
+    const add = parseTags($('#bTagsAll').value); if (!add.length) return;
+    $$('.brow:not([data-status="done"]) input[name="tags"]', rowsEl).forEach((f) => { f.value = parseTags(f.value + ' ' + add.join(' ')).join(', '); });
+    toast('Tags added');
+  });
+  $('#bNames').addEventListener('click', () => {
+    for (const it of items) {
+      const f = $('input[name="title"]', rowEl(it));
+      if (f && !f.value.trim() && it.status !== 'done') f.value = titleFromName(it.file.name);
+    }
+    summary();
+  });
+  $('#bClear').addEventListener('click', () => {
+    if (posting) return;
+    items.splice(0); rowsEl.innerHTML = ''; summary();
+  });
+  $('#bAgree').addEventListener('change', summary);
+
+  const warn = (e) => { if (posting) { e.preventDefault(); e.returnValue = ''; } };
+  window.addEventListener('beforeunload', warn);
+
+  $('#bPost').addEventListener('click', async () => {
+    if (!state.ready) return toast('One moment, still signing you in…');
+    const queue = items.filter(valid);
+    if (!queue.length) return;
+    posting = true; summary();
+    $('#bProg').hidden = false;
+    let ok = 0; let failed = 0;
+    for (const [n, it] of queue.entries()) {
+      $('#bProgFill').style.width = `${(n / queue.length) * 100}%`;
+      it.status = 'posting'; it.error = ''; paintRow(it);
+      try {
+        it.postId = await createPost(it.processed, {
+          title: rowVal(it, 'title'), section: rowVal(it, 'section'), tags: parseTags(rowVal(it, 'tags')), nsfw: rowVal(it, 'nsfw'),
+        });
+        it.status = 'done'; ok++;
+      } catch (err) {
+        it.status = 'failed'; failed++;
+        it.error = errMsg(err, 'Couldn\'t post this one. Press Post again to retry.');
+      }
+      paintRow(it);
+      if (it.status === 'done' && it.processed) {
+        // free the big bytes, keep the thumbnail
+        it.processed = { ...it.processed, bytes: { length: it.processed.bytes.length } };
+      }
+    }
+    $('#bProgFill').style.width = '100%';
+    posting = false; summary();
+    setTimeout(() => { if ($('#bProg')) $('#bProg').hidden = true; }, 800);
+    toast(failed ? `${ok} posted, ${failed} failed. Press Post again to retry.` : `All ${ok} memes are live! 🎉`, failed ? 'bad' : 'good');
+    feedCache.hash = null; feedCache.frag = null;
+  });
+
+  // stop warning once you leave this page
+  const off = () => { if (myView !== state.view) { window.removeEventListener('beforeunload', warn); window.removeEventListener('hashchange', off); } };
+  window.addEventListener('hashchange', off);
 }
 
 // ---------------------------------------------------------------- nav, router
@@ -1081,7 +1295,7 @@ function repaintAll() {
 }
 function refreshForUser() {
   const h = location.hash;
-  if (/^#\/(u|mod)/.test(h)) return route();
+  if (/^#\/(u|mod|bulk)/.test(h)) return route();
   const ids = $$('#main article.post').map((a) => a.dataset.id);
   repaintAll();
   loadMyVotes(ids);
@@ -1107,6 +1321,7 @@ function route() {
   else if (a === 'tag' && b) { viewFeed({ kind: 'search', q: b.toLowerCase() }); }
   else if (a === 'search' && b) { viewFeed({ kind: 'search', q: b.toLowerCase() }); }
   else if (a === 'mod') { viewMod(); setActiveNav(''); }
+  else if (a === 'bulk') viewBulk();
   else if (a === 'rules') viewRules();
   else if (a === 'upload') { viewFeed({ kind: 'feed', sort: 'hot' }); setTimeout(() => openUpload(), 50); }
   else $('#main').innerHTML = '<div class="empty card"><div class="empty-art">🤷</div><p>Nothing on this shelf.</p><a class="btn btn-accent" href="#/">Back to Hot</a></div>';
@@ -1173,6 +1388,13 @@ if (EMU) {
   window.__mk = {
     async signInAs(uid, name) {
       await signInWithCredential(auth, GoogleAuthProvider.credential(JSON.stringify({ sub: uid, email: `${uid}@example.com`, email_verified: true, name })));
+    },
+    // emulator only: unsigned custom token for a fixed uid (the auth emulator accepts these)
+    async signInAsAdmin() {
+      const b64 = (o) => btoa(JSON.stringify(o)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const now = Math.floor(Date.now() / 1000);
+      const token = `${b64({ alg: 'none', typ: 'JWT' })}.${b64({ uid: ADMIN_UIDS[0], iat: now, exp: now + 3600, aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit', iss: 'test@example.com', sub: 'test@example.com' })}.`;
+      await signInWithCustomToken(auth, token);
     },
     state,
   };
