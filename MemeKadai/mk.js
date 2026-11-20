@@ -21,7 +21,7 @@ const firebaseConfig = {
   messagingSenderId: '214816352993',
   appId: '1:214816352993:web:48d969d978562d64a265a0',
 };
-const ADMIN_UIDS = []; // keep in sync with firestore.rules
+const ADMIN_UIDS = ['yaBttsOx9RZeyEFcCkUKgcQgVCm2']; // keep in sync with firestore.rules
 const EMU = new URLSearchParams(location.search).has('emu');
 const PAGE = 8;
 const HIDE_AT_REPORTS = 3;
