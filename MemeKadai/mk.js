@@ -1096,7 +1096,7 @@ function openUpload(presetSection) {
 }
 
 // ---------------------------------------------------------------- bulk upload (admin)
-const BULK_MAX = 500;
+const BULK_MAX = 1500;
 function titleFromName(name) {
   return name.replace(/\.[a-z0-9]+$/i, '').replace(/[_\-.]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
 }
