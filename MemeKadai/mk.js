@@ -47,6 +47,7 @@ export const SECTIONS = [
   { id: 'tech', name: 'Tech', ic: '💻' },
   { id: 'sports', name: 'Sports', ic: '⚽' },
   { id: 'food', name: 'Food', ic: '🍛' },
+  { id: 'oldmemes', name: 'Old Memes', ic: '📼' },
   { id: 'random', name: 'Random', ic: '🎲' },
 ];
 const SECTION = Object.fromEntries(SECTIONS.map((s) => [s.id, s]));
@@ -1095,7 +1096,7 @@ function openUpload(presetSection) {
 }
 
 // ---------------------------------------------------------------- bulk upload (admin)
-const BULK_MAX = 50;
+const BULK_MAX = 500;
 function titleFromName(name) {
   return name.replace(/\.[a-z0-9]+$/i, '').replace(/[_\-.]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
 }
