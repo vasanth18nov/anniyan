@@ -1,0 +1,1431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kavin Krishna</title>
+<meta name="description" content="Hi, I'm Kavin Krishna. 13 years old. Student. Footballer. Animal lover. From Malaysia to Coimbatore.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#06102a">
+<meta property="og:title" content="Kavin Krishna">
+<meta property="og:description" content="13 years old. Student. Footballer. Animal Lover.">
+<meta property="og:image" content="https://thudinest.com/kavin/img/top.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #06102a;
+    --navy-2: #0a1a44;
+    --blue: #3b82ff;
+    --sky: #8cc8ff;
+    --lime: #c8ff3e;
+    --green: #19c37d;
+    --pitch: #05301e;
+    --coral: #ff7a59;
+    --sun: #ffc145;
+    --cream: #fff4e8;
+    --ink: #1a1220;
+    --white: #f4f7ff;
+    --muted: #a9b6d8;
+    --radius: 28px;
+    --shadow: 0 30px 60px -20px rgba(0, 0, 0, .55), 0 12px 24px -12px rgba(0, 0, 0, .4);
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "DM Sans", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  body {
+    margin: 0;
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+  img, video { display: block; max-width: 100%; }
+  h1, h2, h3 { font-family: var(--display); margin: 0; line-height: .95; letter-spacing: -.02em; }
+  p { margin: 0; }
+  a { color: inherit; }
+  .container { width: min(1180px, 100% - 32px); margin-inline: auto; }
+  .kicker {
+    font: 700 13px/1 var(--body);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--sky);
+    margin-bottom: 18px;
+  }
+  .h2 { font-size: clamp(2.6rem, 8vw, 6.5rem); font-weight: 800; }
+
+  /* ---------- Progress + nav ---------- */
+  .progress {
+    position: fixed; inset: 0 0 auto 0; height: 4px; z-index: 50;
+    background: linear-gradient(90deg, var(--blue), var(--lime), var(--sun), var(--coral));
+    transform-origin: 0 50%; transform: scaleX(0);
+  }
+  .progress-ball { position: fixed; top: 2px; left: 0; z-index: 51; font-size: 14px; line-height: 1; pointer-events: none; }
+  html:not(.motion) .progress-ball { display: none; }
+  .nav {
+    position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 40;
+    display: flex; align-items: center; gap: 4px;
+    padding: 6px; border-radius: 999px;
+    background: rgba(6, 16, 42, .55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, .1);
+  }
+  .nav a {
+    text-decoration: none; font-weight: 700; font-size: 14px;
+    padding: 8px 14px; border-radius: 999px; white-space: nowrap;
+  }
+  .nav a:hover { background: rgba(255, 255, 255, .1); }
+  .nav .logo { background: var(--lime); color: var(--navy); font-family: var(--display); }
+  .nav .logo:hover { background: var(--lime); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; height: 100vh; height: 100svh; min-height: 560px;
+    display: grid; place-items: center; overflow: hidden;
+    background:
+      radial-gradient(60vmax 60vmax at 85% 15%, rgba(59, 130, 255, .45), transparent 60%),
+      radial-gradient(50vmax 50vmax at 5% 95%, rgba(25, 195, 125, .35), transparent 60%),
+      var(--navy);
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(circle at 50% 50%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 30%, transparent 75%);
+  }
+  .hero-inner {
+    position: relative; width: min(1180px, 100% - 32px);
+    display: grid; grid-template-columns: 1.25fr .75fr; align-items: center; gap: clamp(24px, 5vw, 72px);
+    will-change: transform, opacity;
+  }
+  .eyebrow {
+    display: inline-flex; gap: 8px; align-items: center;
+    padding: 8px 16px; border-radius: 999px; margin-bottom: 22px;
+    background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .14);
+    font-weight: 500; font-size: 15px;
+  }
+  .hero-title { font-size: clamp(3rem, 9.4vw, 8.6rem); font-weight: 800; }
+  .hero-title .line { display: block; overflow: hidden; padding: .04em 0 .1em; }
+  .hero-title .accent {
+    background: linear-gradient(90deg, var(--sky), var(--lime) 60%, var(--sun));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-title .accent.split { background: none; color: var(--lime); }
+  .word { display: inline-block; white-space: nowrap; }
+  .char { display: inline-block; will-change: transform; }
+  .hero-sub {
+    margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px;
+    font: 700 clamp(1rem, 2vw, 1.3rem)/1 var(--body);
+  }
+  .hero-sub span { padding: 12px 18px; border-radius: 999px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .12); }
+  .hero-sub span:nth-child(1) { color: var(--sky); }
+  .hero-sub span:nth-child(2) { color: var(--white); }
+  .hero-sub span:nth-child(3) { color: var(--lime); }
+  .hero-sub span:nth-child(4) { color: var(--sun); }
+  .hero-photo { position: relative; margin: 0; justify-self: center; width: min(100%, 420px); }
+  /* Round profile picture with a story-style ring that spins as you scroll */
+  .hero-photo .ring {
+    position: absolute; inset: -14px; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--blue), var(--lime), var(--sun), var(--coral), var(--blue));
+    box-shadow: 0 0 70px rgba(59, 130, 255, .35);
+  }
+  .hero-photo .frame {
+    position: relative; aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    border: 8px solid var(--navy); box-shadow: var(--shadow);
+  }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 45% 35%; }
+  .sticker {
+    position: absolute; display: grid; place-items: center;
+    width: 76px; height: 76px; border-radius: 50%; font-size: 40px;
+    background: var(--white); box-shadow: var(--shadow);
+  }
+  .sticker.s1 { left: -30px; top: 4%; }
+  .sticker.s2 { right: -30px; top: 48%; background: var(--sun); }
+  .sticker.s3 { left: 6%; bottom: -10px; background: var(--lime); }
+  .scroll-cue {
+    position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+    font-size: 14px; font-weight: 500; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .scroll-cue i { width: 2px; height: 36px; background: linear-gradient(var(--lime), transparent); animation: cue 1.6s ease-in-out infinite; transform-origin: top; }
+  @keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+  /* ---------- Journey ---------- */
+  .journey {
+    position: relative; z-index: 2;
+    border-radius: 44px 44px 0 0;
+    background: linear-gradient(180deg, var(--navy-2), #0b2463 55%, #0a1a44);
+    box-shadow: 0 -40px 80px rgba(0, 0, 0, .5);
+    padding-top: clamp(80px, 14vw, 160px);
+  }
+  .journey-head { display: grid; gap: 34px; }
+  .reveal-text {
+    font: 500 clamp(1.35rem, 3.2vw, 2.4rem)/1.35 var(--display);
+    max-width: 30ch; letter-spacing: -.01em;
+  }
+  .reveal-text strong { color: var(--lime); font-weight: 700; }
+  .reveal-text .w { display: inline; }
+
+  /* Memory lane: scrolling down slides this film strip sideways */
+  .lane { position: relative; margin-top: clamp(60px, 10vw, 120px); overflow: hidden; }
+  html.motion .lane { height: 100vh; height: 100svh; display: flex; align-items: center; }
+  html:not(.motion) .lane { overflow-x: auto; padding-bottom: 40px; }
+  .lane-track {
+    display: flex; align-items: center; gap: clamp(18px, 3vw, 44px);
+    padding-inline: max(16px, 6vw); width: max-content; will-change: transform;
+  }
+  .lane-intro { flex: none; width: clamp(220px, 26vw, 360px); }
+  .lane-intro h3 { font-size: clamp(2.4rem, 5vw, 4.4rem); font-weight: 800; }
+  .lane-intro p { color: var(--muted); margin-top: 14px; }
+  .lane figure { margin: 0; flex: none; width: clamp(220px, 25vw, 340px); will-change: transform; }
+  /* Shared responsive photo container: rounded corners + soft drop shadow */
+  .photo {
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+    background: rgba(255, 255, 255, .06);
+  }
+  .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .lane .photo { aspect-ratio: 3 / 4; }
+  .lane figcaption, .card figcaption { margin-top: 12px; font-size: 14px; font-weight: 500; color: var(--muted); }
+
+  /* Flight scene (pinned) */
+  .flight { position: relative; height: 100vh; height: 100svh; min-height: 600px; margin-top: clamp(40px, 8vw, 100px); }
+  .flight-stage {
+    height: 100%; width: min(1280px, 100% - 32px); margin-inline: auto;
+    display: grid; grid-template-columns: .8fr 1.2fr; align-items: center; gap: clamp(20px, 4vw, 60px);
+  }
+  .flight-copy { position: relative; min-height: 320px; }
+  .stop h3 { font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 800; margin: 6px 0 16px; }
+  .stop p { color: #d5def5; max-width: 34ch; }
+  .stop .tag { font: 700 13px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--sun); }
+  html.motion .stop { position: absolute; inset: 0 0 auto 0; }
+  .school {
+    display: inline-flex; align-items: center; gap: 14px; margin-top: 22px;
+    padding: 14px 20px 14px 14px; border-radius: 20px;
+    background: var(--white); color: var(--navy); box-shadow: var(--shadow);
+  }
+  .school .crest { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; background: linear-gradient(135deg, var(--blue), var(--green)); }
+  .school b { display: block; font-family: var(--display); font-size: 20px; line-height: 1.1; }
+  .school small { font-size: 13px; color: #4b5578; font-weight: 500; }
+  .flight-bar { position: absolute; left: 0; bottom: -40px; width: 160px; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .15); overflow: hidden; }
+  .flight-bar span { display: block; height: 100%; background: var(--lime); transform-origin: 0 50%; transform: scaleX(0); }
+  html:not(.motion) .flight-bar { display: none; }
+
+  .map { position: relative; width: min(100%, 95vh * 1.25); aspect-ratio: 5 / 4; justify-self: center; }
+  .map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .land { fill: rgba(140, 200, 255, .13); stroke: rgba(140, 200, 255, .35); stroke-width: 2; }
+  .sea-label { fill: rgba(140, 200, 255, .45); font: italic 500 22px var(--body); letter-spacing: .1em; }
+  .place-label { fill: var(--white); font: 800 30px var(--display); }
+  .polaroid {
+    position: absolute; margin: 0; padding: 10px 10px 0; width: 25%;
+    background: var(--white); border-radius: 18px; box-shadow: var(--shadow);
+  }
+  .polaroid .photo { aspect-ratio: 1; border-radius: 12px; box-shadow: none; }
+  .polaroid figcaption { color: var(--navy); font: 700 clamp(10px, 1.2vw, 14px)/1 var(--body); text-align: center; padding: 10px 0 12px; }
+  .polaroid.p1 { left: 44%; top: 28%; rotate: -7deg; }
+  .polaroid.p2 { left: 70%; top: 6%; rotate: 6deg; }
+  .polaroid.p3 { left: 52%; top: 58%; rotate: -3deg; }
+  .home-tag {
+    position: absolute; left: 26%; top: 40%; translate: -50% -175%;
+    padding: 10px 16px; border-radius: 14px; white-space: nowrap;
+    background: var(--lime); color: var(--navy); font: 800 clamp(13px, 1.6vw, 18px)/1 var(--display);
+    box-shadow: var(--shadow);
+  }
+
+  /* ---------- Name in the sand (pinned; the photo grows to full screen) ---------- */
+  .sand { position: relative; height: 100vh; height: 100svh; min-height: 520px; background: #0a1a44; overflow: hidden; }
+  .sand-media { position: absolute; inset: 0; will-change: clip-path; }
+  .sand-media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 70%; }
+  .sand-media::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(6, 16, 42, .5), transparent 30%, transparent 55%, rgba(6, 16, 42, .8));
+  }
+  .sand-text { position: absolute; left: 16px; right: 16px; top: clamp(130px, 22vh, 220px); text-align: center; }
+  .sand-text p { font: 800 clamp(1.8rem, 5vw, 4rem)/1.05 var(--display); letter-spacing: -.02em; text-shadow: 0 4px 30px rgba(0, 0, 0, .55); }
+  .sand-text p span { color: var(--lime); }
+  html.motion .sand-text p { position: absolute; left: 0; right: 0; top: 0; }
+  /* Wide screens: captions sit to the left so they never cover Kavin (he stands mid-photo) */
+  @media (min-aspect-ratio: 1/1) {
+    .sand-text { left: max(16px, 5vw); right: auto; width: min(36vw, 520px); text-align: left; }
+  }
+  /* On tall phone screens show the whole photo (with the name) instead of a cropped slice */
+  @media (max-aspect-ratio: 1/1) {
+    .sand-media { inset: 50% 0 auto; translate: 0 -60%; aspect-ratio: 4 / 3; }
+  }
+
+  /* ---------- Kavin in letters (the particle ring from the thudinest.com hero) ---------- */
+  .letters {
+    position: relative; overflow: hidden; margin-top: clamp(40px, 8vw, 100px);
+    background: radial-gradient(60vmax 50vmax at 75% 50%, rgba(59, 130, 255, .22), transparent 65%);
+  }
+  .letters-stage {
+    min-height: 100vh; min-height: 100svh; width: min(1180px, 100% - 32px); margin-inline: auto;
+    display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: clamp(24px, 5vw, 70px); padding-block: 40px;
+  }
+  .letters-copy p:not(.kicker) { color: #d5def5; max-width: 34ch; margin-top: 22px; font-size: clamp(1.05rem, 1.6vw, 1.25rem); }
+  .letters-art { position: relative; width: min(100%, 78svh); aspect-ratio: 1; justify-self: center; }
+  .lt-ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 1.5px solid rgba(140, 200, 255, .35);
+    box-shadow: 0 0 80px rgba(59, 130, 255, .15), inset 0 0 80px rgba(59, 130, 255, .08);
+  }
+  .lt-ring::before { content: ""; position: absolute; inset: 9%; border-radius: 50%; border: 1px dashed rgba(255, 255, 255, .12); animation: lt-spin 60s linear infinite; }
+  .lt-orbit { position: absolute; inset: 0; border-radius: 50%; animation: lt-spin 18s linear infinite; pointer-events: none; }
+  .lt-orbit::before {
+    content: ""; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; margin-left: -5px;
+    border-radius: 50%; background: var(--lime); box-shadow: 0 0 18px 2px var(--lime);
+  }
+  @keyframes lt-spin { to { transform: rotate(360deg); } }
+  #lt-cv { position: absolute; inset: 5%; width: 90%; height: 90%; display: block; border-radius: 50%; touch-action: pan-y; cursor: pointer; }
+  .lt-chip {
+    position: absolute; left: 50%; bottom: 3%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px; padding: 8px 16px 8px 8px; border-radius: 999px; white-space: nowrap;
+    background: rgba(6, 16, 42, .86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 20px 50px rgba(0, 0, 0, .5);
+    font-weight: 700; font-size: 15px;
+  }
+  .lt-no { width: 30px; height: 30px; border-radius: 50%; background: var(--lime); color: var(--navy); display: grid; place-items: center; font: 800 12px/1 var(--display); }
+  .lt-bar { width: 64px; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+  .lt-bar i { display: block; height: 100%; background: var(--lime); transform-origin: 0 50%; transform: scaleX(0); }
+  @media (max-width: 860px) {
+    .letters-stage { grid-template-columns: 1fr; align-content: center; gap: 18px; padding-top: 70px; }
+    .letters-art { width: min(100%, 50svh); }
+    .letters-copy p:not(.kicker) { margin-top: 12px; font-size: 16px; }
+    .lt-chip { font-size: 13px; }
+  }
+
+  /* ---------- Passions ---------- */
+  .passions { position: relative; background: #0a1a44; padding-top: clamp(100px, 14vw, 180px); }
+  .passions-intro { padding-bottom: clamp(60px, 9vw, 110px); }
+  .block { position: relative; overflow: hidden; padding: clamp(80px, 12vw, 150px) 0; }
+  .marquee { font: 800 clamp(5rem, 18vw, 16rem)/1 var(--display); white-space: nowrap; letter-spacing: -.03em; pointer-events: none; user-select: none; }
+  .marquee .track { display: inline-block; will-change: transform; }
+  .block-grid { position: relative; display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 6vw, 80px); align-items: center; margin-top: clamp(30px, 5vw, 60px); }
+  .block h3 { font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 800; margin-bottom: 20px; }
+  .block-copy p { font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 36ch; }
+  .facts { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 0; padding: 0; list-style: none; }
+  .facts li { padding: 10px 16px; border-radius: 999px; font-weight: 700; font-size: 15px; }
+  .cards { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2vw, 22px); }
+  .card { margin: 0; will-change: transform; }
+  .card .photo { aspect-ratio: 4 / 5; }
+  .card.wide { grid-column: span 2; }
+  .card.wide .photo { aspect-ratio: 16 / 10; }
+  .card.tall { grid-row: span 2; display: flex; flex-direction: column; }
+  .card.tall .photo { flex: 1; aspect-ratio: auto; min-height: 0; }
+
+  /* Block A: Football */
+  .football {
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 90px, transparent 90px 180px),
+      radial-gradient(80vmax 50vmax at 80% 0%, rgba(200, 255, 62, .14), transparent 60%),
+      var(--pitch);
+    border-radius: 44px 44px 0 0;
+  }
+  .football .marquee { color: transparent; -webkit-text-stroke: 2px rgba(200, 255, 62, .35); }
+  .football .kicker { color: var(--lime); }
+  .football h3 span { color: var(--lime); }
+  .football .facts li { background: rgba(200, 255, 62, .12); color: var(--lime); border: 1px solid rgba(200, 255, 62, .3); }
+  .football .card .photo { box-shadow: var(--shadow), 0 0 0 4px rgba(200, 255, 62, .25); }
+  /* Block A+: the football game, where Kavin plays in his 25 */
+  .fwgame {
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.045) 0 1px, transparent 1px 24px),
+      repeating-linear-gradient(-45deg, rgba(255,255,255,.045) 0 1px, transparent 1px 24px),
+      radial-gradient(70vmax 50vmax at 15% 0%, rgba(200,255,62,.16), transparent 60%),
+      var(--navy);
+  }
+  .fwgame .beam { position: absolute; top: -10%; width: 40vw; height: 120%; pointer-events: none; opacity: .5; background: linear-gradient(rgba(255,246,210,.28), rgba(255,246,210,0) 70%); filter: blur(8px); }
+  .fwgame .beam.l { left: -8vw; clip-path: polygon(0 0, 20% 0, 100% 100%, 40% 100%); }
+  .fwgame .beam.r { right: -8vw; clip-path: polygon(80% 0, 100% 0, 60% 100%, 0 100%); }
+  .fwgame .kicker { color: var(--lime); }
+  .fwgame h3 span { color: var(--lime); }
+  .fw-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .fw-sheet { margin: 26px 0 30px; max-width: 440px; background: var(--white); color: var(--navy); border-radius: 22px; overflow: hidden; box-shadow: 8px 8px 0 var(--lime); }
+  .fw-sheet header { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: #2350b8; color: var(--white); font: 800 15px/1 var(--display); letter-spacing: .02em; }
+  .fw-sheet header i { width: 18px; height: 18px; border-radius: 5px; background: linear-gradient(135deg, #2350b8 0 50%, #ffc53d 50%); border: 2px solid var(--white); }
+  .fw-sheet ol { list-style: none; margin: 0; padding: 4px 0; }
+  .fw-sheet li { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 10px; padding: 11px 18px; border-top: 1px dashed rgba(6,16,42,.15); }
+  .fw-sheet li:first-child { border-top: 0; }
+  .fw-sheet li b { font: 800 26px/1 var(--display); color: #2350b8; }
+  .fw-sheet li span { font-weight: 700; font-size: 17px; }
+  .fw-sheet li small { font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; opacity: .55; }
+  .fw-sheet li.star { background: rgba(200, 255, 62, .45); }
+  .fw-sheet li.star span::after { content: ' ★'; color: #e8392f; }
+  .fw-play { display: inline-flex; align-items: center; gap: 12px; padding: 16px 28px; border-radius: 999px; background: var(--lime); color: var(--navy); font: 800 18px/1 var(--display); text-decoration: none; box-shadow: 0 6px 0 #7fa71f; transition: transform .12s, box-shadow .12s; }
+  .fw-play:active { transform: translateY(4px); box-shadow: 0 2px 0 #7fa71f; }
+  .fw-play svg { width: 18px; height: 18px; }
+  .fw-wrap { perspective: 1200px; position: relative; }
+  .fw-screen { display: block; position: relative; border-radius: 24px; overflow: hidden; border: 3px solid #050a18; box-shadow: 0 0 0 7px #16234d, 0 40px 80px -24px rgba(0,0,0,.8); }
+  .fw-screen img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+  .fw-screen .go { position: absolute; right: 14px; bottom: 14px; width: 62px; height: 62px; border-radius: 50%; background: var(--lime); display: grid; place-items: center; box-shadow: 0 8px 20px rgba(0,0,0,.45); }
+  .fw-screen .go svg { width: 22px; height: 22px; margin-left: 3px; }
+  .fw-25 { position: absolute; left: -18px; top: -26px; z-index: 2; width: 92px; height: 92px; border-radius: 50%; background: var(--sun); color: var(--navy); display: grid; place-items: center; text-align: center; font: 800 34px/0.8 var(--display); transform: rotate(-12deg); box-shadow: 0 10px 24px rgba(0,0,0,.4); }
+  .fw-25 small { display: block; font: 700 10px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; }
+  @media (max-width: 860px) { .fw-grid { grid-template-columns: 1fr; } .fw-25 { left: 6px; width: 76px; height: 76px; font-size: 28px; } }
+
+  .shirt { display: flex; align-items: flex-end; gap: 14px; margin-top: 30px; }
+  .shirt b {
+    font: 800 clamp(5rem, 12vw, 9rem)/.8 var(--display); font-variant-numeric: tabular-nums;
+    color: transparent; -webkit-text-stroke: 3px var(--lime); min-width: 1.2em;
+  }
+  .shirt small { font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: .14em; font-size: 13px; line-height: 1.3; padding-bottom: 6px; }
+  .ball { position: absolute; top: clamp(150px, 22vw, 290px); left: 0; width: clamp(56px, 7vw, 92px); filter: drop-shadow(0 16px 14px rgba(0, 0, 0, .45)); will-change: transform; }
+  .video-card { position: relative; }
+  .video-card video { width: 100%; height: 100%; object-fit: cover; }
+  .video-card .badge {
+    position: absolute; left: 14px; bottom: 14px;
+    padding: 8px 12px; border-radius: 12px; background: rgba(5, 48, 30, .8); backdrop-filter: blur(6px);
+    font: 700 13px/1 var(--body); color: var(--lime);
+  }
+
+  /* Block B: Pets */
+  .pets {
+    background:
+      radial-gradient(70vmax 50vmax at 10% 10%, rgba(255, 193, 69, .35), transparent 60%),
+      radial-gradient(60vmax 50vmax at 100% 100%, rgba(255, 122, 89, .3), transparent 60%),
+      var(--cream);
+    color: var(--ink);
+    border-radius: 44px 44px 0 0; margin-top: -44px;
+  }
+  .pets .marquee { color: rgba(255, 122, 89, .16); text-align: right; }
+  .pets .kicker { color: #d4502f; }
+  .pets h3 span { color: var(--coral); }
+  .pets .block-grid { grid-template-columns: 1.1fr .9fr; }
+  .pets .block-copy { order: 2; }
+  .pets .facts li { background: #fff; color: #b8431f; box-shadow: 0 8px 20px -10px rgba(184, 67, 31, .4); }
+  .pet-card {
+    border-radius: var(--radius); padding: 22px; box-shadow: 0 30px 50px -24px rgba(120, 50, 20, .45);
+    display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 4 / 5;
+  }
+  .pet-card svg { width: 72%; align-self: center; margin-block: auto; }
+  .pet-card b { font: 800 clamp(1.2rem, 2vw, 1.6rem)/1.1 var(--display); }
+  .pet-card small { display: block; margin-top: 6px; font-size: 14px; line-height: 1.4; opacity: .8; }
+  .pet-card.cat { background: linear-gradient(160deg, #ffb36b, var(--coral)); color: #3a1405; }
+  .pet-card.dog { background: linear-gradient(160deg, #ffe08a, var(--sun)); color: #3d2a00; }
+  .pet-photo .photo { box-shadow: 0 30px 50px -24px rgba(120, 50, 20, .45); position: relative; }
+  .pet-photo .fallback { display: none; }
+  .pet-photo.missing img { display: none; }
+  .pet-photo.missing .fallback {
+    position: absolute; inset: 0; display: grid; place-content: center; gap: 10px; text-align: center;
+    background: linear-gradient(135deg, #fff, #ffe9d6); color: #b8431f;
+    font: 800 clamp(1.3rem, 2.6vw, 2rem)/1.2 var(--display);
+  }
+  .pet-photo.missing .fallback span { font-size: clamp(3rem, 7vw, 5rem); letter-spacing: .1em; }
+  .pets .card figcaption { color: #8a5a44; }
+  .paws { position: absolute; inset: 0; pointer-events: none; }
+  .paw { position: absolute; width: clamp(22px, 3vw, 36px); fill: rgba(255, 122, 89, .35); }
+
+  /* ---------- Finale ---------- */
+  .finale {
+    position: relative; overflow: hidden;
+    background: radial-gradient(70vmax 60vmax at 50% 0%, rgba(59, 130, 255, .35), transparent 65%), var(--navy);
+    border-radius: 44px 44px 0 0; margin-top: -44px;
+    padding: clamp(100px, 14vw, 170px) 0 60px;
+  }
+  .finale-grid { display: grid; grid-template-columns: 1fr auto; gap: clamp(32px, 6vw, 90px); align-items: center; }
+  .finale p.lead { font-size: clamp(1.1rem, 1.8vw, 1.35rem); color: #d5def5; max-width: 38ch; margin-top: 22px; }
+  .phone {
+    position: relative; width: clamp(220px, 26vw, 320px); aspect-ratio: 9 / 16;
+    border-radius: 40px; overflow: hidden; border: 8px solid #10183a;
+    box-shadow: var(--shadow), 0 0 0 2px rgba(255, 255, 255, .12), 0 0 80px rgba(59, 130, 255, .35);
+  }
+  .phone video { width: 100%; height: 100%; object-fit: cover; }
+  .sound {
+    position: absolute; right: 12px; bottom: 12px; border: 0; cursor: pointer;
+    padding: 10px 14px; border-radius: 999px; background: rgba(6, 16, 42, .75); color: #fff;
+    font: 700 13px/1 var(--body); backdrop-filter: blur(6px);
+  }
+  .tbc { margin-top: clamp(90px, 14vw, 170px); text-align: center; }
+  .tbc h2 { font-size: clamp(3rem, 12vw, 11rem); font-weight: 800; }
+  .tbc h2 span { display: inline-block; }
+  .tbc p { margin-top: 18px; color: var(--muted); }
+  footer { text-align: center; padding: 70px 16px 30px; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--sky); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    body { font-size: 17px; }
+    .nav a:not(.logo) { padding: 8px 10px; font-size: 13px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 26px; text-align: left; }
+    .hero-photo { width: min(46vw, 230px); justify-self: start; order: -1; }
+    .hero-title { font-size: clamp(2.6rem, 11.5vw, 5rem); }
+    .hero-sub span { padding: 9px 14px; }
+    .sticker { width: 52px; height: 52px; font-size: 27px; }
+    .sticker.s1 { left: -14px; } .sticker.s2 { right: -18px; } .sticker.s3 { bottom: -16px; }
+    .eyebrow { display: none; }
+    .lane figure, .lane-intro { width: 64vw; }
+    .flight-stage { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: center; gap: 8px; padding-top: 64px; }
+    .map { width: min(100%, 52svh * 1.25); order: -1; }
+    .flight-copy { min-height: 250px; }
+    .stop h3 { margin: 4px 0 10px; }
+    .stop p { font-size: 16px; }
+    .school { margin-top: 14px; padding: 10px 16px 10px 10px; }
+    .flight-bar { bottom: auto; top: -12px; }
+    .block-grid, .pets .block-grid { grid-template-columns: 1fr; }
+    .pets .block-copy { order: 0; }
+    .finale-grid { grid-template-columns: 1fr; justify-items: start; }
+    .phone { justify-self: center; }
+  }
+  @media (max-width: 860px) {
+    html:not(.motion) .flight { height: auto; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue i { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"></div>
+<div class="progress-ball" aria-hidden="true">⚽</div>
+
+<nav class="nav" aria-label="Sections">
+  <a class="logo" href="#top" data-scroll>KK</a>
+  <a href="#journey" data-scroll>Journey</a>
+  <a href="#football" data-scroll>Football</a>
+  <a href="#pets" data-scroll>Pets</a>
+</nav>
+
+<main>
+
+  <!-- ======================= 1. HERO ======================= -->
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow">👋 Welcome to my corner of the internet</p>
+        <h1 class="hero-title">
+          <span class="line" data-split>Hi, I'm</span>
+          <span class="line accent" data-split>Kavin Krishna.</span>
+        </h1>
+        <p class="hero-sub">
+          <span>13 years old.</span>
+          <span>Student.</span>
+          <span>Footballer.</span>
+          <span>Animal Lover.</span>
+        </p>
+      </div>
+      <figure class="hero-photo">
+        <div class="ring" aria-hidden="true"></div>
+        <div class="frame">
+          <!-- File: kavin/img/top.jpg (the profile picture — made from kavin/toppicture.png) -->
+          <img src="/kavin/img/top.jpg" alt="Kavin Krishna with his yellow backpack" width="942" height="789" fetchpriority="high">
+        </div>
+        <span class="sticker s1" aria-hidden="true">⚽</span>
+        <span class="sticker s2" aria-hidden="true">🐶</span>
+        <span class="sticker s3" aria-hidden="true">🐱</span>
+      </figure>
+    </div>
+    <div class="scroll-cue" aria-hidden="true">Scroll to start the story<i></i></div>
+  </section>
+
+  <!-- ======================= 2. THE JOURNEY ======================= -->
+  <section class="journey" id="journey">
+    <div class="container journey-head">
+      <div>
+        <p class="kicker">Chapter 01 — The Journey</p>
+        <h2 class="h2" data-split>From Malaysia<br>to Coimbatore.</h2>
+      </div>
+      <p class="reveal-text" data-words>
+        Kavin's story starts in <strong>Malaysia</strong> — sunny days by the water, long drives up into misty green hills, and his favourite people always in the frame.
+        Then came the biggest adventure yet: packing up a whole life and flying across the Bay of Bengal to <strong>Coimbatore</strong>, where the Western Ghats sit on the horizon.
+        New city, new friends, new school — and he's taken every bit of it in his stride.
+      </p>
+    </div>
+
+    <!-- Kavin in letters: the particle ring from the thudinest.com hero; a new picture every 3 seconds -->
+    <div class="letters" role="region" aria-label="Kavin, drawn in letters">
+      <div class="letters-stage">
+        <div class="letters-copy">
+          <p class="kicker">Interlude — Kavin, in letters</p>
+          <h2 class="h2" data-split>Made of<br>k·a·v·i·n.</h2>
+          <p>Every speck in this circle is a tiny letter from his name. Watch them burst apart and rebuild into the things he loves — tap the circle to skip ahead.</p>
+        </div>
+        <div class="letters-art">
+          <span class="lt-ring" aria-hidden="true"></span>
+          <span class="lt-orbit" aria-hidden="true"></span>
+          <canvas id="lt-cv" role="img" aria-label="Tiny letters of Kavin's name forming his name, a football, his number 25 shirt, a cat, a dog, a plane, a graduation cap, a game controller, the Roblox logo, a gaming PC and a heart that says DAD."></canvas>
+          <div class="lt-chip" aria-live="polite">
+            <span class="lt-no" id="lt-no">01</span>
+            <span id="lt-name">Kavin</span>
+            <span class="lt-bar" aria-hidden="true"><i id="lt-bar"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory lane: pinned; scrolling down slides this strip sideways -->
+    <div class="lane">
+      <div class="lane-track">
+        <div class="lane-intro">
+          <h3 data-split>Memory lane →</h3>
+          <p>A few favourite moments along the way.</p>
+        </div>
+        <figure>
+          <!-- File: kavin/img/little-kavin.jpg -->
+          <div class="photo"><img src="/kavin/img/little-kavin.jpg" alt="Little Kavin in a red cap"></div>
+          <figcaption>Where it all began</figcaption>
+        </figure>
+        <figure>
+          <!-- File: kavin/img/smile.jpg -->
+          <div class="photo"><img src="/kavin/img/smile.jpg" alt="Kavin in a SMILE ALWAYS T-shirt"></div>
+          <figcaption>Smile always 😄</figcaption>
+        </figure>
+        <figure>
+          <!-- File: kavin/img/malaysia-colours.jpg -->
+          <div class="photo"><img src="/kavin/img/malaysia-colours.jpg" alt="Kavin with two younger girls in front of a colourful wall"></div>
+          <figcaption>Colourful days</figcaption>
+        </figure>
+        <figure>
+          <!-- File: kavin/img/malaysia-lake.jpg -->
+          <div class="photo"><img src="/kavin/img/malaysia-lake.jpg" alt="Kids on a jetty by the water"></div>
+          <figcaption>Lakeside crew</figcaption>
+        </figure>
+        <figure>
+          <!-- File: kavin/img/family.jpg -->
+          <div class="photo"><img src="/kavin/img/family.jpg" alt="Kavin smiling with his dad, Vasanth"></div>
+          <figcaption>Family time with Dad, Vasanth ❤️</figcaption>
+        </figure>
+        <figure>
+          <!-- File: kavin/img/yellow.jpg -->
+          <div class="photo"><img src="/kavin/img/yellow.jpg" alt="Kavin in a yellow T-shirt"></div>
+          <figcaption>Holiday mode: on</figcaption>
+        </figure>
+        <figure>
+          <!-- File: kavin/img/profile.jpg -->
+          <div class="photo"><img src="/kavin/img/profile.jpg" alt="Kavin grinning against a blue background"></div>
+          <figcaption>That grin, though</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- Pinned flight scene: the route draws itself as you scroll -->
+    <div class="flight">
+      <div class="flight-stage">
+        <div class="flight-copy">
+          <div class="stop" data-stop="0">
+            <span class="tag">Stop 01</span>
+            <h3>Malaysia 🇲🇾</h3>
+            <p>Growing up between beaches, theme-park colours and cool highland air. Every weekend felt like a new adventure.</p>
+          </div>
+          <div class="stop" data-stop="1">
+            <span class="tag">In the air</span>
+            <h3>Big move ✈️</h3>
+            <p>Bags packed, goodbyes said, and a few thousand kilometres of ocean below. A brand-new chapter was loading…</p>
+          </div>
+          <div class="stop" data-stop="2">
+            <span class="tag">Stop 02 · Home now</span>
+            <h3>Coimbatore 🇮🇳</h3>
+            <p>A new city, new friends, and a whole new routine. These days you'll find him at school, on the pitch, or making friends with every dog on the street.</p>
+            <div class="school">
+              <span class="crest" aria-hidden="true">🎓</span>
+              <span><b>Sarvvam School</b><small>Where Kavin studies today</small></span>
+            </div>
+          </div>
+          <div class="flight-bar" aria-hidden="true"><span></span></div>
+        </div>
+
+        <div class="map">
+          <svg viewBox="0 0 1000 800" role="img" aria-label="A flight path from Malaysia to Coimbatore, India">
+            <defs>
+              <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1.6" fill="rgba(140,200,255,.18)"/>
+              </pattern>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <rect width="1000" height="800" rx="40" fill="url(#dots)"/>
+            <!-- Rough, playful outlines: southern India, Sri Lanka, the Malay peninsula and Sumatra -->
+            <path class="land" d="M0,0 L520,0 L470,120 L400,200 L350,330 L300,430 L265,400 L220,300 L170,180 L120,90 L0,60 Z"/>
+            <ellipse class="land" cx="372" cy="478" rx="28" ry="46"/>
+            <path class="land" d="M560,0 L700,0 L690,120 L682,240 L720,330 L760,430 L800,560 L830,660 L800,700 L760,640 L720,520 L680,420 L640,330 L600,250 L590,140 Z"/>
+            <path class="land" d="M540,560 L600,580 L700,700 L760,800 L680,800 L600,690 Z"/>
+            <text class="sea-label" x="430" y="300">BAY OF BENGAL</text>
+
+            <path id="route-ghost" d="M770,590 C690,420 470,170 260,320" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="3" stroke-dasharray="4 12" stroke-linecap="round"/>
+            <path id="route" d="M770,590 C690,420 470,170 260,320" fill="none" stroke="#c8ff3e" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+
+            <g class="pin my-pin">
+              <circle cx="770" cy="590" r="14" fill="#ffc145"/>
+              <circle cx="770" cy="590" r="28" fill="none" stroke="#ffc145" stroke-opacity=".5" stroke-width="3"/>
+              <text class="place-label" x="800" y="625">Malaysia</text>
+            </g>
+            <g class="pin cbe-pin">
+              <circle cx="260" cy="320" r="14" fill="#c8ff3e"/>
+              <circle class="pulse" cx="260" cy="320" r="28" fill="none" stroke="#c8ff3e" stroke-width="3"/>
+              <text class="place-label" x="120" y="372">Coimbatore</text>
+            </g>
+            <g id="plane">
+              <path d="M-26,-4 L10,-4 L24,0 L10,4 L-26,4 Z" fill="#fff"/>
+              <path d="M-4,-4 L-14,-26 L-6,-26 L10,-4 Z M-4,4 L-14,26 L-6,26 L10,4 Z" fill="#fff"/>
+              <path d="M-24,-4 L-30,-14 L-24,-14 L-16,-4 Z M-24,4 L-30,14 L-24,14 L-16,4 Z" fill="#fff"/>
+            </g>
+          </svg>
+
+          <figure class="polaroid p1">
+            <!-- File: kavin/img/malaysia.jpg -->
+            <div class="photo"><img src="/kavin/img/malaysia.jpg" alt="Kavin and two girls posing by the waterfront" loading="lazy"></div>
+            <figcaption>Malaysia days</figcaption>
+          </figure>
+          <figure class="polaroid p2">
+            <!-- File: kavin/img/malaysia-highlands.jpg -->
+            <div class="photo"><img src="/kavin/img/malaysia-highlands.jpg" alt="Kids sitting on a car roof under blue skies" loading="lazy"></div>
+            <figcaption>Road trips</figcaption>
+          </figure>
+          <figure class="polaroid p3">
+            <!-- File: kavin/img/adventure.jpg -->
+            <div class="photo"><img src="/kavin/img/adventure.jpg" alt="Kavin on a bench by the sea" loading="lazy"></div>
+            <figcaption>Sea breeze</figcaption>
+          </figure>
+          <div class="home-tag">📍 Home now</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Name in the sand: pinned; the photo grows from a card to full screen as you scroll -->
+  <section class="sand" aria-label="Kavin's name written in the sand">
+    <div class="sand-media">
+      <!-- File: kavin/img/kavin-sand.jpg -->
+      <img src="/kavin/img/kavin-sand.jpg" alt="Kavin on a beach with KAVIN written in the sand" width="1600" height="1200">
+    </div>
+    <div class="sand-text">
+      <p class="l1">Some names get written in the sand…</p>
+      <p class="l2">…this one's going to be <span>heard on the pitch.</span></p>
+    </div>
+  </section>
+
+  <!-- ======================= 3. THE PASSIONS ======================= -->
+  <section class="passions">
+    <div class="container passions-intro">
+      <p class="kicker">Chapter 02 — The Passions</p>
+      <h2 class="h2" data-split>Two things he'd<br>never give up.</h2>
+    </div>
+
+    <!-- Block A: Football -->
+    <article class="block football" id="football">
+      <div class="marquee" aria-hidden="true"><span class="track">FOOTBALL • FOOTBALL • FOOTBALL •</span></div>
+      <svg class="ball" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="47" fill="#fff" stroke="#0b1020" stroke-width="3"/>
+        <polygon points="50,32 66,44 60,63 40,63 34,44" fill="#0b1020"/>
+        <path d="M50,32 L50,6 M66,44 L90,36 M60,63 L74,84 M40,63 L26,84 M34,44 L10,36" stroke="#0b1020" stroke-width="3" fill="none"/>
+        <path d="M38,8 L50,6 L62,8 M86,26 L90,36 L92,50 M80,80 L74,84 L62,94 M38,94 L26,84 L20,80 M8,50 L10,36 L14,26" stroke="#0b1020" stroke-width="7" fill="none" stroke-linejoin="round"/>
+      </svg>
+      <div class="container block-grid">
+        <div class="block-copy">
+          <p class="kicker">Block A · On the pitch</p>
+          <h3>Football is his <span>happy place.</span></h3>
+          <p>Give Kavin a ball and a patch of grass and he'll play until the floodlights switch off — chasing every pass, celebrating every goal like it's a cup final, and proudly wearing number 25.</p>
+          <ul class="facts">
+            <li>⚽ Plays every chance he gets</li>
+            <li>🏅 Medal winner</li>
+            <li>#25 on his back</li>
+          </ul>
+          <div class="shirt"><b class="count">25</b><small>Shirt<br>number</small></div>
+        </div>
+        <div class="cards cards-left">
+          <figure class="card tall" data-from="left" data-rot="-2">
+            <!-- File: kavin/img/football.jpg (Kavin in his football kit) -->
+            <div class="photo"><img src="/kavin/img/football.jpg" alt="Kavin in a red football kit wearing a medal" loading="lazy" style="object-position:50% 40%"></div>
+            <figcaption>Kit on, medal earned 🏅</figcaption>
+          </figure>
+          <figure class="card" data-from="left" data-rot="3">
+            <!-- File: kavin/media/kavin-25.mp4 (poster: kavin/img/kavin-25-poster.jpg) -->
+            <div class="photo video-card">
+              <video src="/kavin/media/kavin-25.mp4" poster="/kavin/img/kavin-25-poster.jpg" muted loop playsinline preload="none" data-autoplay aria-label="Kavin in a number 25 shirt in a stadium"></video>
+              <span class="badge">KAVIN · 25</span>
+            </div>
+          </figure>
+          <figure class="card" data-from="left" data-rot="-3">
+            <!-- File: kavin/img/sporty.jpg -->
+            <div class="photo"><img src="/kavin/img/sporty.jpg" alt="Kavin in a neon green sports top" loading="lazy"></div>
+            <figcaption>Always ready to play</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <!-- Block A+: the game -->
+    <article class="block fwgame" id="game" aria-label="Play Final Whistle, the football game">
+      <span class="beam l" aria-hidden="true"></span><span class="beam r" aria-hidden="true"></span>
+      <div class="container fw-grid">
+        <div class="fw-copy">
+          <p class="kicker">Block A+ · Game time</p>
+          <h3>Now play <span>as Kavin.</span></h3>
+          <p>Final Whistle is the 3D football game on Thudinest. Pick Thudinest Coimbatore and Kavin leads the line in his number 25, on the floodlit futsal court. Every goal ends in a silly dance.</p>
+          <div class="fw-sheet">
+            <header><i aria-hidden="true"></i>Thudinest Coimbatore</header>
+            <ol>
+              <li class="star"><b>25</b><span>Kavin</span><small>Forward</small></li>
+              <li><b>18</b><span>Vasanth</span><small>Forward</small></li>
+              <li><b>33</b><span>Vihaan</span><small>Defender</small></li>
+              <li><b>3</b><span>Dhyaan</span><small>Forward</small></li>
+            </ol>
+          </div>
+          <a class="fw-play" href="/football/"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3l12 7-12 7z" fill="currentColor"/></svg>Play Final Whistle</a>
+        </div>
+        <div class="fw-wrap">
+          <span class="fw-25" aria-hidden="true"><span>25<small>Kavin</small></span></span>
+          <a class="fw-screen" href="/football/" aria-label="Play Final Whistle">
+            <img src="/images/games/final-whistle.jpg" alt="Final Whistle: a striker running at goal under floodlights" width="800" height="450" loading="lazy">
+            <span class="go" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 3l12 7-12 7z" fill="#06102a"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Block B: Animals -->
+    <article class="block pets" id="pets">
+      <div class="paws" aria-hidden="true"></div>
+      <div class="marquee" aria-hidden="true"><span class="track">CATS 🐱 DOGS 🐶 CATS 🐱 DOGS 🐶</span></div>
+      <div class="container block-grid">
+        <div class="block-copy">
+          <p class="kicker">Block B · Furry friends</p>
+          <h3>Cats, dogs &amp; <span>everything fluffy.</span></h3>
+          <p>Kavin's heart has room for every four-legged friend. Cats with their sleepy stares, dogs with their wild zoomies — he loves them all, and he'll never say no to a cuddle. Cats or dogs? He refuses to pick.</p>
+          <ul class="facts">
+            <li>🐱 Cat whisperer</li>
+            <li>🐶 Dog's best friend</li>
+            <li>🐾 Never walks past a pet</li>
+          </ul>
+        </div>
+        <div class="cards cards-right">
+          <figure class="card wide pet-photo" data-from="right" data-rot="2">
+            <div class="photo">
+              <!-- File: kavin/img/pets.jpg — add a photo of Kavin with a cat or dog and name it "pets.jpg".
+                   Until that file exists, the illustrated fallback below is shown instead. -->
+              <img src="/kavin/img/pets.jpg" alt="Kavin with his furry friends" loading="lazy" onerror="this.closest('.pet-photo').classList.add('missing')">
+              <div class="fallback"><span>🐶🐾🐱</span>Friends with every pet he meets</div>
+            </div>
+          </figure>
+          <figure class="card" data-from="right" data-rot="-3">
+            <div class="pet-card cat">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <path d="M24,56 L28,12 L58,38 Z M96,56 L92,12 L62,38 Z" fill="#fff1e2"/>
+                <path d="M32,46 L33,24 L48,38 Z M88,46 L87,24 L72,38 Z" fill="#ff9aa2"/>
+                <circle cx="60" cy="68" r="40" fill="#fff1e2"/>
+                <ellipse cx="45" cy="64" rx="5" ry="7.5" fill="#3a1405"/>
+                <ellipse cx="75" cy="64" rx="5" ry="7.5" fill="#3a1405"/>
+                <circle cx="47" cy="61" r="1.8" fill="#fff"/><circle cx="77" cy="61" r="1.8" fill="#fff"/>
+                <path d="M55,78 L65,78 L60,84 Z" fill="#ff7a8a"/>
+                <path d="M60,84 q-6,8 -13,3 M60,84 q6,8 13,3" stroke="#3a1405" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <path d="M14,72 L38,76 M14,84 L38,82 M106,72 L82,76 M106,84 L82,82" stroke="#3a1405" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+                <ellipse cx="36" cy="80" rx="7" ry="4" fill="#ffb3b3" opacity=".7"/><ellipse cx="84" cy="80" rx="7" ry="4" fill="#ffb3b3" opacity=".7"/>
+              </svg>
+              <div><b>Team Cat</b><small>Sleepy stares, tiny paws, maximum attitude.</small></div>
+            </div>
+          </figure>
+          <figure class="card" data-from="right" data-rot="3">
+            <div class="pet-card dog">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <ellipse cx="24" cy="58" rx="14" ry="30" fill="#8a4f1d" transform="rotate(18 24 58)"/>
+                <ellipse cx="96" cy="58" rx="14" ry="30" fill="#8a4f1d" transform="rotate(-18 96 58)"/>
+                <ellipse cx="60" cy="64" rx="36" ry="40" fill="#f3c98b"/>
+                <ellipse cx="74" cy="50" rx="12" ry="10" fill="#e3a964"/>
+                <circle cx="46" cy="58" r="5.5" fill="#3d2a00"/><circle cx="74" cy="58" r="5.5" fill="#3d2a00"/>
+                <circle cx="48" cy="56" r="1.8" fill="#fff"/><circle cx="76" cy="56" r="1.8" fill="#fff"/>
+                <ellipse cx="60" cy="84" rx="19" ry="14" fill="#fff6e8"/>
+                <ellipse cx="60" cy="77" rx="7.5" ry="5.5" fill="#3d2a00"/>
+                <path d="M60,82 L60,88 M60,88 q-7,6 -12,1 M60,88 q7,6 12,1" stroke="#3d2a00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <path d="M55,92 q5,14 10,0 Z" fill="#ff7a8a"/>
+              </svg>
+              <div><b>Team Dog</b><small>Waggy tails and zoomies — instant best friends.</small></div>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ======================= FINALE ======================= -->
+  <section class="finale">
+    <div class="container finale-grid">
+      <div>
+        <p class="kicker">Chapter 03 — What's next</p>
+        <h2 class="h2" data-split>Kavin,<br>animated.</h2>
+        <p class="lead">Footballer, animal lover, Coimbatore's newest local — and apparently a cartoon star too. The story's only just getting started.</p>
+      </div>
+      <div class="phone">
+        <!-- File: kavin/media/cartoon.mp4 (poster: kavin/img/cartoon-poster.jpg) -->
+        <video src="/kavin/media/cartoon.mp4" poster="/kavin/img/cartoon-poster.jpg" muted loop playsinline preload="none" data-autoplay aria-label="A cartoon version of Kavin in a number 25 football shirt"></video>
+        <button class="sound" type="button" aria-pressed="false">🔇 Sound</button>
+      </div>
+    </div>
+    <div class="container tbc">
+      <h2 aria-label="To be continued…"><span>To</span> <span>be</span> <span>continued…</span></h2>
+      <p>Check back soon for the next chapter.</p>
+    </div>
+    <footer>Made with ⚽ &amp; 🐾 for Kavin · <a href="https://thudinest.com/">thudinest.com</a></footer>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+
+  // Videos only play while on screen (works with or without motion)
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.play().catch(() => {}); } else { e.target.pause(); }
+    });
+  }, { threshold: .25 });
+  $$('video[data-autoplay]').forEach(v => io.observe(v));
+
+  const soundBtn = $('.sound');
+  soundBtn.addEventListener('click', () => {
+    const v = $('.phone video');
+    v.muted = !v.muted;
+    if (!v.muted) v.play().catch(() => {});
+    soundBtn.textContent = v.muted ? '🔇 Sound' : '🔊 Sound on';
+    soundBtn.setAttribute('aria-pressed', String(!v.muted));
+  });
+
+  if (!window.gsap || !window.ScrollTrigger) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+  // Smooth scrolling, kept in lock-step with ScrollTrigger
+  let lenis = null;
+  if (!reduced && window.Lenis) {
+    lenis = new Lenis({ lerp: 0.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+  $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
+    const target = $(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    lenis ? lenis.scrollTo(target, { offset: 0 }) : target.scrollIntoView();
+  }));
+
+  // Top progress bar
+  gsap.to('.progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
+
+  // ---------- Kavin in letters ----------
+  // The particle ring from the thudinest.com hero: thousands of tiny k/a/v/i/n letters that burst
+  // apart and spring into each picture. Plays on its own, a new picture every 3 seconds
+  // (HOLD + MOVE); tap the circle to skip ahead. Still, tap-to-step, with reduced motion.
+  (() => {
+    const cv = $('#lt-cv'), ctx = cv.getContext('2d');
+    //           0 deep blue  1 blue     2 sky      3 white    4 sun      5 lime     6 coral    7 green
+    const PAL = ['#2f5fd0', '#3b82ff', '#8cc8ff', '#f4f7ff', '#ffc145', '#c8ff3e', '#ff7a59', '#19c37d'];
+    const CHARS = 'kavin', HOLD = 1800, MOVE = 1200, FONT = '"Bricolage Grotesque", sans-serif';
+    const noEl = $('#lt-no'), nameEl = $('#lt-name'), barEl = $('#lt-bar');
+
+    // ---- scene drawings (square canvas of side w; u = 1% of it) ----
+    const poly = (x, pts, u) => { x.beginPath(); pts.forEach(([a, b], i) => i ? x.lineTo(a * u, b * u) : x.moveTo(a * u, b * u)); x.closePath(); x.fill(); };
+    const oval = (x, cx, cy, rx, ry, u, rot = 0) => { x.beginPath(); x.ellipse(cx * u, cy * u, rx * u, ry * u, rot, 0, 7); x.fill(); };
+    const pent = (x, cx, cy, r, rot) => {
+      x.beginPath();
+      for (let k = 0; k < 5; k++) { const a = rot + k * Math.PI * 2 / 5; x[k ? 'lineTo' : 'moveTo'](cx + Math.cos(a) * r, cy + Math.sin(a) * r); }
+      x.closePath(); x.fill();
+    };
+    function drawWord(x, w) {
+      x.textBaseline = 'middle';
+      let fs = 100; x.font = `800 ${fs}px ${FONT}`;
+      fs = fs * (w * 0.8) / x.measureText('KAVIN').width; x.font = `800 ${fs}px ${FONT}`;
+      let cx = (w - x.measureText('KAVIN').width) / 2;
+      [...'KAVIN'].forEach((ch, i) => {
+        x.lineWidth = fs * 0.07; x.strokeStyle = PAL[0]; x.strokeText(ch, cx, w / 2);
+        x.fillStyle = PAL[[5, 2, 4, 6, 1][i]]; x.fillText(ch, cx, w / 2); cx += x.measureText(ch).width;
+      });
+    }
+    function drawBall(x, w) {
+      const u = w / 100, c = 50 * u, up = -Math.PI / 2;
+      x.fillStyle = PAL[3]; oval(x, 50, 50, 38, 38, u);
+      x.save(); x.beginPath(); x.arc(c, c, 38 * u, 0, 7); x.clip();
+      x.fillStyle = PAL[0]; pent(x, c, c, 11 * u, up);
+      x.strokeStyle = PAL[0]; x.lineWidth = 2.6 * u;
+      for (let k = 0; k < 5; k++) {
+        const a = up + k * Math.PI * 2 / 5;
+        x.beginPath(); x.moveTo(c + Math.cos(a) * 11 * u, c + Math.sin(a) * 11 * u); x.lineTo(c + Math.cos(a) * 26 * u, c + Math.sin(a) * 26 * u); x.stroke();
+        pent(x, c + Math.cos(a) * 34 * u, c + Math.sin(a) * 34 * u, 10 * u, a + Math.PI);
+      }
+      x.restore();
+      x.strokeStyle = PAL[2]; x.lineWidth = 2.6 * u; x.beginPath(); x.arc(c, c, 38 * u, 0, 7); x.stroke();
+    }
+    function drawShirt(x, w) {
+      const u = w / 100;
+      x.fillStyle = PAL[6];
+      x.beginPath(); x.moveTo(34 * u, 12 * u); x.lineTo(12 * u, 25 * u); x.lineTo(21 * u, 42 * u); x.lineTo(30 * u, 37 * u);
+      x.lineTo(30 * u, 88 * u); x.lineTo(70 * u, 88 * u); x.lineTo(70 * u, 37 * u); x.lineTo(79 * u, 42 * u); x.lineTo(88 * u, 25 * u);
+      x.lineTo(66 * u, 12 * u); x.quadraticCurveTo(50 * u, 24 * u, 34 * u, 12 * u); x.closePath(); x.fill();
+      x.fillStyle = PAL[3]; x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `800 ${32 * u}px ${FONT}`; x.fillText('25', 50 * u, 58 * u);
+    }
+    function drawCat(x, w) {
+      const u = w / 100;
+      x.fillStyle = PAL[6]; poly(x, [[20, 42], [24, 10], [46, 28]], u); poly(x, [[80, 42], [76, 10], [54, 28]], u);
+      x.fillStyle = PAL[4]; poly(x, [[27, 34], [28, 19], [39, 27]], u); poly(x, [[73, 34], [72, 19], [61, 27]], u);
+      x.fillStyle = PAL[6]; oval(x, 50, 56, 33, 30, u);
+      x.fillStyle = PAL[5]; oval(x, 38, 52, 6.5, 8, u); oval(x, 62, 52, 6.5, 8, u);
+      x.fillStyle = PAL[0]; oval(x, 38, 52, 2.2, 6, u); oval(x, 62, 52, 2.2, 6, u);
+      x.fillStyle = PAL[3]; oval(x, 50, 71, 12, 8, u);
+      x.fillStyle = PAL[0]; poly(x, [[45.5, 64], [54.5, 64], [50, 69]], u);
+      x.strokeStyle = PAL[3]; x.lineWidth = 1.8 * u; x.lineCap = 'round';
+      [[36, 69, 6, 62], [36, 74, 6, 78], [64, 69, 94, 62], [64, 74, 94, 78]].forEach(([a, b, c, d]) => { x.beginPath(); x.moveTo(a * u, b * u); x.lineTo(c * u, d * u); x.stroke(); });
+    }
+    function drawDog(x, w) {
+      const u = w / 100;
+      x.fillStyle = PAL[6]; oval(x, 22, 50, 11, 25, u, 0.35); oval(x, 78, 50, 11, 25, u, -0.35);
+      x.fillStyle = PAL[4]; oval(x, 50, 54, 28, 32, u);
+      x.fillStyle = PAL[0]; oval(x, 40, 47, 4.5, 4.5, u); oval(x, 60, 47, 4.5, 4.5, u);
+      x.fillStyle = PAL[3]; oval(x, 50, 70, 15, 11, u);
+      x.fillStyle = PAL[0]; oval(x, 50, 64, 6, 4.5, u);
+      x.fillStyle = PAL[6]; oval(x, 50, 82, 5, 6, u);
+    }
+    function drawPlane(x, w) {
+      const u = w / 100;
+      x.fillStyle = PAL[5]; for (let i = 0; i < 5; i++) oval(x, 8 + i * 4.5, 90 - i * 3.6, 2.2, 2.2, u);
+      x.save(); x.translate(52 * u, 48 * u); x.rotate(-0.55);
+      x.fillStyle = PAL[3];
+      x.beginPath(); x.roundRect(-36 * u, -6 * u, 72 * u, 12 * u, 6 * u); x.fill();
+      poly(x, [[-6, -4], [-20, -36], [-10, -36], [16, -4]], u); poly(x, [[-6, 4], [-20, 36], [-10, 36], [16, 4]], u);
+      poly(x, [[-30, -4], [-40, -18], [-33, -18], [-22, -4]], u); poly(x, [[-30, 4], [-40, 18], [-33, 18], [-22, 4]], u);
+      x.fillStyle = PAL[2]; oval(x, 28, 0, 5, 3, u);
+      x.restore();
+    }
+    function drawCap(x, w) {
+      const u = w / 100;
+      x.fillStyle = PAL[2];
+      x.beginPath(); x.moveTo(28 * u, 44 * u); x.lineTo(72 * u, 44 * u); x.lineTo(72 * u, 64 * u); x.quadraticCurveTo(50 * u, 76 * u, 28 * u, 64 * u); x.closePath(); x.fill();
+      x.fillStyle = PAL[1]; poly(x, [[50, 18], [92, 36], [50, 54], [8, 36]], u);
+      x.strokeStyle = PAL[4]; x.lineWidth = 2.4 * u; x.beginPath(); x.moveTo(50 * u, 36 * u); x.lineTo(82 * u, 44 * u); x.lineTo(82 * u, 66 * u); x.stroke();
+      x.fillStyle = PAL[4]; oval(x, 50, 36, 3.5, 3.5, u); x.beginPath(); x.roundRect(78 * u, 64 * u, 8 * u, 14 * u, 2 * u); x.fill();
+    }
+    function drawPad(x, w) {
+      const u = w / 100;
+      x.save(); x.translate(8 * u, 26 * u); x.scale(0.84, 0.84);
+      x.beginPath(); x.moveTo(26 * u, 6 * u); x.lineTo(74 * u, 6 * u);
+      x.bezierCurveTo(96 * u, 6 * u, 102 * u, 56 * u, 92 * u, 64 * u); x.bezierCurveTo(84 * u, 70 * u, 74 * u, 52 * u, 66 * u, 46 * u); x.lineTo(34 * u, 46 * u);
+      x.bezierCurveTo(26 * u, 52 * u, 16 * u, 70 * u, 8 * u, 64 * u); x.bezierCurveTo(-2 * u, 56 * u, 4 * u, 6 * u, 26 * u, 6 * u); x.closePath();
+      x.fillStyle = PAL[3]; x.fill();
+      x.fillStyle = PAL[0]; x.beginPath(); x.roundRect(38 * u, 9 * u, 24 * u, 16 * u, 3 * u); x.fill();     // touchpad
+      x.fillStyle = PAL[2]; x.fillRect(17 * u, 21 * u, 14 * u, 5 * u); x.fillRect(21.5 * u, 16.5 * u, 5 * u, 14 * u); // d-pad
+      x.fillStyle = PAL[1]; oval(x, 37, 37, 5.5, 5.5, u); oval(x, 63, 37, 5.5, 5.5, u);                        // sticks
+      // △ ○ × □ face buttons on dark pads so the symbols read
+      x.fillStyle = PAL[0]; [[78, 12.5], [87, 22], [78, 31.5], [69, 22]].forEach(([a, b]) => oval(x, a, b, 5.6, 5.6, u));
+      x.lineWidth = 2.6 * u; x.lineCap = 'round'; x.lineJoin = 'round';
+      x.strokeStyle = PAL[7]; x.beginPath(); x.moveTo(78 * u, 9.5 * u); x.lineTo(81 * u, 15 * u); x.lineTo(75 * u, 15 * u); x.closePath(); x.stroke();
+      x.strokeStyle = PAL[6]; x.beginPath(); x.arc(87 * u, 22 * u, 3 * u, 0, 7); x.stroke();
+      x.strokeStyle = PAL[2]; x.beginPath(); x.moveTo(75.5 * u, 29 * u); x.lineTo(80.5 * u, 34 * u); x.moveTo(80.5 * u, 29 * u); x.lineTo(75.5 * u, 34 * u); x.stroke();
+      x.strokeStyle = PAL[4]; x.strokeRect(66.5 * u, 19.5 * u, 5 * u, 5 * u);
+      x.restore();
+    }
+    function drawRoblox(x, w) {
+      const u = w / 100;
+      x.save(); x.translate(50 * u, 36 * u); x.rotate(0.26);
+      x.fillStyle = PAL[3]; x.fillRect(-24 * u, -24 * u, 48 * u, 48 * u);
+      x.clearRect(-7 * u, -7 * u, 14 * u, 14 * u);
+      x.restore();
+      x.fillStyle = PAL[2]; x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `800 ${19 * u}px ${FONT}`; x.fillText('ROBLOX', 50 * u, 74 * u);
+    }
+    function drawPC(x, w) {
+      const u = w / 100;
+      x.fillStyle = PAL[0]; x.beginPath(); x.roundRect(12 * u, 8 * u, 76 * u, 46 * u, 5 * u); x.fill();        // screen
+      x.strokeStyle = PAL[2]; x.lineWidth = 4 * u; x.stroke();                                                     // bezel
+      x.fillStyle = PAL[5]; x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `800 ${28 * u}px ${FONT}`; x.fillText('GG', 50 * u, 32 * u);
+      x.fillStyle = PAL[2]; x.fillRect(45 * u, 56 * u, 10 * u, 6 * u); x.fillRect(33 * u, 62 * u, 34 * u, 4 * u);  // stand
+      x.fillStyle = PAL[3]; x.beginPath(); x.roundRect(12 * u, 69 * u, 66 * u, 9 * u, 3 * u); x.fill();          // keyboard
+      oval(x, 86, 73.5, 4, 5.5, u);                                                                                // mouse
+      [6, 4, 5, 7, 2, 1].forEach((c, i) => { x.fillStyle = PAL[c]; x.fillRect((12 + i * 11) * u, 80 * u, 11 * u, 3.5 * u); }); // RGB strip
+    }
+    function drawHeart(x, w) {
+      const u = w / 100;
+      x.fillStyle = PAL[6];
+      x.beginPath(); x.moveTo(50 * u, 86 * u);
+      x.bezierCurveTo(8 * u, 58 * u, 10 * u, 18 * u, 33 * u, 18 * u); x.bezierCurveTo(43 * u, 18 * u, 50 * u, 26 * u, 50 * u, 32 * u);
+      x.bezierCurveTo(50 * u, 26 * u, 57 * u, 18 * u, 67 * u, 18 * u); x.bezierCurveTo(90 * u, 18 * u, 92 * u, 58 * u, 50 * u, 86 * u); x.fill();
+      // DAD is cut out of the heart: empty letters read better than white-on-coral at low particle counts
+      x.globalCompositeOperation = 'destination-out';
+      x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `700 ${31 * u}px ${FONT}`;
+      x.fillText('DAD', 50 * u, 49 * u);
+      x.globalCompositeOperation = 'source-over';
+    }
+    const SCENES = [
+      ['Kavin', drawWord], ['Footballer', drawBall], ['Number 25', drawShirt], ['Team Cat', drawCat],
+      ['Team Dog', drawDog], ['Malaysia → Coimbatore', drawPlane], ['Student at Sarvvam', drawCap],
+      ['PlayStation', drawPad], ['Roblox', drawRoblox], ['PC gamer', drawPC], ['Daddy lover', drawHeart]
+    ];
+
+    let S = 0, DPR = 1, N = 0, P = null, T = [], sprites = [], glyph = 7, running = false, visible = false, last = 0, mx = -1e4, my = -1e4;
+    let cur = 0, nxt = 0, want = 0, phase = 'hold', t0 = 0, built = false;
+
+    const nearestPal = (r, g, b) => {
+      let best = 0, bd = 1e9;
+      PAL.forEach((hex, i) => { const c = parseInt(hex.slice(1), 16), d = ((c >> 16) - r) ** 2 + (((c >> 8) & 255) - g) ** 2 + ((c & 255) - b) ** 2; if (d < bd) { bd = d; best = i; } });
+      return best;
+    };
+    // Rasterise a scene at half size and pick N target points (with colours) from its pixels
+    function sample(draw) {
+      const sc = 0.5, sw = Math.max(1, Math.round(S * sc));
+      const oc = document.createElement('canvas'); oc.width = oc.height = sw;
+      const x = oc.getContext('2d', { willReadFrequently: true }); draw(x, sw);
+      const d = x.getImageData(0, 0, sw, sw).data, pts = [], step = Math.max(1, Math.round(glyph * 0.58 * sc));
+      for (let yy = 0; yy < sw; yy += step) for (let xx = 0; xx < sw; xx += step) {
+        const i = (yy * sw + xx) * 4; if (d[i + 3] < 140) continue;
+        pts.push([xx / sc + (Math.random() - 0.5) * step, yy / sc + (Math.random() - 0.5) * step, nearestPal(d[i], d[i + 1], d[i + 2])]);
+      }
+      for (let k = pts.length - 1; k > 0; k--) { const j = (Math.random() * (k + 1)) | 0; [pts[k], pts[j]] = [pts[j], pts[k]]; }
+      const out = new Float32Array(N * 3);
+      for (let n = 0; n < N; n++) {
+        const p = pts.length ? pts[n % pts.length] : [S / 2, S / 2, 1], rep = n >= pts.length;
+        out[n * 3] = p[0] + (rep ? (Math.random() - 0.5) * 2.5 : 0); out[n * 3 + 1] = p[1] + (rep ? (Math.random() - 0.5) * 2.5 : 0); out[n * 3 + 2] = p[2];
+      }
+      return out;
+    }
+    function buildSprites() {
+      sprites = PAL.map(col => [...CHARS].map(ch => {
+        const s = Math.ceil(glyph * 1.4 * DPR), c = document.createElement('canvas'); c.width = c.height = s;
+        const x = c.getContext('2d'); x.font = `700 ${Math.round(glyph * DPR)}px ui-monospace, Menlo, monospace`;
+        x.fillStyle = col; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(ch, s / 2, s / 2 + DPR * 0.5);
+        return c;
+      }));
+    }
+    function layout() {
+      const r = cv.getBoundingClientRect(); if (!r.width) return;
+      S = r.width; DPR = Math.min(devicePixelRatio || 1, 2);
+      cv.width = cv.height = Math.round(S * DPR);
+      glyph = S < 420 ? 6 : 7;
+      const n = Math.round(Math.min(S < 420 ? 1500 : 2600, (S * S) / (S < 420 ? 95 : 120)));
+      if (!P || n !== N) {
+        N = n; P = new Float32Array(N * 7);
+        for (let i = 0; i < N; i++) {
+          const a = Math.random() * Math.PI * 2, rad = S * 0.46 * Math.sqrt(Math.random());
+          P[i * 7] = S / 2 + Math.cos(a) * rad; P[i * 7 + 1] = S / 2 + Math.sin(a) * rad;
+          P[i * 7 + 4] = (Math.random() * CHARS.length) | 0; P[i * 7 + 5] = Math.random() * Math.PI * 2; P[i * 7 + 6] = 0.35 + Math.random() * 0.65;
+        }
+      }
+      buildSprites();
+      T = SCENES.map(sc => sample(sc[1]));
+      built = true;
+    }
+    const label = i => { noEl.textContent = String(i + 1).padStart(2, '0'); nameEl.textContent = SCENES[i][0]; };
+    function advance(now) {
+      nxt = want; phase = 'move'; t0 = now; label(nxt);
+      for (let i = 0; i < N; i++) { P[i * 7 + 5] = Math.random() * Math.PI * 2; P[i * 7 + 6] = 0.3 + Math.random() * 0.7; }
+    }
+    const ease = t => { t = Math.min(1, Math.max(0, t)); return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+
+    function tick(now) {
+      if (!running) return;
+      requestAnimationFrame(tick);
+      if (!built) return;
+      const dt = Math.min(2.5, (now - (last || now)) / 16.67); last = now;
+      if (!t0) t0 = now + 600; // let the opening name settle a moment longer
+      if (phase === 'hold') {
+        const hp = (now - t0) / HOLD;
+        barEl.style.transform = `scaleX(${Math.max(0, Math.min(1, hp))})`;
+        if (hp >= 1 && !reduced) want = (cur + 1) % SCENES.length;
+        if (want !== cur) advance(now);
+      }
+      let A = T[cur], B = T[cur], tt = 0;
+      if (phase === 'move') {
+        A = T[cur]; B = T[nxt]; tt = ease((now - t0) / MOVE); barEl.style.transform = 'scaleX(0)';
+        if (now - t0 >= MOVE) { cur = nxt; phase = 'hold'; t0 = now; A = B = T[cur]; tt = 0; }
+      }
+      const burst = phase === 'move' ? Math.sin(Math.PI * tt) : 0, R = S * 0.36, time = now * 0.001;
+      const k = 1 - Math.pow(1 - 0.09, dt), damp = Math.pow(0.8, dt);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.clearRect(0, 0, S, S);
+      ctx.lineCap = 'round'; ctx.lineWidth = glyph * 0.55;
+      const gs = glyph * 1.4, half = gs / 2;
+      for (let i = 0; i < N; i++) {
+        const o = i * 7, j = i * 3, ang = P[o + 5] + time * 0.3, br = burst * R * P[o + 6];
+        let tx = A[j] + (B[j] - A[j]) * tt + Math.cos(ang) * br, ty = A[j + 1] + (B[j + 1] - A[j + 1]) * tt + Math.sin(ang) * br;
+        tx += Math.sin(time * 1.3 + i) * 0.5; ty += Math.cos(time * 1.1 + i * 0.7) * 0.5;
+        let x = P[o], y = P[o + 1], vx = P[o + 2], vy = P[o + 3];
+        if (reduced) { x = tx; y = ty; vx = vy = 0; }
+        else {
+          const dx = x - mx, dy = y - my, d2 = dx * dx + dy * dy;
+          if (d2 < 4200) { const f = (1 - d2 / 4200) * 2 * dt, dd = Math.sqrt(d2 + 1); vx += dx / dd * f; vy += dy / dd * f; }
+          vx = (vx + (tx - x) * k) * damp; vy = (vy + (ty - y) * k) * damp; x += vx * dt; y += vy * dt;
+        }
+        P[o] = x; P[o + 1] = y; P[o + 2] = vx; P[o + 3] = vy;
+        const c = (tt < 0.5 ? A[j + 2] : B[j + 2]) | 0, sp = vx * vx + vy * vy;
+        if (sp > 1.6) { const len = Math.min(5, Math.sqrt(sp) * 0.9 + 1); ctx.strokeStyle = PAL[c]; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - vx * len, y - vy * len); ctx.stroke(); }
+        else ctx.drawImage(sprites[c][P[o + 4]], x - half, y - half, gs, gs);
+      }
+    }
+    const setRunning = on => { if (on === running) return; running = on; if (on) { last = 0; requestAnimationFrame(tick); } };
+
+    // A tap mid-burst queues the picture after the incoming one
+    cv.addEventListener('click', () => { want = ((phase === 'move' ? nxt : cur) + 1) % SCENES.length; });
+    cv.addEventListener('pointermove', e => { const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
+    cv.addEventListener('pointerleave', () => { mx = my = -1e4; });
+    let resizeT = 0;
+    addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(layout, 200); });
+    document.addEventListener('visibilitychange', () => setRunning(visible && !document.hidden));
+    const fontsReady = document.fonts ? document.fonts.load(`800 100px ${FONT}`).catch(() => {}) : Promise.resolve();
+    Promise.race([fontsReady, new Promise(r => setTimeout(r, 2500))]).then(() => {
+      layout(); label(0);
+      new IntersectionObserver(e => { visible = e[0].isIntersecting; setRunning(visible && !document.hidden); }).observe(cv);
+    });
+  })();
+
+  if (reduced) return;
+  document.documentElement.classList.add('motion');
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  // ---------- Text splitting ----------
+  // Wrap every letter in a .char (inside a .word so lines never break mid-word); keeps <br> etc.
+  const splitChars = el => {
+    [...el.childNodes].forEach(n => {
+      if (n.nodeType === 1) { splitChars(n); return; }
+      if (n.nodeType !== 3) return;
+      const frag = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.append(' '); return; }
+        const w = document.createElement('span');
+        w.className = 'word';
+        [...part].forEach(c => {
+          const s = document.createElement('span');
+          s.className = 'char'; s.textContent = c; w.append(s);
+        });
+        frag.append(w);
+      });
+      n.replaceWith(frag);
+    });
+  };
+  $$('[data-split]').forEach(el => {
+    splitChars(el);
+    if (el.classList.contains('accent')) {
+      // Gradient text can't survive per-letter transforms, so tint each letter along the gradient instead
+      const chars = $$('.char', el);
+      const stops = ['#8cc8ff', '#c8ff3e', '#ffc145'];
+      chars.forEach((c, i) => {
+        const t = i / Math.max(chars.length - 1, 1) * (stops.length - 1);
+        const k = Math.min(Math.floor(t), stops.length - 2);
+        c.style.color = gsap.utils.interpolate(stops[k], stops[k + 1], t - k);
+      });
+      el.classList.add('split');
+    }
+  });
+  $$('[data-words]').forEach(el => {
+    const walk = node => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.append(' '); return; }
+            const s = document.createElement('span');
+            s.className = 'w'; s.textContent = part; frag.append(s);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1) { walk(n); }
+      });
+    };
+    walk(el);
+  });
+
+  // ---------- 1. Hero ----------
+  const intro = gsap.timeline({ defaults: { ease: 'expo.out' } });
+  intro
+    .from('.hero-title .char', { yPercent: 115, rotate: 12, duration: 1.1, stagger: .035 })
+    .from('.hero-photo .frame', { scale: .6, rotate: -14, opacity: 0, duration: 1.3 }, 0.15)
+    .from('.sticker', { scale: 0, rotate: -90, duration: .9, stagger: .12, ease: 'back.out(2.2)' }, 0.7)
+    .from('.hero-sub span', { y: 30, opacity: 0, duration: .8, stagger: .09 }, 0.6)
+    .from('.eyebrow, .scroll-cue', { y: 16, opacity: 0, duration: .8 }, 0.9);
+
+  // Block A+: the game. The floodlights come up, the screen swings round to face you, the team sheet fills in
+  gsap.fromTo('.fwgame .beam', { opacity: 0 }, { opacity: .5, ease: 'none', scrollTrigger: { trigger: '.fwgame', start: 'top 85%', end: 'top 30%', scrub: true } });
+  gsap.fromTo('.fw-copy', { y: 70, opacity: 0 }, { y: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: '.fwgame', start: 'top 80%', end: 'top 35%', scrub: true } });
+  gsap.fromTo('.fw-screen', { rotationY: 38, rotationX: 10, scale: .85, opacity: .3 }, { rotationY: 0, rotationX: 0, scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: '.fw-wrap', start: 'top 95%', end: 'top 40%', scrub: true } });
+  gsap.fromTo('.fw-25', { scale: 0, rotate: -120 }, { scale: 1, rotate: -12, ease: 'none', scrollTrigger: { trigger: '.fw-wrap', start: 'top 70%', end: 'top 40%', scrub: true } });
+  $$('.fw-sheet li').forEach((li, i) => gsap.fromTo(li, { x: -60, opacity: 0 }, { x: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: '.fw-sheet', start: `top ${88 - i * 6}%`, end: `top ${64 - i * 6}%`, scrub: true } }));
+
+  // Stickers bob gently forever
+  $$('.sticker').forEach((s, i) => gsap.to(s, { y: i % 2 ? 10 : -10, rotate: i % 2 ? 8 : -8, duration: 2 + i * .4, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 1.6 }));
+
+  // Hero stays pinned while the Journey panel slides over it; it shrinks and fades in sync
+  ScrollTrigger.create({ trigger: '.hero', start: 'top top', end: 'bottom top', pin: true, pinSpacing: false });
+  gsap.to('.hero-inner', {
+    scale: .82, yPercent: -8, opacity: 0, filter: 'blur(6px)', ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+  // While leaving the hero: title lines drift apart, the ring spins, the photo zooms, stickers fly off
+  const heroScrub = () => ({ trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true });
+  gsap.to('.hero-title .line:first-child', { xPercent: -18, ease: 'none', scrollTrigger: heroScrub() });
+  gsap.to('.hero-title .line.accent', { xPercent: 14, ease: 'none', scrollTrigger: heroScrub() });
+  gsap.to('.hero-photo .ring', { rotate: 360, ease: 'none', scrollTrigger: heroScrub() });
+  gsap.to('.hero-photo img', { scale: 1.3, ease: 'none', scrollTrigger: heroScrub() });
+  gsap.to('.sticker', { x: i => [-160, 180, -80][i], scale: 1.7, ease: 'none', scrollTrigger: heroScrub() });
+
+  // Little football rides along the progress bar
+  gsap.to('.progress-ball', {
+    x: () => innerWidth - 18, rotate: 1440, ease: 'none',
+    scrollTrigger: { start: 0, end: 'max', scrub: true, invalidateOnRefresh: true }
+  });
+
+  // ---------- 2. Journey ----------
+  $$('[data-words]').forEach(el => {
+    gsap.fromTo($$('.w', el), { opacity: .14 }, {
+      opacity: 1, stagger: .1, ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 50%', scrub: true }
+    });
+  });
+  // Memory lane: pinned, and vertical scroll moves the strip sideways
+  const track = $('.lane-track');
+  const laneDist = () => track.scrollWidth - innerWidth;
+  const lane = gsap.to(track, {
+    x: () => -laneDist(), ease: 'none',
+    scrollTrigger: { trigger: '.lane', start: 'top top', end: () => '+=' + laneDist(), pin: true, scrub: true, invalidateOnRefresh: true }
+  });
+  $$('.lane figure').forEach((fig, i) => {
+    const inLane = { trigger: fig, containerAnimation: lane, start: 'left right', end: 'right left', scrub: true };
+    gsap.fromTo(fig, { rotate: i % 2 ? 7 : -7, y: i % 2 ? 60 : -60 }, { rotate: i % 2 ? -3 : 3, y: i % 2 ? -20 : 20, ease: 'none', scrollTrigger: { ...inLane } });
+    gsap.fromTo($('img', fig), { xPercent: -9, scale: 1.25 }, { xPercent: 9, scale: 1.25, ease: 'none', scrollTrigger: { ...inLane } });
+  });
+  // Photos lean into the scroll: the faster you scroll, the more they skew
+  const skewTo = gsap.quickTo('.lane .photo', 'skewX', { duration: .4, ease: 'power3' });
+  ScrollTrigger.create({
+    trigger: '.lane', start: 'top bottom', end: 'bottom top',
+    onUpdate: self => skewTo(gsap.utils.clamp(-12, 12, self.getVelocity() / -250))
+  });
+  ScrollTrigger.addEventListener('scrollEnd', () => skewTo(0));
+
+  // Flight scene: pinned; route + plane are scroll-scrubbed 1:1
+  const route = $('#route');
+  const len = route.getTotalLength();
+  gsap.set(route, { strokeDasharray: len, strokeDashoffset: len });
+  const planePath = { path: '#route', align: '#route', alignOrigin: [.5, .5], autoRotate: true };
+  gsap.set('#plane', { motionPath: { ...planePath, end: 0 } });
+
+  const flight = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: { trigger: '.flight', start: 'top top', end: '+=320%', pin: true, scrub: true }
+  });
+  flight
+    .from('.polaroid', { scale: .4, opacity: 0, y: 120, rotate: i => [-30, 25, -20][i], stagger: .2, duration: .7, ease: 'back.out(1.4)' })
+    .from('.my-pin', { scale: 0, transformOrigin: '770px 590px', duration: .3, ease: 'back.out(2)' }, .2)
+    .to({}, { duration: .4 })
+    .addLabel('fly')
+    .to('.stop[data-stop="0"]', { opacity: 0, y: -40, duration: .35 }, 'fly')
+    .to('.polaroid', { opacity: 0, scale: .7, y: -80, stagger: .1, duration: .6 }, 'fly')
+    .fromTo('.stop[data-stop="1"]', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .35 }, 'fly+=.25')
+    .to(route, { strokeDashoffset: 0, duration: 2 }, 'fly')
+    .to('#plane', { motionPath: planePath, duration: 2 }, 'fly')
+    .to('.stop[data-stop="1"]', { opacity: 0, y: -40, duration: .3 }, 'fly+=1.6')
+    .from('.cbe-pin', { scale: 0, transformOrigin: '260px 320px', duration: .35, ease: 'back.out(2.5)' }, 'fly+=1.8')
+    .fromTo('.stop[data-stop="2"]', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .4 }, 'fly+=1.9')
+    .from('.home-tag', { opacity: 0, y: 20, scale: .6, duration: .3, ease: 'back.out(2)' }, 'fly+=2')
+    .from('.school', { opacity: 0, x: -40, duration: .35 }, 'fly+=2.15')
+    .to('#plane', { opacity: 0, duration: .2 }, 'fly+=2')
+    .to({}, { duration: .5 });
+  gsap.set('.stop[data-stop="1"], .stop[data-stop="2"]', { opacity: 0 });
+  gsap.to('.flight-bar span', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '.flight', start: 'top top', end: '+=320%', scrub: true } });
+  gsap.to('.cbe-pin .pulse', { attr: { r: 44 }, opacity: 0, duration: 1.4, repeat: -1, ease: 'power1.out', transformOrigin: 'center' });
+
+  // ---------- Name in the sand ----------
+  gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: { trigger: '.sand', start: 'top top', end: '+=200%', pin: true, scrub: true }
+  })
+    .fromTo('.sand-media', { clipPath: 'inset(30% 32% 30% 32% round 40px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1 })
+    .fromTo('.sand-media img', { scale: 1.6 }, { scale: 1, duration: 1 }, 0)
+    .fromTo('.sand-text .l1', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .3 }, .6)
+    .to('.sand-text .l1', { opacity: 0, y: -50, duration: .3 }, 1.2)
+    .fromTo('.sand-text .l2', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .3 }, 1.4)
+    .to({}, { duration: .4 });
+
+  // ---------- 3. Passions ----------
+  // Shirt number counts up 0 → 25 with the scroll
+  const count = $('.count');
+  const shirt = { n: 0 };
+  count.textContent = '0';
+  gsap.to(shirt, {
+    n: 25, ease: 'none', onUpdate: () => { count.textContent = Math.round(shirt.n); },
+    scrollTrigger: { trigger: '.shirt', start: 'top 95%', end: 'top 50%', scrub: true }
+  });
+
+  $$('.block:not(.fwgame)').forEach(block => { // the game block (A+) animates on its own
+    const dir = block.classList.contains('pets') ? 1 : -1;
+    gsap.fromTo($('.marquee .track', block), { xPercent: dir < 0 ? 0 : -30 }, {
+      xPercent: dir < 0 ? -30 : 0, ease: 'none',
+      scrollTrigger: { trigger: block, start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+    gsap.from($('.block-copy', block), {
+      y: 80, opacity: 0, ease: 'none',
+      scrollTrigger: { trigger: $('.block-grid', block), start: 'top 90%', end: 'top 45%', scrub: true }
+    });
+    gsap.from($$('.facts li', block), {
+      scale: .6, opacity: 0, stagger: .15, ease: 'none',
+      scrollTrigger: { trigger: $('.facts', block), start: 'top 95%', end: 'top 65%', scrub: true }
+    });
+  });
+
+  // Cards slide in from their side, moving exactly with the scroll
+  $$('.card').forEach(card => {
+    const fromLeft = card.dataset.from === 'left';
+    gsap.fromTo(card,
+      { xPercent: fromLeft ? -130 : 130, rotate: fromLeft ? -16 : 16, opacity: 0 },
+      { xPercent: 0, rotate: parseFloat(card.dataset.rot), opacity: 1, ease: 'none',
+        scrollTrigger: { trigger: card, start: 'top 100%', end: 'top 50%', scrub: true } });
+  });
+  // Pet cards also swing open in 3D as they arrive
+  $$('.pets .card').forEach(card => {
+    gsap.fromTo(card.firstElementChild,
+      { rotationY: -80, transformPerspective: 900, transformOrigin: '100% 50%' },
+      { rotationY: 0, ease: 'none', scrollTrigger: { trigger: card, start: 'top 100%', end: 'top 45%', scrub: true } });
+  });
+
+  // The ball rolls across the pitch — distance and spin both tied to scroll
+  gsap.fromTo('.ball', { x: () => -120, rotate: 0 }, {
+    x: () => innerWidth + 40, rotate: 900, ease: 'none',
+    scrollTrigger: { trigger: '.football', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
+  });
+
+  // Paw-print trail across the pets block
+  const paws = $('.paws');
+  const pawSvg = '<svg class="paw" viewBox="0 0 40 40"><ellipse cx="20" cy="27" rx="9" ry="8"/><ellipse cx="9" cy="16" rx="4" ry="5"/><ellipse cx="17" cy="10" rx="4" ry="5"/><ellipse cx="25" cy="10" rx="4" ry="5"/><ellipse cx="32" cy="16" rx="4" ry="5"/></svg>';
+  for (let i = 0; i < 12; i++) {
+    paws.insertAdjacentHTML('beforeend', pawSvg);
+    const p = paws.lastElementChild;
+    const t = i / 11;
+    p.style.left = `${4 + t * 88}%`;
+    p.style.top = `${88 - t * 70 + (i % 2 ? 4 : -4)}%`;
+    p.style.rotate = `${40 + (i % 2 ? 14 : -14)}deg`;
+  }
+  gsap.from('.paw', {
+    scale: 0, opacity: 0, stagger: .2, ease: 'none',
+    scrollTrigger: { trigger: '.pets', start: 'top 70%', end: 'bottom 60%', scrub: true }
+  });
+
+  // ---------- Finale ----------
+  gsap.fromTo('.phone', { scale: .7, rotate: 8, y: 80 }, {
+    scale: 1, rotate: -2, y: 0, ease: 'none',
+    scrollTrigger: { trigger: '.finale', start: 'top 90%', end: 'top 10%', scrub: true }
+  });
+  gsap.from('.tbc h2 span', {
+    yPercent: 100, opacity: 0, stagger: .2, ease: 'none',
+    scrollTrigger: { trigger: '.tbc', start: 'top 95%', end: 'top 55%', scrub: true }
+  });
+
+  // Big headings build letter by letter, in step with the scroll
+  // (created last so their positions account for every pinned section above them)
+  $$('.h2[data-split], .lane-intro h3').forEach(h => {
+    gsap.from($$('.char', h), {
+      yPercent: 80, rotate: 10, opacity: 0, stagger: .04, ease: 'none',
+      scrollTrigger: { trigger: h, start: 'top 90%', end: 'top 45%', scrub: true }
+    });
+  });
+
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
